@@ -1,0 +1,8 @@
+{
+  "title": "Operations",
+  "pages": [
+    "configuration",
+    "reverse-proxy",
+    "upgrading"
+  ]
+}
