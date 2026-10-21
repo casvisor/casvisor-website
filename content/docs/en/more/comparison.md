@@ -21,7 +21,7 @@ There are several good open-source projects in this space. This page is meant to
 - **JumpServer** is the most complete option, and the established one in China. Some of its connectors, such as the proxies for native RDP and database clients, are part of the enterprise edition.
 - **Teleport** issues short-lived certificates and covers the widest range of infrastructure. Since v16, its community edition binaries are free to use only for companies with fewer than 100 employees and under $10 million a year in revenue.
 - **Warpgate** is a single Rust binary that proxies SSH, HTTPS, Kubernetes, MySQL, PostgreSQL, RDP and VNC transparently, with recording and live view, and no paid edition. Today it does more than Casvisor on the protocol side.
-- **Apache Guacamole** is a browser remote desktop gateway with its own users and connection permissions. Casvisor uses its daemon, guacd, for RDP and Telnet.
+- **Apache Guacamole** is a browser remote desktop gateway with its own users and connection permissions. Casvisor uses its daemon, guacd, for Telnet.
 - **HashiCorp Boundary** archived its open-source repository in October 2026; it continues as HCP Boundary and Boundary Enterprise.
 
 ## Where Casvisor differs

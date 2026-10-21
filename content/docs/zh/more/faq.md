@@ -21,9 +21,13 @@ description: "关于Casvisor的常见问题：什么是堡垒机，是否必须�
 
 他不是管理员，也没有任何已启用的权限允许他此刻、从他所在的地址**连接**任何资产。检查权限的用户和用户组、资产和标签、来源IP和有效期。新加入的Casdoor用户组要等他下次登录才算。
 
-## RDP或Telnet一连就失败
+## RDP一连就失败
 
-这两种协议经由guacd。检查guacd在`guacamoleEndpoint`上运行着，并且guacd本身能访问资产的主机和端口。SSH和VNC不经过guacd，如果它们正常而RDP不行，问题多半在guacd。
+RDP由Casvisor自己连接，所以Casvisor服务器要能访问资产的3389端口。标签页里的提示会说明是哪一步失败：连接被拒绝或超时，是网络或防火墙的问题；认证错误，是账号的问题。Casvisor使用NLA，只支持旧版RDP安全层的服务器连不上。
+
+## Telnet一连就失败
+
+Telnet经由guacd。检查guacd在`guacamoleEndpoint`上运行着，并且guacd本身能访问资产的主机和端口。
 
 ## 资产的密码存在哪里？
 

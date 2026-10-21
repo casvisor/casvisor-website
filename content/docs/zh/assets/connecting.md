@@ -23,7 +23,7 @@ description: "用户从工作台连接，工作台列出他们能访问的资产
 
 1. 浏览器请求Casvisor为这个资产建立会话。
 2. Casvisor检查用户已登录，并且有[权限](../access-control/permissions.md)允许他此刻、从他所在的IP对这个资产**连接**。管理员跳过这一步。
-3. Casvisor为会话打开WebSocket，再检查一次会话是同一个用户发起的、权限仍然有效，然后连资产：SSH和VNC直接连，RDP和Telnet经由guacd。
+3. Casvisor为会话打开WebSocket，再检查一次会话是同一个用户发起的、权限仍然有效，然后连资产：SSH、RDP和VNC直接连，Telnet经由guacd。
 4. 在用户关掉标签页或管理员停止它之前，会话在会话列表里显示为**在线**。
 
 检查不通过时，标签页里会显示原因，例如*you have no permission to connect to the asset*。
@@ -31,4 +31,4 @@ description: "用户从工作台连接，工作台列出他们能访问的资产
 ## 键盘和剪贴板
 
 - **SSH**运行在xterm.js终端里：支持颜色，随窗口调整大小，复制粘贴用浏览器自己的。
-- **RDP、VNC和Telnet**运行在画布里，按键原样发给远端。剪贴板能否共享取决于用户权限里的**复制**和**粘贴**动作，各协议在哪里执行这项限制见[协议](./protocols.md)。
+- **RDP、VNC和Telnet**运行在画布里，按键原样发给远端。VNC和Telnet的剪贴板能否共享取决于用户权限里的**复制**和**粘贴**动作；RDP暂时没有剪贴板。见[协议](./protocols.md)。

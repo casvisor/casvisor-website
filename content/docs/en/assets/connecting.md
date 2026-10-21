@@ -23,7 +23,7 @@ If the asset has no stored username or password, the button asks for what is mis
 
 1. The browser asks Casvisor to start a session for the asset.
 2. Casvisor checks that the user is signed in and that a [permission](../access-control/permissions.md) gives them **Connect** on this asset, from their IP address, right now. Administrators skip this check.
-3. Casvisor opens a WebSocket for the session. It checks again that the session was started by the same user and that the permission still holds, then connects to the asset, natively for SSH and VNC and through guacd for RDP and Telnet.
+3. Casvisor opens a WebSocket for the session. It checks again that the session was started by the same user and that the permission still holds, then connects to the asset, natively for SSH, RDP and VNC and through guacd for Telnet.
 4. The session shows as **Online** in the session list until the tab is closed or an administrator stops it.
 
 If the check fails, the tab shows why, for example *you have no permission to connect to the asset*.
@@ -31,4 +31,4 @@ If the check fails, the tab shows why, for example *you have no permission to co
 ## Keyboard and clipboard
 
 - **SSH** runs in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser.
-- **RDP, VNC and Telnet** run in a canvas. Keys go to the remote side as typed. Clipboard sharing follows the **Copy** and **Paste** actions of the user's permission; see [Protocols](./protocols.md) for where each is enforced.
+- **RDP, VNC and Telnet** run in a canvas. Keys go to the remote side as typed. For VNC and Telnet, clipboard sharing follows the **Copy** and **Paste** actions of the user's permission; RDP has no clipboard yet. See [Protocols](./protocols.md).

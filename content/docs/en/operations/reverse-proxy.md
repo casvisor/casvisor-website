@@ -5,7 +5,7 @@ description: "Put Casvisor behind nginx or another reverse proxy for HTTPS: pass
 
 Casvisor serves plain HTTP. In production, put it behind a reverse proxy that terminates HTTPS. Three things matter:
 
-1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-vnc` and `get-asset-tunnel` (RDP and Telnet). The proxy must pass the `Upgrade` and `Connection` headers through.
+1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-rdp`, `get-asset-vnc` and `get-asset-tunnel` (Telnet). The proxy must pass the `Upgrade` and `Connection` headers through.
 2. **Timeouts.** A terminal can sit idle for a long time. Raise the proxy's read timeout, or idle sessions are cut off after its default, often 60 seconds.
 3. **The client IP.** Permissions can be limited to [client IPs](../access-control/permissions.md#the-client-ip). When a request comes from a loopback or private address, Casvisor takes the last entry of `X-Forwarded-For`, so the proxy must set it to the address it received the connection from.
 

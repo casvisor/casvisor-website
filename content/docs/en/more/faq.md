@@ -21,9 +21,13 @@ Yes. Casvisor signs people in only through Casdoor and takes users and groups fr
 
 They are not an administrator and no enabled permission gives them **Connect** on anything, from their address, at this time. Check the permission's users and groups, its assets and tags, its client IPs and its time window. A new Casdoor group membership counts from their next sign-in.
 
-## An RDP or Telnet connection fails straight away
+## An RDP connection fails straight away
 
-These go through guacd. Check that guacd is running at `guacamoleEndpoint` and that guacd itself can reach the asset's host and port. SSH and VNC do not use guacd, so if those work and RDP does not, guacd is the place to look.
+Casvisor connects to RDP itself, so the Casvisor server has to reach the asset's port 3389. The message in the tab says which step failed: a refused or timed-out connection points at the network or firewall, an authentication error at the account. Casvisor uses NLA; a server that only offers legacy RDP security is not supported.
+
+## A Telnet connection fails straight away
+
+Telnet goes through guacd. Check that guacd is running at `guacamoleEndpoint` and that guacd itself can reach the asset's host and port.
 
 ## Where are the passwords of assets kept?
 

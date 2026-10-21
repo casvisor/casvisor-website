@@ -51,7 +51,7 @@ When the environment variable `RUNNING_IN_DOCKER` is `true`, `localhost` in `dat
 
 | Key | Default | Meaning |
 | --- | --- | --- |
-| `guacamoleEndpoint` | `127.0.0.1:4822` | Where guacd listens. Used for RDP and Telnet only. See [Protocols](../assets/protocols.md#guacd). |
+| `guacamoleEndpoint` | `127.0.0.1:4822` | Where guacd listens. Used for Telnet only. See [Protocols](../assets/protocols.md#guacd). |
 
 ## Casdoor
 

@@ -32,7 +32,7 @@ A permission covers everyone in **Users** and everyone in **Groups**, for every 
 | Paste | Text from the user's clipboard reaching the remote side. |
 | Upload, Download | Reserved for file transfer, which is not in the interface yet. |
 
-[Protocols](../assets/protocols.md#ssh) lists where Copy and Paste are enforced: by guacd for RDP and Telnet, by the web client for VNC, and not yet for SSH.
+[Protocols](../assets/protocols.md#ssh) lists where Copy and Paste are enforced: by guacd for Telnet and by the web client for VNC. SSH does not restrict them yet, and RDP has no clipboard yet.
 
 ## How permissions combine
 

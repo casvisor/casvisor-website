@@ -134,8 +134,8 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           </div>
           <Arrow />
           <div className="flex flex-col justify-center gap-3">
-            <Protocols label={t.how.native} names={['SSH', 'VNC']} />
-            <Protocols label={t.how.guacd} names={['RDP', 'Telnet']} />
+            <Protocols label={t.how.native} names={['SSH', 'RDP', 'VNC']} />
+            <Protocols label={t.how.guacd} names={['Telnet']} />
           </div>
           <Arrow />
           <div className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-fd-card p-5 text-center">

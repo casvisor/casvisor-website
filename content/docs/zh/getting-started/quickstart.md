@@ -3,7 +3,7 @@ title: "用Docker快速上手"
 description: "用自带MariaDB和guacd的all-in-one Docker镜像运行Casvisor，通过Casdoor登录，连上第一台服务器。"
 ---
 
-试用Casvisor最快的办法是all-in-one镜像`casbin/casvisor-all-in-one`。除了Casvisor本身，它还带了做数据库用的MariaDB和连RDP、Telnet用的guacd，一个容器就能跑。外面只需要一个用来登录的Casdoor。
+试用Casvisor最快的办法是all-in-one镜像`casbin/casvisor-all-in-one`。除了Casvisor本身，它还带了做数据库用的MariaDB和连Telnet用的guacd，一个容器就能跑。外面只需要一个用来登录的Casdoor。
 
 ## 1. 准备Casdoor
 
@@ -67,7 +67,7 @@ docker run -d --name casvisor -p 19000:19000 \
 
 ## 不用all-in-one镜像
 
-`casbin/casvisor`是不带MariaDB和guacd的Casvisor。已经有MySQL的时候用它；要连RDP或Telnet，再在旁边起一个guacd：
+`casbin/casvisor`是不带MariaDB和guacd的Casvisor。已经有MySQL的时候用它；要连Telnet，再在旁边起一个guacd：
 
 ```bash
 docker run -d --name guacd -p 4822:4822 guacamole/guacd

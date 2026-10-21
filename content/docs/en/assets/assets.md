@@ -15,7 +15,7 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Name | The ID, unique within the organization. Permissions refer to assets by it. |
 | Display name, Description | What users see in the workbench. |
 | Protocol | `SSH`, `RDP`, `VNC` or `Telnet`. Choosing one fills in its usual port. See [Protocols](./protocols.md). |
-| Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server (or from guacd, for RDP and Telnet), not from the user's browser, so it can be a private address the users cannot reach themselves. |
+| Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server (or from guacd, for Telnet), not from the user's browser, so it can be a private address the users cannot reach themselves. |
 | Username, Password | The account Casvisor logs in with. See below. |
 | OS | `Linux` or `Windows`, shown in the list. |
 | Tag | A label such as `prod-linux` or `db`. A [permission](../access-control/permissions.md) can grant every asset with a tag at once, so the tag works as an asset group. |
@@ -38,4 +38,4 @@ RDP assets have a **RemoteApp** table for publishing a single Windows program in
 
 ## Network placement
 
-Casvisor, and guacd for RDP and Telnet, open the connections, so they need to reach the assets' hosts and ports. A common layout is Casvisor on a host inside the private network, published to users over HTTPS, with the assets' firewalls only letting in Casvisor's address. Users then have no direct way to the servers at all, and every connection passes the permission check and lands in the [session list](../audit/sessions.md).
+Casvisor, and guacd for Telnet, open the connections, so they need to reach the assets' hosts and ports. A common layout is Casvisor on a host inside the private network, published to users over HTTPS, with the assets' firewalls only letting in Casvisor's address. Users then have no direct way to the servers at all, and every connection passes the permission check and lands in the [session list](../audit/sessions.md).

@@ -16,20 +16,20 @@ Casvisor用Go和React编写，采用Apache-2.0许可证，没有企业版。
 
 ```text
   浏览器                      Casvisor                              服务器
-+-----------+   HTTPS    +--------------------------+    SSH    +--------------+
++-----------+   HTTPS    +--------------------------+ SSH、RDP  +--------------+
 | 工作台    |----------->| 登录          (Casdoor)  |---------->| Linux        |
-| 标签页    | WebSocket  | 权限          (Casbin)   |    VNC    | 桌面         |
-+-----------+            | 会话、操作日志           |---------->|              |
+| 标签页    | WebSocket  | 权限          (Casbin)   |    VNC    | Windows      |
++-----------+            | 会话、操作日志           |---------->| 桌面         |
                          +--------------------------+           +--------------+
-                                      |  RDP、Telnet                   ^
+                                      |  Telnet                        ^
                                       v                                |
                                  +---------+                           |
                                  |  guacd  |---------------------------+
                                  +---------+
 ```
 
-- **SSH和VNC**由Casvisor用Go直接处理：浏览器通过WebSocket连Casvisor，Casvisor再连服务器。
-- **RDP和Telnet**经由[guacd](https://guacamole.apache.org/doc/gug/guacamole-architecture.html)，即Apache Guacamole的协议守护进程，Casvisor通过4822端口和它通信。
+- **SSH、RDP和VNC**由Casvisor用Go直接处理：浏览器通过WebSocket连Casvisor，Casvisor再连服务器。
+- **Telnet**经由[guacd](https://guacamole.apache.org/doc/gug/guacamole-architecture.html)，即Apache Guacamole的协议守护进程，Casvisor通过4822端口和它通信。
 - 用户、用户组和登录都在Casdoor里。资产、权限、会话和操作日志存在Casvisor自己的MySQL数据库里。
 
 ## 它解决什么

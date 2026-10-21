@@ -1,6 +1,6 @@
 ---
 title: "Run from source"
-description: "Build Casvisor's Go backend and React web UI from the repository, with MySQL for the database and guacd for RDP and Telnet."
+description: "Build Casvisor's Go backend and React web UI from the repository, with MySQL for the database and guacd for Telnet."
 ---
 
 Running from source is how you develop Casvisor, and for now also how you use it with a Casdoor that signs with its own certificate (see [Connect Casdoor](./casdoor.md#about-the-certificate)).
@@ -12,7 +12,7 @@ Running from source is how you develop Casvisor, and for now also how you use it
 | Go | 1.26 or later | The backend |
 | Node.js and Yarn | Node 20 or later, Yarn 1 | The web UI |
 | MySQL or MariaDB | 5.7 / 10.3 or later | Assets, permissions, sessions, operation log |
-| guacd | 1.5 or later | RDP and Telnet only; SSH and VNC do not need it |
+| guacd | 1.5 or later | Telnet only; SSH, RDP and VNC do not need it |
 | Casdoor | | Sign-in, see [Connect Casdoor](./casdoor.md) |
 
 ## Build and run
@@ -28,7 +28,7 @@ go run .
 
 `yarn build` writes the web UI to `web/build`, which the backend serves. Casvisor listens on port 19000 (`httpport` in `conf/app.conf`). On first start it creates the database named by `dbName` and its tables, so the MySQL account in `dataSourceName` needs the right to create a database.
 
-Start guacd if you need RDP or Telnet:
+Start guacd if you need Telnet:
 
 ```bash
 docker run -d --name guacd -p 4822:4822 guacamole/guacd

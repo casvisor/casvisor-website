@@ -16,20 +16,20 @@ Casvisor is written in Go and React, licensed under Apache-2.0, and has no enter
 
 ```text
   browser                     Casvisor                              servers
-+-----------+   HTTPS    +--------------------------+    SSH    +--------------+
++-----------+   HTTPS    +--------------------------+ SSH, RDP  +--------------+
 | workbench |----------->| sign-in       (Casdoor)  |---------->| Linux        |
-| tabs      | WebSocket  | permissions   (Casbin)   |    VNC    | desktops     |
-+-----------+            | sessions, operation log  |---------->|              |
+| tabs      | WebSocket  | permissions   (Casbin)   |    VNC    | Windows      |
++-----------+            | sessions, operation log  |---------->| desktops     |
                          +--------------------------+           +--------------+
-                                      |  RDP, Telnet                   ^
+                                      |  Telnet                        ^
                                       v                                |
                                  +---------+                           |
                                  |  guacd  |---------------------------+
                                  +---------+
 ```
 
-- **SSH and VNC** are handled in Go inside Casvisor: the browser talks to Casvisor over a WebSocket and Casvisor talks to the server.
-- **RDP and Telnet** go through [guacd](https://guacamole.apache.org/doc/gug/guacamole-architecture.html), the protocol daemon of Apache Guacamole, which Casvisor talks to on port 4822.
+- **SSH, RDP and VNC** are handled in Go inside Casvisor: the browser talks to Casvisor over a WebSocket and Casvisor talks to the server.
+- **Telnet** goes through [guacd](https://guacamole.apache.org/doc/gug/guacamole-architecture.html), the protocol daemon of Apache Guacamole, which Casvisor talks to on port 4822.
 - Users, groups and sign-in live in Casdoor. Assets, permissions, sessions and the operation log live in Casvisor's own MySQL database.
 
 ## What it is for

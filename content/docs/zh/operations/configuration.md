@@ -51,7 +51,7 @@ casdoorApplication = "app-casvisor"
 
 | 配置项 | 默认值 | 含义 |
 | --- | --- | --- |
-| `guacamoleEndpoint` | `127.0.0.1:4822` | guacd监听的地址，只有RDP和Telnet用。见[协议](../assets/protocols.md#guacd)。 |
+| `guacamoleEndpoint` | `127.0.0.1:4822` | guacd监听的地址，只有Telnet用。见[协议](../assets/protocols.md#guacd)。 |
 
 ## Casdoor
 

@@ -11,6 +11,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - SSH和VNC用Go直接处理，VNC密码留在服务器上（v1.108.0）。
 - [权限](../access-control/permissions.md)：用户、用户组、资产、资产标签、动作、来源IP、有效期，用Casbin判断（v1.109.0）。
 - 新的前端，基于React、Vite和shadcn/ui。
+- RDP用Go直接处理（[gordp](https://github.com/casvisor/gordp)），支持NLA，账号在服务器上填入。
 
 ## 接下来：能放心用于生产的堡垒机
 
@@ -19,7 +20,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 3. **原生SSH网关。** 通过Casvisor用自己的`ssh`、`scp`、SFTP客户端或VS Code Remote连接，形如`ssh 用户@资产@casvisor`，和网页终端用同一套权限。记录命令，危险命令可以拦截。
 4. **录像和回放。** 每个会话都录像，SSH存成asciinema格式，图形会话存成Guacamole录像，在浏览器里回放。管理员能实时旁观。记录文件传输。
 5. **部署更简单。** 一个程序，默认用SQLite，一个自带guacd的compose文件，首次启动有设置页，不再默认指向公开演示站。
-6. **用Go实现RDP**，让一个程序覆盖所有协议，不再需要guacd。
+6. **补全RDP，再用Go实现Telnet**：RDP的剪贴板、随窗口调整大小、磁盘映射和更多图像编码，然后是Telnet，让一个程序覆盖所有协议，不再需要guacd。
 
 ## 然后：别的堡垒机收费的功能
 

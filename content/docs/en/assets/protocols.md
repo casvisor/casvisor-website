@@ -1,16 +1,16 @@
 ---
 title: "Protocols"
-description: "Casvisor connects to SSH and VNC natively in Go and to RDP and Telnet through guacd. What each protocol supports today, how it logs in and where clipboard control is enforced."
+description: "Casvisor connects to SSH, RDP and VNC natively in Go and to Telnet through guacd. What each protocol supports today, how it logs in and where clipboard control is enforced."
 ---
 
 | | SSH | VNC | RDP | Telnet |
 | --- | --- | --- | --- | --- |
 | Default port | 22 | 5900 | 3389 | 23 |
-| Handled by | Casvisor (Go) | Casvisor (Go) | guacd | guacd |
-| In the browser | xterm.js terminal | noVNC canvas | Guacamole canvas | Guacamole terminal |
-| Logs in with | Password, keyboard-interactive | VNC password | Username and password (NLA, TLS or RDP security) | Username and password |
-| Copy and Paste actions | Not enforced yet | Enforced by the web client | Enforced by guacd | Enforced by guacd |
-| Needs guacd | No | No | Yes | Yes |
+| Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | guacd |
+| In the browser | xterm.js terminal | noVNC canvas | Canvas | Guacamole terminal |
+| Logs in with | Password, keyboard-interactive | VNC password | Username and password over NLA | Username and password |
+| Copy and Paste actions | Not enforced yet | Enforced by the web client | No clipboard yet | Enforced by guacd |
+| Needs guacd | No | No | No | Yes |
 
 ## SSH
 
@@ -26,24 +26,29 @@ The toolbar over the screen has full screen, a clipboard dialog and key combinat
 
 ## RDP
 
-RDP goes through guacd. Casvisor passes the host, port and account, accepts any server certificate (`ignore-cert`), and lets the server pick NLA, TLS or standard RDP security (`security=any`). The desktop resizes with the browser window.
+Casvisor connects to RDP itself with [gordp](https://github.com/casvisor/gordp), a pure-Go RDP client written for it. Casvisor negotiates TLS and Network Level Authentication (CredSSP with NTLMv2) with the server, logs in with the asset's account, and sends the screen to the browser as image tiles, with mouse and keyboard going back the other way. The password never leaves the server. It is tested against Windows Server 2022 in its default configuration.
 
-Without **Copy** in the permission, Casvisor tells guacd `disable-copy`, so nothing on the remote clipboard reaches the browser; without **Paste**, `disable-paste`. guacd enforces both, so a user cannot get around them from the browser.
+What it does not do yet:
 
-guacd's own drive redirection and file transfer are not exposed in the interface yet; the **Upload** and **Download** actions are reserved for them.
+- **Clipboard.** There is no clipboard channel, so nothing is copied in either direction whatever the permission says.
+- **Resizing.** The desktop takes the size of the browser area when the connection opens and keeps it; reconnect to change it.
+- **Server certificate.** Any certificate is accepted, as most RDP clients do for self-signed server certificates.
+- **Drive redirection, file transfer and RemoteApp.** The **Upload** and **Download** actions are reserved for file transfer.
+- **Newer graphics codecs** (RemoteFX, GFX, H.264). The server falls back to the bitmap codecs gordp decodes.
+- **Legacy RDP security.** Servers that only offer it, without TLS or NLA, cannot be reached.
 
 ## Telnet
 
-Telnet also goes through guacd and is shown as a terminal, with the same `disable-copy` and `disable-paste` handling as RDP. Use it for network gear and old systems that have nothing else; it sends everything in clear text between Casvisor and the device.
+Telnet goes through guacd and is shown as a terminal. Without **Copy** in the permission, Casvisor tells guacd `disable-copy`, so nothing on the remote clipboard reaches the browser; without **Paste**, `disable-paste`. guacd enforces both, so a user cannot get around them from the browser. Use Telnet for network gear and old systems that have nothing else; it sends everything in clear text between Casvisor and the device.
 
 ## guacd
 
-Casvisor talks to guacd at `guacamoleEndpoint` (default `127.0.0.1:4822`). The all-in-one Docker image starts one inside the container. Elsewhere, run the official image:
+Only Telnet needs guacd. Casvisor talks to it at `guacamoleEndpoint` (default `127.0.0.1:4822`). The all-in-one Docker image starts one inside the container. Elsewhere, run the official image:
 
 ```bash
 docker run -d --name guacd -p 4822:4822 guacamole/guacd
 ```
 
-guacd needs to reach the RDP and Telnet hosts itself, since it is the one that connects to them. Do not publish port 4822 beyond Casvisor's host: guacd has no authentication of its own.
+guacd needs to reach the Telnet hosts itself, since it is the one that connects to them. Do not publish port 4822 beyond Casvisor's host: guacd has no authentication of its own.
 
-Replacing guacd for RDP with a Go implementation, so that one binary covers every protocol, is on the [roadmap](../more/roadmap.md).
+Handling Telnet in Go as well, so that one binary covers every protocol, is on the [roadmap](../more/roadmap.md).

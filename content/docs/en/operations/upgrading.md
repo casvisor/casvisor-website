@@ -38,3 +38,4 @@ Casvisor changed a lot in October 2026, when it was narrowed down to a bastion h
 - **v1.107.0** removed the **Machines** and **Providers** pages, the cloud sync behind them, and writing logs to a blockchain. The old `machine` and `provider` tables stay in the database and can be dropped once you no longer need them. An asset now holds its own protocol, host, port and account, so assets made for the old machine-based connection have to be filled in again before they connect.
 - **v1.108.0** connects SSH and VNC natively instead of through guacd.
 - **v1.109.0** added [permissions](../access-control/permissions.md). Users who are not administrators can reach nothing until permissions are created for them.
+- **After v1.109.0**, RDP connects natively as well, so guacd is only needed for Telnet.

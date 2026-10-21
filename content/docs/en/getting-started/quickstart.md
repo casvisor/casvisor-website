@@ -3,7 +3,7 @@ title: "Quick start with Docker"
 description: "Run Casvisor with the all-in-one Docker image, which carries its own MariaDB and guacd, sign in through Casdoor and connect to the first server."
 ---
 
-The quickest way to try Casvisor is the all-in-one image `casbin/casvisor-all-in-one`. Besides Casvisor it carries MariaDB for the database and guacd for RDP and Telnet, so it runs on its own. The only thing it needs from outside is a Casdoor to sign in with.
+The quickest way to try Casvisor is the all-in-one image `casbin/casvisor-all-in-one`. Besides Casvisor it carries MariaDB for the database and guacd for Telnet, so it runs on its own. The only thing it needs from outside is a Casdoor to sign in with.
 
 ## 1. Prepare Casdoor
 
@@ -67,7 +67,7 @@ As an administrator you can reach every asset. To let other people in, create a 
 
 ## Without the all-in-one image
 
-`casbin/casvisor` is the same Casvisor without MariaDB and guacd. Use it when you already have a MySQL server, and run guacd beside it if you need RDP or Telnet:
+`casbin/casvisor` is the same Casvisor without MariaDB and guacd. Use it when you already have a MySQL server, and run guacd beside it if you need Telnet:
 
 ```bash
 docker run -d --name guacd -p 4822:4822 guacamole/guacd

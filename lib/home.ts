@@ -26,7 +26,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: 'Every protocol in a browser tab',
-        body: 'SSH and VNC connect natively in Go; RDP and Telnet go through guacd. Users keep several machines open side by side in the workbench.',
+        body: 'SSH, RDP and VNC connect natively in Go; only Telnet goes through guacd. Users keep several machines open side by side in the workbench.',
         href: 'assets/protocols',
       },
       {
@@ -102,7 +102,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: '所有协议都在浏览器标签页里',
-        body: 'SSH和VNC用Go原生连接，RDP和Telnet经由guacd。在工作台里可以同时打开多台机器，并排切换。',
+        body: 'SSH、RDP和VNC用Go原生连接，只有Telnet经由guacd。在工作台里可以同时打开多台机器，并排切换。',
         href: 'assets/protocols',
       },
       {

@@ -21,7 +21,7 @@ description: "Casvisor和其他开源堡垒机、远程访问网关的比较：J
 - **JumpServer**功能最全，也是国内的事实标准。它的一部分连接器，例如给本地RDP客户端和数据库客户端用的代理，属于企业版。
 - **Teleport**用短期证书做身份，覆盖的基础设施最广。从v16起，社区版二进制只对员工不到100人、年收入低于1000万美元的公司免费。
 - **Warpgate**是一个Rust写的单文件程序，透明代理SSH、HTTPS、Kubernetes、MySQL、PostgreSQL、RDP和VNC，带录像和实时查看，没有收费版。目前在协议这一块它比Casvisor做得多。
-- **Apache Guacamole**是浏览器远程桌面网关，有自己的用户和连接权限。Casvisor用它的守护进程guacd来连RDP和Telnet。
+- **Apache Guacamole**是浏览器远程桌面网关，有自己的用户和连接权限。Casvisor用它的守护进程guacd来连Telnet。
 - **HashiCorp Boundary**在2026年10月归档了开源仓库，之后只有HCP Boundary和Boundary Enterprise。
 
 ## Casvisor不一样的地方

@@ -15,7 +15,7 @@ description: "资产是用户通过Casvisor连接的服务器：它的协议、�
 | 名称 | 组织内唯一的ID，权限通过它引用资产。 |
 | 显示名称、描述 | 用户在工作台里看到的内容。 |
 | 协议 | `SSH`、`RDP`、`VNC`或`Telnet`。选好后会自动填上常用端口。见[协议](./protocols.md)。 |
-| 主机、端口 | Casvisor要连的地址。这个地址由Casvisor服务器（RDP和Telnet是guacd）解析和访问，不是用户的浏览器，所以可以是用户自己访问不到的内网地址。 |
+| 主机、端口 | Casvisor要连的地址。这个地址由Casvisor服务器（Telnet是guacd）解析和访问，不是用户的浏览器，所以可以是用户自己访问不到的内网地址。 |
 | 用户名、密码 | Casvisor登录服务器用的账号，见下文。 |
 | 操作系统 | `Linux`或`Windows`，在列表里显示。 |
 | 标签 | `prod-linux`、`db`这样的标记。[权限](../access-control/permissions.md)可以一次授权带某个标签的所有资产，所以标签就是资产分组。 |
@@ -38,4 +38,4 @@ RDP资产有一个**远程应用**表格，用来只发布一个Windows程序而
 
 ## 网络规划
 
-连接是Casvisor（RDP和Telnet是guacd）发起的，所以它们要能访问资产的主机和端口。常见的做法是把Casvisor放在内网的一台机器上，通过HTTPS对用户开放，资产的防火墙只放行Casvisor的地址。这样用户没有任何直连服务器的途径，每一次连接都要经过权限检查，并出现在[会话列表](../audit/sessions.md)里。
+连接是Casvisor（Telnet是guacd）发起的，所以它们要能访问资产的主机和端口。常见的做法是把Casvisor放在内网的一台机器上，通过HTTPS对用户开放，资产的防火墙只放行Casvisor的地址。这样用户没有任何直连服务器的途径，每一次连接都要经过权限检查，并出现在[会话列表](../audit/sessions.md)里。

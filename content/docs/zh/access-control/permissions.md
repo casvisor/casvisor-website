@@ -32,7 +32,7 @@ description: "一条权限把一组动作授给用户或Casdoor用户组，作�
 | Paste（粘贴） | 用户剪贴板里的文字能传到远端。 |
 | Upload（上传）、Download（下载） | 为文件传输预留，界面里还没有这个功能。 |
 
-复制和粘贴在哪里执行，见[协议](../assets/protocols.md#ssh)：RDP和Telnet由guacd执行，VNC由前端执行，SSH暂未限制。
+复制和粘贴在哪里执行，见[协议](../assets/protocols.md#ssh)：Telnet由guacd执行，VNC由前端执行；SSH暂未限制，RDP暂时没有剪贴板。
 
 ## 多条权限怎么叠加
 
