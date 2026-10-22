@@ -3,7 +3,7 @@ title: "Run from source"
 description: "Build Casvisor's Go backend and React web UI from the repository, with MySQL for the database and guacd for Telnet."
 ---
 
-Running from source is how you develop Casvisor, and for now also how you use it with a Casdoor that signs with its own certificate (see [Connect Casdoor](./casdoor.md#about-the-certificate)).
+Running from source is how you develop Casvisor. To run it without Docker, you can also download a ready-built archive for your system from [GitHub Releases](https://github.com/casvisor/casvisor/releases) and use the configuration below.
 
 ## What you need
 

@@ -5,6 +5,11 @@ description: "Every key of Casvisor's conf/app.conf: the HTTP port, the MySQL co
 
 Casvisor reads `conf/app.conf` from its working directory when it starts. In the Docker images that is `/conf/app.conf`; mount your own file there. Restart Casvisor after changing it.
 
+Two ways to keep your own values apart from the file in the repository:
+
+- **`conf/app.local.conf`**, in the same format. Every key in it overrides `conf/app.conf`. It is not in git, so pulling a new version never conflicts with it; it is the place for `dataSourceName`, `clientSecret` and `credentialKey`.
+- **Environment variables** of the same name as the key, which override both files for most keys, including the Casdoor ones, `driverName`, `dataSourceName`, `credentialKey`, `allowedUsers` and `isDemoMode`. `dbName` and `guacamoleEndpoint` are read from the files only.
+
 ```ini
 appname = casvisor
 httpport = 19000
@@ -70,4 +75,11 @@ The web UI is built with Casbin's demo values and Casvisor replaces them with th
 | --- | --- | --- |
 | `redisEndpoint` | empty | Empty keeps sign-in sessions as files under `tmp/`. Set it to a Redis address, such as `127.0.0.1:6379`, to keep them in Redis instead, so people stay signed in when the container is replaced. |
 | `logPostOnly` | `true` | Log only the calls that change something. See [Operation logs](../audit/operation-logs.md). |
-| `isDemoMode` | `false` | Not used by the backend at present. |
+| `isDemoMode` | `false` | For a public demo: sessions end after 15 minutes, each client IP can have only a few open at a time, and users can only stop their own sessions. |
+
+## Security
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `credentialKey` | empty | Encrypts stored passwords and private keys. See [Encryption](../assets/assets.md#encryption). |
+| `allowedUsers` | empty | Comma-separated `organization/name` of the only users who may sign in. Empty lets everyone in the organization sign in. See [Users and administrators](../access-control/users-and-admins.md#limiting-who-can-sign-in). |

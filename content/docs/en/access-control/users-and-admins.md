@@ -30,6 +30,10 @@ Users who are not administrators:
 
 A user with no permission at all signs in to an empty workbench.
 
+## Limiting who can sign in
+
+By default every user of the application's organization can sign in, and those without permissions get an empty workbench. To let only certain users in at all, set `allowedUsers` to a comma-separated list of `organization/name`, such as `my-org/alice,my-org/bob`. Anyone else is turned away at sign-in.
+
 ## Groups
 
 Casdoor groups carry over. The token Casdoor issues at sign-in lists the user's groups, and a permission that names a group applies to every member.

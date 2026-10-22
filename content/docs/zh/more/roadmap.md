@@ -11,16 +11,17 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - SSH和VNC用Go直接处理，VNC密码留在服务器上（v1.108.0）。
 - [权限](../access-control/permissions.md)：用户、用户组、资产、资产标签、动作、来源IP、有效期，用Casbin判断（v1.109.0）。
 - 新的前端，基于React、Vite和shadcn/ui。
-- RDP用Go直接处理（[gordp](https://github.com/casvisor/gordp)），支持NLA，账号在服务器上填入。
+- RDP用Go直接处理（[gordp](https://github.com/casvisor/gordp)），支持NLA，账号在服务器上填入（v1.110.0）。
+- 启动时自己去Casdoor取证书，能配任意Casdoor（v1.110.0）。
+- 密码和SSH私钥加密保存，SSH主机密钥和RDP证书在第一次连接时固定（v1.110.0）。
 
 ## 接下来：能放心用于生产的堡垒机
 
-1. **从配置读取Casdoor证书**，让Docker镜像能配任意Casdoor使用，而不是只认旧的内置密钥。见[对接Casdoor](../getting-started/casdoor.md#关于证书)。
-2. **凭据保险箱。** 密码和SSH私钥加密保存，一个资产可以有多个账号，权限里写明用户能用哪个账号。用户始终看不到它们。
-3. **原生SSH网关。** 通过Casvisor用自己的`ssh`、`scp`、SFTP客户端或VS Code Remote连接，形如`ssh 用户@资产@casvisor`，和网页终端用同一套权限。记录命令，危险命令可以拦截。
-4. **录像和回放。** 每个会话都录像，SSH存成asciinema格式，图形会话存成Guacamole录像，在浏览器里回放。管理员能实时旁观。记录文件传输。
-5. **部署更简单。** 一个程序，默认用SQLite，一个自带guacd的compose文件，首次启动有设置页，不再默认指向公开演示站。
-6. **补全RDP，再用Go实现Telnet**：RDP的剪贴板、随窗口调整大小、磁盘映射和更多图像编码，然后是Telnet，让一个程序覆盖所有协议，不再需要guacd。
+1. **一个资产多个账号**，权限里写明用户能用哪个账号。
+2. **原生SSH网关。** 通过Casvisor用自己的`ssh`、`scp`、SFTP客户端或VS Code Remote连接，形如`ssh 用户@资产@casvisor`，和网页终端用同一套权限。记录命令，危险命令可以拦截。
+3. **录像和回放。** 每个会话都录像，SSH存成asciinema格式，图形会话存成Guacamole录像，在浏览器里回放。管理员能实时旁观。记录文件传输。
+4. **部署更简单。** 一个程序，默认用SQLite，一个自带guacd的compose文件，首次启动有设置页，不再默认指向公开演示站。
+5. **补全RDP，再用Go实现Telnet**：RDP的剪贴板、随窗口调整大小、磁盘映射和更多图像编码，然后是Telnet，让一个程序覆盖所有协议，不再需要guacd。
 
 ## 然后：别的堡垒机收费的功能
 

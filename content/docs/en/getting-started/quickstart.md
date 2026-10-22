@@ -7,9 +7,7 @@ The quickest way to try Casvisor is the all-in-one image `casbin/casvisor-all-in
 
 ## 1. Prepare Casdoor
 
-Casvisor has no login of its own.
-
-> **Casdoor v4.10 and later.** Casvisor currently checks Casdoor's tokens with a key compiled into it, and a Casdoor installed from v4.10 on signs with a key of its own. Until the certificate can be set in configuration, using such a Casdoor means building Casvisor from source with your certificate, as [Connect Casdoor](./casdoor.md#about-the-certificate) explains; the Docker images will not sign you in.
+Casvisor has no login of its own. Use image v1.110.0 or later: earlier ones cannot sign in with a Casdoor installed from v4.10 on (see [About the certificate](./casdoor.md#about-the-certificate)).
 
 If you already run Casdoor, create an application for Casvisor as described in [Connect Casdoor](./casdoor.md) and come back with its client ID and secret.
 

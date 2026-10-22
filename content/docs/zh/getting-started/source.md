@@ -3,7 +3,7 @@ title: "从源码运行"
 description: "从仓库编译Casvisor的Go后端和React前端，用MySQL做数据库，用guacd连接Telnet。"
 ---
 
-开发Casvisor要从源码运行；目前要配一个用自己证书签名的Casdoor，也得从源码编译（见[对接Casdoor](./casdoor.md#关于证书)）。
+开发Casvisor要从源码运行。只是不想用Docker的话，也可以从[GitHub Releases](https://github.com/casvisor/casvisor/releases)下载对应系统的压缩包，再照下面的配置改。
 
 ## 需要准备
 

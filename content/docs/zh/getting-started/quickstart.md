@@ -7,9 +7,7 @@ description: "用自带MariaDB和guacd的all-in-one Docker镜像运行Casvisor�
 
 ## 1. 准备Casdoor
 
-Casvisor没有自己的登录。
-
-> **Casdoor v4.10及以后的版本。** Casvisor目前用编译在程序里的公钥验证Casdoor的令牌，而从v4.10起新装的Casdoor会生成自己的密钥。在证书能写进配置之前，用这样的Casdoor就要带上你的证书从源码编译Casvisor，做法见[对接Casdoor](./casdoor.md#关于证书)；Docker镜像登录不了。
+Casvisor没有自己的登录。请用v1.110.0及以后的镜像：更早的版本配v4.10及以后新装的Casdoor时登录不了（见[关于证书](./casdoor.md#关于证书)）。
 
 如果你已经有Casdoor，照[对接Casdoor](./casdoor.md)为Casvisor建一个应用，拿到它的Client ID和Client secret再回来。
 

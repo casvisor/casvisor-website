@@ -11,7 +11,7 @@ Casvisor没有用户表，也没有登录表单。用户通过[Casdoor](https://
 2. **用户组**（可选）。建`ops`、`dba`这样的用户组并把用户加进去。Casvisor的[权限](../access-control/permissions.md)可以把资产授权给整个用户组。
 3. **应用。** 在这个组织里建一个应用，例如`app-casvisor`：
    - **Redirect URLs**：加上`https://casvisor.example.com/callback`，用户访问Casvisor的地址是什么就写什么。本地测试时是`http://<你的IP>:19000/callback`。
-   - **Cert**：记下它用的是哪张证书，见下面的[关于证书](#关于证书)。
+   - **Cert**：用哪张证书都可以，Casvisor会自己去取，见下面的[关于证书](#关于证书)。
    - 除非谁打开页面都可以注册，否则关掉**Enable signup**。
 4. 复制应用的**Client ID**和**Client secret**。
 
@@ -25,16 +25,15 @@ casdoorOrganization = "my-org"
 casdoorApplication = "app-casvisor"
 ```
 
-`casdoorEndpoint`是Casdoor的地址，末尾不带斜杠。这个地址既要用户的浏览器能打开（登录时会跳过去），也要Casvisor服务器能访问（它要在那里用登录码换令牌）。改完重启Casvisor。前端读的也是这四项，不需要重新编译前端。
+`casdoorEndpoint`是Casdoor的地址，末尾不带斜杠。这个地址既要用户的浏览器能打开（登录时会跳过去），也要Casvisor服务器能访问（它要在那里用登录码换令牌）。改完重启Casvisor。前端读的也是这四项，不需要重新编译前端。这几项也都可以用同名环境变量传入，例如`docker run -e casdoorEndpoint=https://door.example.com ...`，环境变量优先于文件。
 
 ## 关于证书
 
-Casvisor用编译在程序里的公钥`controllers/token_jwt_key.pem`验证Casdoor令牌的签名。这个文件是Casdoor在v4.10以前自带的`cert-built-in`证书的公钥，那时所有Casdoor用的都是同一对密钥。
+Casvisor需要应用签发令牌所用证书的公钥。从v1.110.0起，它在启动时自己去Casdoor取：先查应用，看应用用的是哪张证书，再下载这张证书；这一步什么都没拿到时，改从Casdoor的`/.well-known/jwks`里取。不需要任何配置，在Casdoor里给应用换了证书，重启Casvisor即可。
 
-- **v4.10以前的Casdoor**，应用用的是`cert-built-in`：直接可用。
-- **v4.10及以后的Casdoor**，或者应用用的是自己的证书：在Casdoor的**证书**里打开这张证书，把它的**Certificate**（`-----BEGIN CERTIFICATE-----`那一段）复制到`controllers/token_jwt_key.pem`，再[从源码编译Casvisor](./source.md)。从v4.10起，每个Casdoor第一次启动时都会生成自己的`cert-built-in`，所以新装的Casdoor都属于这种情况。公钥对不上时，登录会报签名错误。
+如果Casvisor启动时连不上Casdoor，它会在后台每10秒重试一次。在连上之前，只有用Casdoor v4.10以前那把公开的`cert-built-in`密钥签名的令牌能通过，所以这段时间里登录通常会报签名错误。如果一直不恢复，在Casvisor的日志里找`InitAuthConfig`。
 
-把证书改成从配置读取，让Docker镜像能配任意Casdoor使用，是[路线图](../more/roadmap.md)上的第一项。
+v1.110.0以前的版本只认那把旧密钥，配v4.10及以后新装的Casdoor时谁都登录不了，请升级。
 
 ## 谁是管理员
 

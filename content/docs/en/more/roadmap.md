@@ -11,16 +11,17 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - SSH and VNC handled natively in Go, with the VNC password kept on the server (v1.108.0).
 - [Permissions](../access-control/permissions.md) on users, groups, assets, asset tags, actions, client IPs and time windows, enforced with Casbin (v1.109.0).
 - A new web UI on React, Vite and shadcn/ui.
-- RDP handled natively in Go with [gordp](https://github.com/casvisor/gordp), including NLA, with the account filled in on the server.
+- RDP handled natively in Go with [gordp](https://github.com/casvisor/gordp), including NLA, with the account filled in on the server (v1.110.0).
+- The Casdoor certificate fetched at start, so any Casdoor works (v1.110.0).
+- Passwords and SSH private keys stored encrypted, and SSH host keys and RDP certificates pinned on first use (v1.110.0).
 
 ## Next: a bastion host that holds up in production
 
-1. **The Casdoor certificate from configuration**, so the Docker images work with any Casdoor instead of only with the old built-in key. See [Connect Casdoor](../getting-started/casdoor.md#about-the-certificate).
-2. **Credential vault.** Passwords and SSH private keys stored encrypted, several accounts per asset, and a permission naming which account a user may use. Users never see any of them.
-3. **Native SSH gateway.** Connect through Casvisor with your own `ssh`, `scp`, SFTP client or VS Code Remote, as `ssh user@asset@casvisor`, under the same permissions as the web terminal. Commands are logged, and dangerous ones can be blocked.
-4. **Recording and playback.** Every session recorded, SSH as asciinema casts and graphical sessions as Guacamole recordings, with playback in the browser. Administrators can watch a session live. File transfers are logged.
-5. **Simpler deployment.** One binary with SQLite by default, a compose file that brings guacd, a setup page on first start, and no default pointing at the public demo.
-6. **The rest of RDP, and Telnet in Go**: clipboard, resizing with the window, drive redirection and more graphics codecs for RDP, then Telnet, so that one binary covers every protocol without guacd.
+1. **Several accounts per asset**, with a permission naming which account a user may use.
+2. **Native SSH gateway.** Connect through Casvisor with your own `ssh`, `scp`, SFTP client or VS Code Remote, as `ssh user@asset@casvisor`, under the same permissions as the web terminal. Commands are logged, and dangerous ones can be blocked.
+3. **Recording and playback.** Every session recorded, SSH as asciinema casts and graphical sessions as Guacamole recordings, with playback in the browser. Administrators can watch a session live. File transfers are logged.
+4. **Simpler deployment.** One binary with SQLite by default, a compose file that brings guacd, a setup page on first start, and no default pointing at the public demo.
+5. **The rest of RDP, and Telnet in Go**: clipboard, resizing with the window, drive redirection and more graphics codecs for RDP, then Telnet, so that one binary covers every protocol without guacd.
 
 ## Then: what other bastion hosts charge for
 

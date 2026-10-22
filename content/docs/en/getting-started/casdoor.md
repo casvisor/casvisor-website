@@ -11,7 +11,7 @@ Casvisor has no user table and no login form. People sign in through [Casdoor](h
 2. **Groups** (optional). Create groups such as `ops` or `dba` and put users in them. Casvisor's [permissions](../access-control/permissions.md) can grant an asset to a whole group.
 3. **Application.** Create an application in that organization, for example `app-casvisor`:
    - **Redirect URLs**: add `https://casvisor.example.com/callback`, using the address people open Casvisor at. For a local test that is `http://<your-ip>:19000/callback`.
-   - **Cert**: note which certificate it uses. See [About the certificate](#about-the-certificate).
+   - **Cert**: any certificate works; Casvisor fetches it. See [About the certificate](#about-the-certificate).
    - Turn off **Enable signup** unless anyone who finds the page should get an account.
 4. Copy the application's **Client ID** and **Client secret**.
 
@@ -25,16 +25,15 @@ casdoorOrganization = "my-org"
 casdoorApplication = "app-casvisor"
 ```
 
-`casdoorEndpoint` is Casdoor's address with no trailing slash. It has to work both from people's browsers, which are sent there to sign in, and from the Casvisor server, which exchanges the sign-in code for a token there. Restart Casvisor after changing it. The web UI reads the same four values, so nothing needs to be rebuilt.
+`casdoorEndpoint` is Casdoor's address with no trailing slash. It has to work both from people's browsers, which are sent there to sign in, and from the Casvisor server, which exchanges the sign-in code for a token there. Restart Casvisor after changing it. The web UI reads the same four values, so nothing needs to be rebuilt. Each of these keys can also be given as an environment variable of the same name, for example `docker run -e casdoorEndpoint=https://door.example.com ...`, which takes precedence over the file.
 
 ## About the certificate
 
-Casvisor checks the signature of Casdoor's tokens with a public key compiled into it, `controllers/token_jwt_key.pem`. That file is the public key of the `cert-built-in` certificate that Casdoor shipped with before v4.10, when every Casdoor used the same key pair.
+Casvisor needs the public key of the certificate the application signs its tokens with. From v1.110.0 it fetches it from Casdoor at start: it asks for the application, reads which certificate the application uses, and downloads that certificate, falling back to Casdoor's `/.well-known/jwks` when the first way returns nothing. Nothing has to be configured, and changing the application's certificate in Casdoor only needs a restart of Casvisor.
 
-- **Casdoor before v4.10**, with the application on `cert-built-in`: works as it is.
-- **Casdoor v4.10 or later**, or an application on a certificate of its own: open the certificate under **Certs** in Casdoor, copy its **Certificate** (the `-----BEGIN CERTIFICATE-----` block) into `controllers/token_jwt_key.pem`, and [build Casvisor from source](./source.md). Since v4.10 each Casdoor generates its own `cert-built-in` on first start, so this applies to every new installation. Sign-in fails with a signature error until the key matches.
+If Casdoor cannot be reached when Casvisor starts, Casvisor keeps trying every 10 seconds in the background. Until it succeeds, sign-in only works for tokens signed with the old public `cert-built-in` key that Casdoor shipped with before v4.10, so sign-ins in that window usually fail with a signature error. Check Casvisor's log for `InitAuthConfig` if they do not recover.
 
-Taking the certificate from configuration, so the Docker images work with any Casdoor, is the first item on the [roadmap](../more/roadmap.md).
+Versions before v1.110.0 only knew that old key, so with a Casdoor installed from v4.10 on they cannot sign anyone in. Upgrade.
 
 ## Who becomes an administrator
 

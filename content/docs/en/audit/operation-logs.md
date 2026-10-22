@@ -17,7 +17,7 @@ The operation log, under **Records**, answers questions such as who added this a
 | Object | The request body: the asset, permission or session as sent |
 | Response | Whether it succeeded, and the error if not |
 
-Passwords sent in an asset are part of the request body, so the log can contain them. Restrict who can read the database accordingly.
+Passwords and private keys in the request body are replaced by `***` before the entry is stored.
 
 ## What is logged
 

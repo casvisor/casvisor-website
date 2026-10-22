@@ -14,7 +14,7 @@ description: "关于Casvisor的常见问题：什么是堡垒机，是否必须�
 ## 登录时报错
 
 - **Redirect URI不被允许**：把`https://<你的Casvisor>/callback`加进Casdoor应用的Redirect URLs。
-- **从Casdoor跳回来后报签名或令牌错误**：应用的证书不是Casvisor用来验签的那张。从v4.10起新装的Casdoor都是这种情况，见[关于证书](../getting-started/casdoor.md#关于证书)。
+- **从Casdoor跳回来后报签名或令牌错误**：Casvisor没拿到应用的证书。请用v1.110.0及以后的版本，并在日志里找`InitAuthConfig`：它在启动时去Casdoor取证书，见[关于证书](../getting-started/casdoor.md#关于证书)。
 - **Casvisor连不上Casdoor**：`casdoorEndpoint`要在Casvisor服务器上和浏览器里都能访问。在Docker里，`localhost`指的是容器自己。
 
 ## 用户能登录，但看不到资产
@@ -31,7 +31,7 @@ Telnet经由guacd。检查guacd在`guacamoleEndpoint`上运行着，并且guacd�
 
 ## 资产的密码存在哪里？
 
-按原样存在Casvisor的MySQL数据库里；接口只返回打码后的值，浏览器拿不到。加密存储在[路线图](./roadmap.md)上。在那之前，请保护好数据库和备份，或者不填账号，让每个用户自己输入。
+存在Casvisor的MySQL数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。
 
 ## Casvisor会录像吗？
 

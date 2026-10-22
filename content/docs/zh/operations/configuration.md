@@ -5,6 +5,11 @@ description: "Casvisor的conf/app.conf里的每一项：HTTP端口、MySQL连接
 
 Casvisor启动时从工作目录读取`conf/app.conf`。Docker镜像里是`/conf/app.conf`，把你自己的文件挂载到这里。改完要重启Casvisor。
 
+有两种办法把你自己的配置和仓库里的文件分开：
+
+- **`conf/app.local.conf`**，格式相同，其中每一项都会覆盖`conf/app.conf`。它不进git，所以拉新版本时不会冲突，`dataSourceName`、`clientSecret`和`credentialKey`就放在这里。
+- **同名环境变量**，对大多数配置项会覆盖两个文件，包括Casdoor的几项、`driverName`、`dataSourceName`、`credentialKey`、`allowedUsers`和`isDemoMode`。`dbName`和`guacamoleEndpoint`只从文件读取。
+
 ```ini
 appname = casvisor
 httpport = 19000
@@ -70,4 +75,11 @@ casdoorApplication = "app-casvisor"
 | --- | --- | --- |
 | `redisEndpoint` | 空 | 为空时，登录会话以文件形式存在`tmp/`下。填Redis地址（例如`127.0.0.1:6379`）就改存Redis，换容器后用户不用重新登录。 |
 | `logPostOnly` | `true` | 只记改动类的调用，见[操作日志](../audit/operation-logs.md)。 |
-| `isDemoMode` | `false` | 目前后端没有用到。 |
+| `isDemoMode` | `false` | 公开演示用：会话15分钟后自动结束，每个客户端IP同时只能开少量会话，用户只能停止自己的会话。 |
+
+## 安全
+
+| 配置项 | 默认值 | 含义 |
+| --- | --- | --- |
+| `credentialKey` | 空 | 用来加密保存的密码和私钥，见[加密](../assets/assets.md#加密)。 |
+| `allowedUsers` | 空 | 只允许这些用户登录，逗号分隔的`组织/用户名`。为空时组织里所有人都能登录。见[用户和管理员](../access-control/users-and-admins.md#限制谁能登录)。 |

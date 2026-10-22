@@ -17,6 +17,8 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Protocol | `SSH`, `RDP`, `VNC` or `Telnet`. Choosing one fills in its usual port. See [Protocols](./protocols.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server (or from guacd, for Telnet), not from the user's browser, so it can be a private address the users cannot reach themselves. |
 | Username, Password | The account Casvisor logs in with. See below. |
+| Private key | For SSH: a private key to log in with, instead of or besides the password. See below. |
+| Fingerprint | The server's SSH host key or RDP certificate, recorded on the first connection. See [Protocols](./protocols.md). |
 | OS | `Linux` or `Windows`, shown in the list. |
 | Tag | A label such as `prod-linux` or `db`. A [permission](../access-control/permissions.md) can grant every asset with a tag at once, so the tag works as an asset group. |
 
@@ -30,7 +32,13 @@ What you put in **Username** and **Password** decides how people log in to the s
 
 What a user types is sent with that one connection and not stored. The workbench hands it to the connection tab through the browser's local storage for at most a minute and then removes it, so it does not appear in the URL or the history.
 
-Stored passwords are kept in the database as they are. Encrypting them, several accounts per asset and SSH private keys are on the [roadmap](../more/roadmap.md); until then, protect the database and its backups as you would the passwords themselves.
+For SSH you can store a **Private key** (OpenSSH or PEM format) instead of, or as well as, a password. Casvisor tries the key first. If the key is protected by a passphrase, put the passphrase in **Password**. Like the password, the key is returned as `***` and never reaches the browser.
+
+### Encryption
+
+Set `credentialKey` in the configuration, to a long random string, and Casvisor stores passwords and private keys encrypted with AES-256-GCM, using a key derived from it. On start it also encrypts any that were stored before the key was set. Keep `credentialKey` out of git, for example in `conf/app.local.conf` (see [Configuration](../operations/configuration.md)), and back it up with the database: without it the stored credentials cannot be read, and connections to those assets fail with *credentialKey may be wrong*.
+
+Without `credentialKey`, credentials are stored as they are, so protect the database and its backups as you would the passwords themselves. Several accounts per asset, with permissions naming which one a user may use, is on the [roadmap](../more/roadmap.md).
 
 ## RemoteApp
 

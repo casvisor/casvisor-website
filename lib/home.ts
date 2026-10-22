@@ -32,7 +32,7 @@ const text = {
       {
         icon: KeyRound,
         title: 'Passwords stay on the server',
-        body: 'Casvisor fills in the account when it opens the connection, and the API only ever returns passwords masked. Or leave the account empty and let each user type their own.',
+        body: 'Casvisor fills in the password or SSH key when it opens the connection, stores them encrypted, and the API only ever returns them masked. Or leave the account empty and let each user type their own.',
         href: 'assets/assets',
       },
       {
@@ -56,7 +56,7 @@ const text = {
       {
         icon: Package,
         title: 'One Go binary, or one container',
-        body: 'Pure Go without cgo, so it builds for Linux, Windows and macOS. The all-in-one Docker image runs with nothing else beside it.',
+        body: 'Pure Go without cgo, released for Linux, Windows and macOS on amd64 and arm64. The all-in-one Docker image runs with nothing else beside it.',
         href: 'getting-started/quickstart',
       },
     ],
@@ -73,7 +73,7 @@ const text = {
       },
       {
         title: 'Built in the open',
-        body: 'Connections from native ssh and scp clients, an encrypted credential vault and session playback are next.',
+        body: 'Connections from native ssh and scp clients, session recording and playback, and database access are next.',
       },
     ],
     roadmap: 'See the roadmap',
@@ -108,7 +108,7 @@ const text = {
       {
         icon: KeyRound,
         title: '密码留在服务器上',
-        body: 'Casvisor在建立连接时替用户填入账号，接口返回的密码一律打码。也可以不填账号，让每个用户连接时自己输入。',
+        body: 'Casvisor在建立连接时替用户填入密码或SSH私钥，加密保存，接口返回的一律打码。也可以不填账号，让每个用户连接时自己输入。',
         href: 'assets/assets',
       },
       {
@@ -132,7 +132,7 @@ const text = {
       {
         icon: Package,
         title: '一个Go程序，或者一个容器',
-        body: '纯Go实现、不依赖cgo，可以编译到Linux、Windows和macOS。all-in-one Docker镜像不需要再装别的东西。',
+        body: '纯Go实现、不依赖cgo，提供Linux、Windows和macOS的amd64、arm64版本。all-in-one Docker镜像不需要再装别的东西。',
         href: 'getting-started/quickstart',
       },
     ],
@@ -149,7 +149,7 @@ const text = {
       },
       {
         title: '公开开发',
-        body: '接下来要做：用本地ssh、scp客户端直连，加密的凭据保险箱，会话录像回放。',
+        body: '接下来要做：用本地ssh、scp客户端直连，会话录像和回放，数据库访问。',
       },
     ],
     roadmap: '查看路线图',

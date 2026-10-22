@@ -8,7 +8,7 @@ description: "Casvisor connects to SSH, RDP and VNC natively in Go and to Telnet
 | Default port | 22 | 5900 | 3389 | 23 |
 | Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | guacd |
 | In the browser | xterm.js terminal | noVNC canvas | Canvas | Guacamole terminal |
-| Logs in with | Password, keyboard-interactive | VNC password | Username and password over NLA | Username and password |
+| Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password |
 | Copy and Paste actions | Not enforced yet | Enforced by the web client | No clipboard yet | Enforced by guacd |
 | Needs guacd | No | No | No | Yes |
 
@@ -16,7 +16,9 @@ description: "Casvisor connects to SSH, RDP and VNC natively in Go and to Telnet
 
 Casvisor connects with Go's `golang.org/x/crypto/ssh`, asks for a `xterm-256color` terminal, and relays it to xterm.js in the browser over a WebSocket. The terminal follows the size of the browser window.
 
-Not yet: logging in with a private key, checking the server's host key (any host key is accepted, as guacd does by default), and connecting with your own `ssh` client, `scp` or SFTP through Casvisor. All three are on the [roadmap](../more/roadmap.md). The terminal uses the browser's own copy and paste, so the **Copy** and **Paste** actions of a permission do not restrict it yet.
+Casvisor logs in with the asset's private key if it has one, then with the password. The server's host key is pinned: on the first connection Casvisor records its SHA-256 fingerprint in the asset's **Fingerprint**, and from then on refuses to connect if the server presents a different key, telling the user that the host key has changed. If the change is expected, because the server was reinstalled for example, clear **Fingerprint** and connect again.
+
+Not yet: connecting with your own `ssh` client, `scp` or SFTP through Casvisor, which is on the [roadmap](../more/roadmap.md). The terminal uses the browser's own copy and paste, so the **Copy** and **Paste** actions of a permission do not restrict it yet.
 
 ## VNC
 
@@ -28,11 +30,12 @@ The toolbar over the screen has full screen, a clipboard dialog and key combinat
 
 Casvisor connects to RDP itself with [gordp](https://github.com/casvisor/gordp), a pure-Go RDP client written for it. Casvisor negotiates TLS and Network Level Authentication (CredSSP with NTLMv2) with the server, logs in with the asset's account, and sends the screen to the browser as image tiles, with mouse and keyboard going back the other way. The password never leaves the server. It is tested against Windows Server 2022 in its default configuration.
 
+As with SSH, the server's TLS certificate is pinned: its fingerprint is recorded in **Fingerprint** on the first connection, and a different certificate later is refused. Windows renews its self-signed RDP certificate from time to time; when that happens, clear **Fingerprint** and connect again.
+
 What it does not do yet:
 
 - **Clipboard.** There is no clipboard channel, so nothing is copied in either direction whatever the permission says.
 - **Resizing.** The desktop takes the size of the browser area when the connection opens and keeps it; reconnect to change it.
-- **Server certificate.** Any certificate is accepted, as most RDP clients do for self-signed server certificates.
 - **Drive redirection, file transfer and RemoteApp.** The **Upload** and **Download** actions are reserved for file transfer.
 - **Newer graphics codecs** (RemoteFX, GFX, H.264). The server falls back to the bitmap codecs gordp decodes.
 - **Legacy RDP security.** Servers that only offer it, without TLS or NLA, cannot be reached.

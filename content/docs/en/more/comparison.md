@@ -32,4 +32,4 @@ There are several good open-source projects in this space. This page is meant to
 
 ## Where Casvisor is behind
 
-Native SSH clients, session recording and playback, command logging, encrypted credential storage, and database and Kubernetes access. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have them.
+Native SSH clients, session recording and playback, command logging, and database and Kubernetes access. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have them.

@@ -14,7 +14,7 @@ Yes. Casvisor signs people in only through Casdoor and takes users and groups fr
 ## Sign-in comes back with an error
 
 - **Redirect URI not allowed**: add `https://<your Casvisor>/callback` to the Casdoor application's Redirect URLs.
-- **A signature or token error after Casdoor sends you back**: the application's certificate is not the one Casvisor checks against. This is the case for every Casdoor installed from v4.10 on; see [About the certificate](../getting-started/casdoor.md#about-the-certificate).
+- **A signature or token error after Casdoor sends you back**: Casvisor does not have the application's certificate. Use v1.110.0 or later, and check its log for `InitAuthConfig`: it fetches the certificate from Casdoor at start; see [About the certificate](../getting-started/casdoor.md#about-the-certificate).
 - **Casvisor cannot reach Casdoor**: `casdoorEndpoint` has to work from the Casvisor server as well as from the browser. In Docker, `localhost` is the container itself.
 
 ## A user signs in but sees no assets
@@ -31,7 +31,7 @@ Telnet goes through guacd. Check that guacd is running at `guacamoleEndpoint` an
 
 ## Where are the passwords of assets kept?
 
-In Casvisor's MySQL database, as they are; the API only returns them masked, and the browser never receives them. Encrypted storage is on the [roadmap](./roadmap.md). Until then, protect the database and its backups, or leave the account empty so that each user types their own.
+In Casvisor's MySQL database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own.
 
 ## Does Casvisor record sessions?
 
