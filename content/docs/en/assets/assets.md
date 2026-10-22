@@ -5,7 +5,7 @@ description: "An asset is a server people connect to through Casvisor: its proto
 
 An **asset** is one server, desktop or device that people reach through Casvisor, over one protocol. A Windows server that you want both RDP and SSH into is two assets.
 
-Administrators manage assets under **Assets**. Users who are not administrators never see this page; they get the assets a [permission](../access-control/permissions.md) gives them in the [workbench](./connecting.md).
+Administrators manage assets under **Assets**. Users who are not administrators see on that page, and in the [workbench](./connecting.md), only the assets a [permission](../access-control/permissions.md) gives them, and cannot change them.
 
 ## Fields
 
@@ -16,7 +16,7 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Display name, Description | What users see in the workbench. |
 | Protocol | `SSH`, `RDP`, `VNC` or `Telnet`. Choosing one fills in its usual port. See [Protocols](./protocols.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server (or from guacd, for Telnet), not from the user's browser, so it can be a private address the users cannot reach themselves. |
-| Username, Password | The account Casvisor logs in with. See below. |
+| Username, Password | The account Casvisor logs in with. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |
 | Private key | For SSH: a private key to log in with, instead of or besides the password. See below. |
 | Fingerprint | The server's SSH host key or RDP certificate, recorded on the first connection. See [Protocols](./protocols.md). |
 | OS | `Linux` or `Windows`, shown in the list. |

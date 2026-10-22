@@ -50,6 +50,8 @@ docker run -d --name casvisor -p 19000:19000 \
 
 第二个卷用来保存数据库，换容器时数据不会丢。第一次启动时Casvisor会建好`casvisor`库和表。
 
+用本地`ssh`、`scp`和VS Code连接的[SSH网关](../assets/ssh-gateway.md)在master分支上。v1.110.0之后发布的镜像会在2222端口上运行它，要用的话在上面的命令里加上`-p 2222:2222`。
+
 ## 4. 登录
 
 打开`http://<你的IP>:19000`，页面会跳到Casdoor再跳回来。用应用所在组织的管理员账号（Casdoor里该用户打开了**Is admin**）登录才能看到管理页面；其他用户只有工作台。

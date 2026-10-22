@@ -1,9 +1,9 @@
 ---
 title: "Casvisor documentation"
-description: "The manual of Casvisor, the open-source bastion host for SSH, RDP, VNC and Telnet: installation, Casdoor sign-in, assets, permissions, sessions, operation logs and operations."
+description: "The manual of Casvisor, the open-source bastion host for SSH, RDP, VNC and Telnet: installation, Casdoor sign-in, assets, the SSH gateway, file transfer, permissions, sessions, command rules, operation logs and operations."
 ---
 
-Casvisor is an open-source bastion host (jump server). People sign in through Casdoor, see the servers they are allowed to reach, and connect to them over SSH, RDP, VNC or Telnet from a browser tab, while Casvisor checks every connection against your permissions and keeps the record.
+Casvisor is an open-source bastion host (jump server). People sign in through Casdoor, see the servers they are allowed to reach, and connect to them over SSH, RDP, VNC or Telnet from a browser tab, or with their own SSH client, while Casvisor checks every connection against your permissions and keeps the record.
 
 ## Getting started
 
@@ -16,11 +16,14 @@ Casvisor is an open-source bastion host (jump server). People sign in through Ca
 
 - [Assets](./assets/assets.md): the servers people connect to, and the accounts kept for them
 - [Connecting](./assets/connecting.md): the workbench, connection tabs and typing your own account
+- [SSH gateway](./assets/ssh-gateway.md): `ssh`, `scp`, `sftp`, `rsync` and VS Code Remote through Casvisor
+- [File transfer](./assets/file-transfer.md): the file panel of the web terminal, and what Upload and Download allow
 - [Protocols](./assets/protocols.md): what SSH, RDP, VNC and Telnet each support
 - [Users and administrators](./access-control/users-and-admins.md): who manages Casvisor and who only connects
 - [Permissions](./access-control/permissions.md): who may reach which asset, doing what, from where and when
-- [Sessions](./audit/sessions.md): live and past connections, and cutting one off
-- [Operation logs](./audit/operation-logs.md): every change made through the API
+- [Sessions](./audit/sessions.md): live and past connections, watching one, and cutting one off
+- [Commands and command rules](./audit/commands.md): the commands run over SSH, and blocking the dangerous ones
+- [Operation logs](./audit/operation-logs.md): every change made through the API, and every file moved
 
 ## Running it
 

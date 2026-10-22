@@ -5,7 +5,7 @@ description: "资产是用户通过Casvisor连接的服务器：它的协议、�
 
 **资产**是用户通过Casvisor访问的一台服务器、桌面或设备，对应一种协议。一台Windows服务器既要RDP又要SSH，就是两个资产。
 
-管理员在**资产**页面管理资产。不是管理员的用户看不到这个页面，他们在[工作台](./connecting.md)里看到的是[权限](../access-control/permissions.md)给他们的资产。
+管理员在**资产**页面管理资产。不是管理员的用户在这个页面和[工作台](./connecting.md)里只能看到[权限](../access-control/permissions.md)给他们的资产，也不能修改。
 
 ## 字段
 
@@ -16,7 +16,7 @@ description: "资产是用户通过Casvisor连接的服务器：它的协议、�
 | 显示名称、描述 | 用户在工作台里看到的内容。 |
 | 协议 | `SSH`、`RDP`、`VNC`或`Telnet`。选好后会自动填上常用端口。见[协议](./protocols.md)。 |
 | 主机、端口 | Casvisor要连的地址。这个地址由Casvisor服务器（Telnet是guacd）解析和访问，不是用户的浏览器，所以可以是用户自己访问不到的内网地址。 |
-| 用户名、密码 | Casvisor登录服务器用的账号，见下文。 |
+| 用户名、密码 | Casvisor登录服务器用的账号，见下文。[SSH网关](./ssh-gateway.md)至少需要用户名。 |
 | 私钥 | SSH用：登录用的私钥，可以代替密码，也可以和密码一起用。见下文。 |
 | 指纹 | 服务器的SSH主机密钥或RDP证书，第一次连接时记下。见[协议](./protocols.md)。 |
 | 操作系统 | `Linux`或`Windows`，在列表里显示。 |

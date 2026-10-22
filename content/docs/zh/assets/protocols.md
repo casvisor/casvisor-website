@@ -10,6 +10,10 @@ description: "Casvisor用Go直接连接SSH、RDP和VNC，经由guacd连接Telnet
 | 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | Guacamole终端 |
 | 登录方式 | 私钥、密码、keyboard-interactive | VNC密码 | 用户名和密码，经NLA认证 | 用户名和密码 |
 | 复制、粘贴动作 | 暂未限制 | 由前端限制 | 暂时没有剪贴板 | 由guacd限制 |
+| 文件传输 | 文件面板、SFTP、scp、rsync | 无 | 无 | 无 |
+| 命令记录和规则 | 有 | 无 | 无 | 无 |
+| 实时旁观 | 有 | 无 | 无 | 无 |
+| 本地客户端 | 经由SSH网关 | 无 | 无 | 无 |
 | 需要guacd | 否 | 否 | 否 | 是 |
 
 ## SSH
@@ -18,7 +22,11 @@ Casvisor用Go的`golang.org/x/crypto/ssh`连接，申请`xterm-256color`终端�
 
 资产有私钥时Casvisor先用私钥登录，再试密码。服务器的主机密钥会被固定：第一次连接时，Casvisor把它的SHA-256指纹记进资产的**指纹**，之后服务器出示的密钥不一样就拒绝连接，并提示用户主机密钥变了。如果这是预期内的变化（比如服务器重装了），清空**指纹**再连一次。
 
-还不支持：通过Casvisor用自己的`ssh`客户端、`scp`或SFTP连接，这在[路线图](../more/roadmap.md)上。终端用的是浏览器自己的复制粘贴，所以权限里的**复制**和**粘贴**目前限制不了它。
+同一个SSH连接还通过SFTP承载终端的[文件面板](./file-transfer.md)。终端里输入的命令会被记录并按[命令规则](../audit/commands.md)检查，管理员可以[实时旁观](../audit/sessions.md#实时旁观)。
+
+SSH资产也可以经由[SSH网关](./ssh-gateway.md)用你自己的`ssh`、`scp`、`sftp`、`rsync`或VS Code Remote连接。
+
+终端用的是浏览器自己的复制粘贴，所以权限里的**复制**和**粘贴**目前限制不了它。
 
 ## VNC
 
@@ -36,7 +44,7 @@ Casvisor用[gordp](https://github.com/casvisor/gordp)自己连接RDP，这是为
 
 - **剪贴板。** 没有剪贴板通道，不论权限怎么写，两个方向都复制不了。
 - **调整大小。** 桌面大小取连接建立时浏览器区域的大小，之后不变；要改就重新连接。
-- **磁盘映射、文件传输和远程应用。** 权限里的**上传**和**下载**动作是为文件传输预留的。
+- **磁盘映射、文件传输和远程应用。** 权限里的**上传**和**下载**动作目前只对[SSH资产](./file-transfer.md)生效。
 - **较新的图像编码**（RemoteFX、GFX、H.264）。服务器会退回到gordp能解码的位图编码。
 - **旧版RDP安全层。** 只支持它、不支持TLS或NLA的服务器连不上。
 

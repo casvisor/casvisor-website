@@ -11,7 +11,7 @@ There are several good open-source projects in this space. This page is meant to
 | Paid edition | None | Enterprise edition | Enterprise edition | None | None |
 | Written in | Go | Python, Go | Go | Rust | C, Java |
 | Browser access | SSH, RDP, VNC, Telnet | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC | SSH, RDP, VNC, Telnet, K8s |
-| Native clients (`ssh`, `scp`, database clients) | Not yet | Yes | Yes | Yes | No |
+| Native clients (`ssh`, `scp`, database clients) | SSH only: `ssh`, `scp`, `sftp`, `rsync`, port forwarding | Yes | Yes | Yes | No |
 | Session recording | Not yet | Yes | Yes | Yes | Yes |
 | Identity | Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC | Built in, extensions for LDAP, SSO |
 | Access policy | Casbin: users, groups, assets, tags, actions, IPs, time windows | RBAC, asset authorizations | RBAC with labels | Roles on targets | Connection permissions |
@@ -28,8 +28,11 @@ There are several good open-source projects in this space. This page is meant to
 
 - **Identity is Casdoor's.** If you already run Casdoor, or want its single sign-on, MFA, LDAP and SAML, Casvisor uses those directly, including Casdoor's groups in permissions, rather than keeping a second user directory.
 - **Policy is Casbin's.** Permissions combine users and groups, assets and tags, actions, client IP ranges and time windows, and are evaluated by a model you can read on the [permissions page](../access-control/permissions.md#the-casbin-model).
+- **Command rules follow the same scopes as permissions.** A rule applies to users, Casdoor groups, assets and asset tags, and covers the web terminal and native SSH clients alike, since both go through the same check. See [Commands and command rules](../audit/commands.md).
 - **No enterprise edition.** What is on the [roadmap](./roadmap.md), including database proxies and access requests, is planned for the open-source project itself.
 
 ## Where Casvisor is behind
 
-Native SSH clients, session recording and playback, command logging, and database and Kubernetes access. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have them.
+Session recording and playback, several system accounts per asset with password rotation, access requests, an agent for private networks, and database and Kubernetes access. Native clients cover SSH only. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have most of them.
+
+The SSH gateway, file transfer, command rules and live watching are on Casvisor's master branch and not in a release yet.

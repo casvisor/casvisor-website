@@ -1,6 +1,6 @@
 ---
 title: "常见问题"
-description: "关于Casvisor的常见问题：什么是堡垒机，是否必须用Casdoor，登录为什么失败，资产密码存在哪里，去哪里求助。"
+description: "关于Casvisor的常见问题：什么是堡垒机，是否必须用Casdoor，登录为什么失败，能否用自己的SSH客户端，资产密码存在哪里，去哪里求助。"
 ---
 
 ## 什么是堡垒机？
@@ -29,13 +29,21 @@ RDP由Casvisor自己连接，所以Casvisor服务器要能访问资产的3389端
 
 Telnet经由guacd。检查guacd在`guacamoleEndpoint`上运行着，并且guacd本身能访问资产的主机和端口。
 
+## 能用自己的SSH客户端、scp或VS Code吗？
+
+SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**页面登记你的公钥，然后`ssh -p 2222 <资产>@<Casvisor主机>`。VS Code Remote还需要权限里有**端口转发**（Forward）。RDP和VNC只能在浏览器里连。
+
+## SSH网关提示“Permission denied (publickey)”
+
+网关不认识客户端出示的公钥。检查公钥是否已登记在你要用的那个用户的**SSH公钥**里，以及客户端出示的是不是这把密钥，例如用`ssh -i ~/.ssh/id_ed25519`指定。网关不接受口令。公钥通过以后的其他拒绝，都会以`casvisor: ...`打印出原因。
+
 ## 资产的密码存在哪里？
 
 存在Casvisor的MySQL数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。
 
 ## Casvisor会录像吗？
 
-还不会。会话列表记录了谁、从哪里、连了什么、连了多久，操作日志记录了每一次改动。录像和回放在[路线图](./roadmap.md)上。
+还没有可以回放的录像。会话列表记录了谁、从哪里、连了什么、连了多久；SSH会话里执行的[命令](../audit/commands.md)会保留；传过的文件和每一次改动记在操作日志里；管理员可以[实时旁观SSH会话](../audit/sessions.md#实时旁观)。录像和回放在[路线图](./roadmap.md)上。
 
 ## 有托管版或企业版吗？
 

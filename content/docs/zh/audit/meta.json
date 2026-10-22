@@ -2,6 +2,7 @@
   "title": "审计",
   "pages": [
     "sessions",
+    "commands",
     "operation-logs"
   ]
 }

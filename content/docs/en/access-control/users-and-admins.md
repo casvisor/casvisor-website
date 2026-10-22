@@ -14,9 +14,9 @@ A user is an administrator when either is true:
 
 Administrators:
 
-- see **Assets**, **Permissions**, **Sessions** and **Records** (the [operation log](../audit/operation-logs.md));
+- see **Permissions**, **Sessions**, **Commands**, **Command rules** and **Records** (the [operation log](../audit/operation-logs.md)), and manage **Assets**;
 - can connect to every asset of their organization, with every action, without a permission;
-- can stop anyone's session.
+- can stop anyone's session and [watch SSH sessions live](../audit/sessions.md#watching-a-session-live).
 
 An administrator of one organization cannot manage the assets or permissions of another. `built-in` users can, which is why they should be few.
 
@@ -25,8 +25,8 @@ An administrator of one organization cannot manage the assets or permissions of 
 Users who are not administrators:
 
 - land on the [workbench](../assets/connecting.md), which lists only the assets a [permission](./permissions.md) gives them **Connect** on;
-- can call only the API needed to list those assets and connect to them;
-- cannot see stored passwords, other people's sessions, or the operation log.
+- can call only the API needed to list those assets, connect to them, move files in their own SSH sessions, and manage their own [SSH keys](../assets/ssh-gateway.md#registering-a-public-key);
+- cannot see stored passwords, other people's sessions, the command records, or the operation log.
 
 A user with no permission at all signs in to an empty workbench.
 
@@ -40,11 +40,13 @@ Casdoor groups carry over. The token Casdoor issues at sign-in lists the user's 
 
 ## When changes in Casdoor take effect
 
-Casvisor reads the user's groups and administrator flag from the token it gets at sign-in, and keeps that sign-in until the user signs out or the browser session ends. Adding someone to a group, removing them, turning **Is admin** on or off, or disabling the user in Casdoor therefore applies the next time they sign in to Casvisor, not at once.
+Casvisor reads the user's groups and administrator flag from the token it gets at sign-in, and keeps that sign-in until the user signs out or the browser session ends. Adding someone to a group, removing them, turning **Is admin** on or off, or disabling the user in Casdoor therefore applies to the web UI the next time they sign in to Casvisor, not at once.
+
+The [SSH gateway](../assets/ssh-gateway.md) has no web sign-in: it reads the user from Casdoor at every connection, so a disabled or deleted user cannot open a new gateway connection from then on. A connection already open keeps the groups it started with.
 
 To cut someone off now:
 
-1. Take them out of the permissions that name them, or turn those permissions off. Permissions are checked again on every connection, so this applies immediately.
-2. Stop their open connections under [Sessions](../audit/sessions.md).
+1. Take them out of the permissions that name them, or turn those permissions off. This also refuses them at the SSH gateway, whatever keys they have registered, and their open sessions to the assets those permissions gave them are disconnected straight away; see [Disconnected when the permission goes](../audit/sessions.md#disconnected-when-the-permission-goes).
+2. Stop any session that is still open under [Sessions](../audit/sessions.md).
 
 Signing out of Casvisor ends its own cookie only. It does not sign the user out of Casdoor, so the next visit may go through without a password, as with any single sign-on.

@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-description: "Common questions about Casvisor: what a bastion host is, whether Casdoor is required, why sign-in fails, where passwords are kept, and how to get help."
+description: "Common questions about Casvisor: what a bastion host is, whether Casdoor is required, why sign-in fails, using your own SSH client, where passwords are kept, and how to get help."
 ---
 
 ## What is a bastion host?
@@ -29,13 +29,21 @@ Casvisor connects to RDP itself, so the Casvisor server has to reach the asset's
 
 Telnet goes through guacd. Check that guacd is running at `guacamoleEndpoint` and that guacd itself can reach the asset's host and port.
 
+## Can I use my own SSH client, scp or VS Code?
+
+Yes, for SSH assets, through the [SSH gateway](../assets/ssh-gateway.md): register your public key under **SSH keys**, then `ssh -p 2222 <asset>@<casvisor host>`. VS Code Remote also needs the **Forward** action in your permission. RDP and VNC are reached from the browser only.
+
+## The SSH gateway answers "Permission denied (publickey)"
+
+The gateway does not know the key your client offered. Check that the public key is added under **SSH keys** of the user you mean to be, and that your client offers that key, for example with `ssh -i ~/.ssh/id_ed25519`. The gateway takes no passwords. Once the key is accepted, any other refusal is printed as `casvisor: ...` with the reason.
+
 ## Where are the passwords of assets kept?
 
 In Casvisor's MySQL database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own.
 
 ## Does Casvisor record sessions?
 
-Not yet. The session list records who connected to what, from where and for how long, and the operation log records every change. Recording and playback are on the [roadmap](./roadmap.md).
+Not as a replay yet. The session list records who connected to what, from where and for how long; the [commands](../audit/commands.md) run in SSH sessions are kept; files moved and every change go into the operation log; and administrators can [watch SSH sessions live](../audit/sessions.md#watching-a-session-live). Recording and playback are on the [roadmap](./roadmap.md).
 
 ## Is there a hosted or enterprise version?
 

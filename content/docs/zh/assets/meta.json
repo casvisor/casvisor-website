@@ -3,6 +3,8 @@
   "pages": [
     "assets",
     "connecting",
+    "ssh-gateway",
+    "file-transfer",
     "protocols"
   ]
 }

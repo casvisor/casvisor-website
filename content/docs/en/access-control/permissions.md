@@ -16,7 +16,7 @@ Administrators manage permissions under **Permissions**.
 | Groups | Casdoor groups. Every member is covered. |
 | Assets | Assets by name. `*` means every asset of the organization. |
 | Asset tags | Every asset whose **Tag** is one of these, including assets tagged later. |
-| Actions | Any of `Connect`, `Copy`, `Paste`, `Upload`, `Download`. |
+| Actions | Any of `Connect`, `Copy`, `Paste`, `Upload`, `Download`, `Forward`. |
 | Client IPs | Addresses or CIDR ranges the user must connect from, such as `10.0.0.0/8` or `203.0.113.7`. Empty means from anywhere. |
 | Start time, End time | The window in which the permission counts. Either can be empty, meaning no limit on that side. |
 | Enabled | Off means the permission counts for nothing, without deleting it. |
@@ -27,10 +27,12 @@ A permission covers everyone in **Users** and everyone in **Groups**, for every 
 
 | Action | What it allows |
 | --- | --- |
-| Connect | Seeing the asset in the workbench and opening a session to it. Without it, the other actions give nothing. |
+| Connect | Seeing the asset in the workbench and opening a session to it, in the browser or through the [SSH gateway](../assets/ssh-gateway.md). Without it, the other actions give nothing. |
 | Copy | Text from the remote clipboard reaching the user's browser. |
 | Paste | Text from the user's clipboard reaching the remote side. |
-| Upload, Download | Reserved for file transfer, which is not in the interface yet. |
+| Upload | Sending files to an SSH asset, and creating, renaming and deleting files there, in the file panel or over SFTP, `scp` and `rsync`. See [File transfer](../assets/file-transfer.md). |
+| Download | Fetching files from an SSH asset, in the file panel or over SFTP, `scp` and `rsync`. Upload or Download is also needed to browse the files at all. |
+| Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs. |
 
 [Protocols](../assets/protocols.md#ssh) lists where Copy and Paste are enforced: by guacd for Telnet and by the web client for VNC. SSH does not restrict them yet, and RDP has no clipboard yet.
 
@@ -43,20 +45,23 @@ Some examples:
 | Goal | Users / Groups | Assets / Asset tags | Actions | Client IPs | Time |
 | --- | --- | --- | --- | --- | --- |
 | The ops team on all Linux servers, from the office | group `ops` | tag `linux` | Connect, Copy, Paste | `198.51.100.0/24` | |
+| Developers with VS Code Remote and file transfer on the test servers | group `dev` | tag `test` | Connect, Upload, Download, Forward | | |
 | A contractor on two servers for a week, no clipboard | user `alice` | `web-01`, `web-02` | Connect | | 2026-11-01 to 2026-11-08 |
 | Everyone on the jump desktop | `*` | `jump-desktop` | Connect, Paste | | |
 
 ## When it is checked
 
-Casvisor checks permissions when it lists the assets of a user's workbench, when a session starts, and again when the session's WebSocket opens. Changes therefore apply to the next connection straight away.
+Casvisor checks permissions when it lists the assets of a user's workbench, when a session starts, again when the session's WebSocket opens, and when the SSH gateway picks an asset. File operations are checked one by one. Changes therefore apply to the next connection straight away.
 
-A session that is already open is not re-checked, so revoking a permission does not cut off someone connected at that moment. Stop their session under [Sessions](../audit/sessions.md) to do that.
+Open sessions are checked again too: right after a permission or an asset is edited or deleted, and every 30 seconds, which is how a permission that reaches its **End time** takes effect. A session that is no longer allowed is disconnected; see [Disconnected when the permission goes](../audit/sessions.md#disconnected-when-the-permission-goes).
 
 Group membership is read when the user signs in; see [When changes in Casdoor take effect](./users-and-admins.md#when-changes-in-casdoor-take-effect).
 
 ## The client IP
 
 The address checked against **Client IPs** is the one the connection comes from. When it comes from a loopback or private address, as it does behind a reverse proxy on the same network, Casvisor takes the last entry of `X-Forwarded-For` instead, which is the address your proxy saw. Make sure the proxy sets that header; see [Behind a reverse proxy](../operations/reverse-proxy.md).
+
+For the [SSH gateway](../assets/ssh-gateway.md) there is no such header: the address checked is the one the SSH connection comes from.
 
 ## The Casbin model
 

@@ -3,7 +3,7 @@ title: "Connecting"
 description: "Users connect from the workbench, which lists the assets they may reach and opens each connection in a tab, or from an asset's Connect button, which opens it on a page of its own."
 ---
 
-There are two ways into an asset.
+There are two ways into an asset from the browser, and for SSH assets a third: your own SSH client through the [SSH gateway](./ssh-gateway.md).
 
 ## The workbench
 
@@ -19,6 +19,8 @@ On **Assets**, the **Connect** button opens the asset at `/access/<organization>
 
 If the asset has no stored username or password, the button asks for what is missing first. See [The account](./assets.md#the-account).
 
+When the SSH gateway is on, SSH assets also have a **Copy SSH command** button, which copies a command such as `ssh -p 2222 web-01@casvisor.example.com` for a terminal on your own machine.
+
 ## What happens on connect
 
 1. The browser asks Casvisor to start a session for the asset.
@@ -30,5 +32,5 @@ If the check fails, the tab shows why, for example *you have no permission to co
 
 ## Keyboard and clipboard
 
-- **SSH** runs in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser.
+- **SSH** runs in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser. With Upload or Download in the permission, the **Files** button in the top right corner opens a [file panel](./file-transfer.md#the-file-panel) beside the terminal.
 - **RDP, VNC and Telnet** run in a canvas. Keys go to the remote side as typed. For VNC and Telnet, clipboard sharing follows the **Copy** and **Paste** actions of the user's permission; RDP has no clipboard yet. See [Protocols](./protocols.md).

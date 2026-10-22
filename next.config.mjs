@@ -12,7 +12,7 @@ const oldDocs = {
   'asset/vnc': 'assets/protocols',
   'asset/database': 'more/roadmap',
   'asset/intranet': 'assets/assets',
-  'command/command': 'more/roadmap',
+  'command/command': 'audit/commands',
 };
 
 function redirects() {

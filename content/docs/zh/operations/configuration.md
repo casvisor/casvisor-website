@@ -1,6 +1,6 @@
 ---
 title: "配置"
-description: "Casvisor的conf/app.conf里的每一项：HTTP端口、MySQL连接、guacd、Casdoor应用、Redis会话和操作日志。"
+description: "Casvisor的conf/app.conf里的每一项：HTTP端口、MySQL连接、guacd、SSH网关、Casdoor应用、Redis会话和操作日志。"
 ---
 
 Casvisor启动时从工作目录读取`conf/app.conf`。Docker镜像里是`/conf/app.conf`，把你自己的文件挂载到这里。改完要重启Casvisor。
@@ -8,7 +8,7 @@ Casvisor启动时从工作目录读取`conf/app.conf`。Docker镜像里是`/conf
 有两种办法把你自己的配置和仓库里的文件分开：
 
 - **`conf/app.local.conf`**，格式相同，其中每一项都会覆盖`conf/app.conf`。它不进git，所以拉新版本时不会冲突，`dataSourceName`、`clientSecret`和`credentialKey`就放在这里。
-- **同名环境变量**，对大多数配置项会覆盖两个文件，包括Casdoor的几项、`driverName`、`dataSourceName`、`credentialKey`、`allowedUsers`和`isDemoMode`。`dbName`和`guacamoleEndpoint`只从文件读取。
+- **同名环境变量**，对大多数配置项会覆盖两个文件，包括Casdoor的几项、`driverName`、`dataSourceName`、`credentialKey`、`allowedUsers`、`isDemoMode`、`sshGatewayPort`和`sshGatewayHost`。`dbName`和`guacamoleEndpoint`只从文件读取。
 
 ```ini
 appname = casvisor
@@ -29,6 +29,8 @@ clientId = b108dacba027db36ec26
 clientSecret = 124140638b4f9de7e78e79ba22d451c17bfa9688
 casdoorOrganization = "casbin"
 casdoorApplication = "app-casvisor"
+sshGatewayPort =
+sshGatewayHost =
 ```
 
 文件里自带的Casdoor配置属于Casbin的公开演示，用它登录不了你自己的Casvisor。请换成你自己的，见[对接Casdoor](../getting-started/casdoor.md)。
@@ -57,6 +59,8 @@ casdoorApplication = "app-casvisor"
 | 配置项 | 默认值 | 含义 |
 | --- | --- | --- |
 | `guacamoleEndpoint` | `127.0.0.1:4822` | guacd监听的地址，只有Telnet用。见[协议](../assets/protocols.md#guacd)。 |
+| `sshGatewayPort` | 空；Docker镜像里是`2222` | [SSH网关](../assets/ssh-gateway.md)的端口，监听所有网卡。为空表示关闭网关。Docker镜像用环境变量设置了它，所以在容器里要关掉就传`-e sshGatewayPort=`。`isDemoMode = true`时网关总是关闭。 |
+| `sshGatewayHost` | 空 | 用户复制的SSH命令里显示的主机名。为空时用网页界面的主机名。 |
 
 ## Casdoor
 
@@ -75,7 +79,7 @@ casdoorApplication = "app-casvisor"
 | --- | --- | --- |
 | `redisEndpoint` | 空 | 为空时，登录会话以文件形式存在`tmp/`下。填Redis地址（例如`127.0.0.1:6379`）就改存Redis，换容器后用户不用重新登录。 |
 | `logPostOnly` | `true` | 只记改动类的调用，见[操作日志](../audit/operation-logs.md)。 |
-| `isDemoMode` | `false` | 公开演示用：会话15分钟后自动结束，每个客户端IP同时只能开少量会话，用户只能停止自己的会话。 |
+| `isDemoMode` | `false` | 公开演示用：会话15分钟后自动结束，每个客户端IP同时只能开少量会话，用户只能停止自己的会话，SSH网关不开。 |
 
 ## 安全
 

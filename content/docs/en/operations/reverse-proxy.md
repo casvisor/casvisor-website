@@ -5,7 +5,7 @@ description: "Put Casvisor behind nginx or another reverse proxy for HTTPS: pass
 
 Casvisor serves plain HTTP. In production, put it behind a reverse proxy that terminates HTTPS. Three things matter:
 
-1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-rdp`, `get-asset-vnc` and `get-asset-tunnel` (Telnet). The proxy must pass the `Upgrade` and `Connection` headers through.
+1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-rdp`, `get-asset-vnc`, `get-asset-tunnel` (Telnet) and `get-session-monitor` (watching a session live). The proxy must pass the `Upgrade` and `Connection` headers through.
 2. **Timeouts.** A terminal can sit idle for a long time. Raise the proxy's read timeout, or idle sessions are cut off after its default, often 60 seconds.
 3. **The client IP.** Permissions can be limited to [client IPs](../access-control/permissions.md#the-client-ip). When a request comes from a loopback or private address, Casvisor takes the last entry of `X-Forwarded-For`, so the proxy must set it to the address it received the connection from.
 
@@ -38,6 +38,14 @@ server {
 ## Casdoor's redirect URL
 
 Casdoor sends people back to the address they opened Casvisor at, so add the public one, `https://casvisor.example.com/callback`, to the application's **Redirect URLs**.
+
+## The SSH gateway
+
+The [SSH gateway](../assets/ssh-gateway.md) is SSH on its own port, 2222 in the Docker images, not HTTP, so it does not go through nginx. Publish that port directly, or pass it through a TCP proxy such as nginx's `stream` module or a cloud load balancer.
+
+Casvisor checks [client IPs](../access-control/permissions.md#the-client-ip) against the address the SSH connection comes from. Behind a TCP proxy that is the proxy's address, so permissions limited by client IP would see the proxy, not the user. Prefer publishing the port directly, or use a load balancer that keeps the client's address.
+
+If SSH is reached at another name than the web UI, set `sshGatewayHost` to it, so the commands users copy are right.
 
 ## Do not publish
 

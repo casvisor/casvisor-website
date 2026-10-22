@@ -26,7 +26,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: 'Every protocol in a browser tab',
-        body: 'SSH, RDP and VNC connect natively in Go; only Telnet goes through guacd. Users keep several machines open side by side in the workbench.',
+        body: 'SSH, RDP and VNC connect natively in Go; only Telnet goes through guacd. Users keep several machines open side by side in the workbench, or reach SSH assets with their own ssh, scp and VS Code through the SSH gateway.',
         href: 'assets/protocols',
       },
       {
@@ -50,7 +50,7 @@ const text = {
       {
         icon: ScrollText,
         title: 'Every session and every change on record',
-        body: 'Live and past sessions with who, from where and for how long, and a button to cut one off. Every write to the API goes into the operation log.',
+        body: 'Live and past sessions with who, from where and for how long. SSH commands recorded and checked against rules, SSH sessions watched live, files moved and every write to the API in the operation log.',
         href: 'audit/sessions',
       },
       {
@@ -73,7 +73,7 @@ const text = {
       },
       {
         title: 'Built in the open',
-        body: 'Connections from native ssh and scp clients, session recording and playback, and database access are next.',
+        body: 'Session recording and playback, access requests, and database access are next.',
       },
     ],
     roadmap: 'See the roadmap',
@@ -102,7 +102,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: '所有协议都在浏览器标签页里',
-        body: 'SSH、RDP和VNC用Go原生连接，只有Telnet经由guacd。在工作台里可以同时打开多台机器，并排切换。',
+        body: 'SSH、RDP和VNC用Go原生连接，只有Telnet经由guacd。在工作台里可以同时打开多台机器并排切换，SSH资产也能通过SSH网关用本地的ssh、scp和VS Code连接。',
         href: 'assets/protocols',
       },
       {
@@ -126,7 +126,7 @@ const text = {
       {
         icon: ScrollText,
         title: '每个会话、每次改动都有记录',
-        body: '在线和历史会话：谁、从哪里、连了多久，管理员可以一键断开。对接口的每次写操作都记进操作日志。',
+        body: '在线和历史会话：谁、从哪里、连了多久。SSH命令有记录、按规则拦截，SSH会话可以实时旁观，传过的文件和对接口的每次写操作都记进操作日志。',
         href: 'audit/sessions',
       },
       {
@@ -149,7 +149,7 @@ const text = {
       },
       {
         title: '公开开发',
-        body: '接下来要做：用本地ssh、scp客户端直连，会话录像和回放，数据库访问。',
+        body: '接下来要做：会话录像和回放，访问审批，数据库访问。',
       },
     ],
     roadmap: '查看路线图',

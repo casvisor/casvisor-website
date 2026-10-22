@@ -10,6 +10,10 @@ description: "Casvisor connects to SSH, RDP and VNC natively in Go and to Telnet
 | In the browser | xterm.js terminal | noVNC canvas | Canvas | Guacamole terminal |
 | Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password |
 | Copy and Paste actions | Not enforced yet | Enforced by the web client | No clipboard yet | Enforced by guacd |
+| File transfer | File panel, SFTP, scp, rsync | No | No | No |
+| Command records and rules | Yes | No | No | No |
+| Live view | Yes | No | No | No |
+| Native clients | Through the SSH gateway | No | No | No |
 | Needs guacd | No | No | No | Yes |
 
 ## SSH
@@ -18,7 +22,11 @@ Casvisor connects with Go's `golang.org/x/crypto/ssh`, asks for a `xterm-256colo
 
 Casvisor logs in with the asset's private key if it has one, then with the password. The server's host key is pinned: on the first connection Casvisor records its SHA-256 fingerprint in the asset's **Fingerprint**, and from then on refuses to connect if the server presents a different key, telling the user that the host key has changed. If the change is expected, because the server was reinstalled for example, clear **Fingerprint** and connect again.
 
-Not yet: connecting with your own `ssh` client, `scp` or SFTP through Casvisor, which is on the [roadmap](../more/roadmap.md). The terminal uses the browser's own copy and paste, so the **Copy** and **Paste** actions of a permission do not restrict it yet.
+The same SSH connection carries the [file panel](./file-transfer.md) of the terminal, over SFTP. Commands typed in the terminal are recorded and checked against the [command rules](../audit/commands.md), and administrators can [watch the session live](../audit/sessions.md#watching-a-session-live).
+
+SSH assets can also be reached with your own `ssh`, `scp`, `sftp`, `rsync` or VS Code Remote through the [SSH gateway](./ssh-gateway.md).
+
+The terminal uses the browser's own copy and paste, so the **Copy** and **Paste** actions of a permission do not restrict it yet.
 
 ## VNC
 
@@ -36,7 +44,7 @@ What it does not do yet:
 
 - **Clipboard.** There is no clipboard channel, so nothing is copied in either direction whatever the permission says.
 - **Resizing.** The desktop takes the size of the browser area when the connection opens and keeps it; reconnect to change it.
-- **Drive redirection, file transfer and RemoteApp.** The **Upload** and **Download** actions are reserved for file transfer.
+- **Drive redirection, file transfer and RemoteApp.** The **Upload** and **Download** actions only apply to [SSH assets](./file-transfer.md) for now.
 - **Newer graphics codecs** (RemoteFX, GFX, H.264). The server falls back to the bitmap codecs gordp decodes.
 - **Legacy RDP security.** Servers that only offer it, without TLS or NLA, cannot be reached.
 

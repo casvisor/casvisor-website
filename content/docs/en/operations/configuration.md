@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-description: "Every key of Casvisor's conf/app.conf: the HTTP port, the MySQL connection, guacd, the Casdoor application, sessions in Redis and the operation log."
+description: "Every key of Casvisor's conf/app.conf: the HTTP port, the MySQL connection, guacd, the SSH gateway, the Casdoor application, sessions in Redis and the operation log."
 ---
 
 Casvisor reads `conf/app.conf` from its working directory when it starts. In the Docker images that is `/conf/app.conf`; mount your own file there. Restart Casvisor after changing it.
@@ -8,7 +8,7 @@ Casvisor reads `conf/app.conf` from its working directory when it starts. In the
 Two ways to keep your own values apart from the file in the repository:
 
 - **`conf/app.local.conf`**, in the same format. Every key in it overrides `conf/app.conf`. It is not in git, so pulling a new version never conflicts with it; it is the place for `dataSourceName`, `clientSecret` and `credentialKey`.
-- **Environment variables** of the same name as the key, which override both files for most keys, including the Casdoor ones, `driverName`, `dataSourceName`, `credentialKey`, `allowedUsers` and `isDemoMode`. `dbName` and `guacamoleEndpoint` are read from the files only.
+- **Environment variables** of the same name as the key, which override both files for most keys, including the Casdoor ones, `driverName`, `dataSourceName`, `credentialKey`, `allowedUsers`, `isDemoMode`, `sshGatewayPort` and `sshGatewayHost`. `dbName` and `guacamoleEndpoint` are read from the files only.
 
 ```ini
 appname = casvisor
@@ -29,6 +29,8 @@ clientId = b108dacba027db36ec26
 clientSecret = 124140638b4f9de7e78e79ba22d451c17bfa9688
 casdoorOrganization = "casbin"
 casdoorApplication = "app-casvisor"
+sshGatewayPort =
+sshGatewayHost =
 ```
 
 The Casdoor values in the file as shipped belong to Casbin's public demo and will not sign anyone in to your Casvisor. Replace them; see [Connect Casdoor](../getting-started/casdoor.md).
@@ -57,6 +59,8 @@ When the environment variable `RUNNING_IN_DOCKER` is `true`, `localhost` in `dat
 | Key | Default | Meaning |
 | --- | --- | --- |
 | `guacamoleEndpoint` | `127.0.0.1:4822` | Where guacd listens. Used for Telnet only. See [Protocols](../assets/protocols.md#guacd). |
+| `sshGatewayPort` | empty; `2222` in the Docker images | The port of the [SSH gateway](../assets/ssh-gateway.md), on every interface. Empty turns the gateway off. The Docker images set it with an environment variable, so pass `-e sshGatewayPort=` to turn it off there. It is always off with `isDemoMode = true`. |
+| `sshGatewayHost` | empty | The host name shown in the SSH commands users copy. Empty uses the host name of the web UI. |
 
 ## Casdoor
 
@@ -75,7 +79,7 @@ The web UI is built with Casbin's demo values and Casvisor replaces them with th
 | --- | --- | --- |
 | `redisEndpoint` | empty | Empty keeps sign-in sessions as files under `tmp/`. Set it to a Redis address, such as `127.0.0.1:6379`, to keep them in Redis instead, so people stay signed in when the container is replaced. |
 | `logPostOnly` | `true` | Log only the calls that change something. See [Operation logs](../audit/operation-logs.md). |
-| `isDemoMode` | `false` | For a public demo: sessions end after 15 minutes, each client IP can have only a few open at a time, and users can only stop their own sessions. |
+| `isDemoMode` | `false` | For a public demo: sessions end after 15 minutes, each client IP can have only a few open at a time, users can only stop their own sessions, and the SSH gateway is off. |
 
 ## Security
 

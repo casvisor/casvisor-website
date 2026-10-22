@@ -1,6 +1,6 @@
 ---
 title: "路线图"
-description: "Casvisor接下来要做的：从配置读取证书、加密的凭据保险箱、用本地SSH客户端连接、会话录像和回放，然后是数据库、Kubernetes和访问申请。"
+description: "Casvisor已经做完的和接下来要做的：会话录像和回放，开箱即用（SQLite、自带Casdoor），一个资产多个系统账号与自动改密，访问审批，内网agent，数据库和Kubernetes访问，syslog转发。"
 ---
 
 Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先后顺序。进展会体现在[casvisor/casvisor](https://github.com/casvisor/casvisor)的提交和本手册的更新里。欢迎在[issue](https://github.com/casvisor/casvisor/issues)里提想法和反对意见。
@@ -15,25 +15,26 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - 启动时自己去Casdoor取证书，能配任意Casdoor（v1.110.0）。
 - 密码和SSH私钥加密保存，SSH主机密钥和RDP证书在第一次连接时固定（v1.110.0）。
 
-## 接下来：能放心用于生产的堡垒机
+已在master分支上，还没有发版：
 
-1. **一个资产多个账号**，权限里写明用户能用哪个账号。
-2. **原生SSH网关。** 通过Casvisor用自己的`ssh`、`scp`、SFTP客户端或VS Code Remote连接，形如`ssh 用户@资产@casvisor`，和网页终端用同一套权限。记录命令，危险命令可以拦截。
-3. **录像和回放。** 每个会话都录像，SSH存成asciinema格式，图形会话存成Guacamole录像，在浏览器里回放。管理员能实时旁观。记录文件传输。
-4. **部署更简单。** 一个程序，默认用SQLite，一个自带guacd的compose文件，首次启动有设置页，不再默认指向公开演示站。
-5. **补全RDP，再用Go实现Telnet**：RDP的剪贴板、随窗口调整大小、磁盘映射和更多图像编码，然后是Telnet，让一个程序覆盖所有协议，不再需要guacd。
+- [SSH网关](../assets/ssh-gateway.md)：经由Casvisor用`ssh`、`scp`、`sftp`、`rsync`和VS Code Remote连接，用公钥登录，和网页终端用同一套权限；新增端口转发动作**Forward**。
+- SSH资产的[文件传输](../assets/file-transfer.md)：网页终端旁的文件面板和SFTP，由上传、下载动作放行，并记进操作日志。
+- [命令记录和命令规则](../audit/commands.md)：在虚拟屏幕上读出SSH会话里的命令，按规则拦截或告警。
+- [实时旁观SSH会话](../audit/sessions.md#实时旁观)，以及权限收回或到期时[立即断开会话](../audit/sessions.md#权限收回即断开)。
 
-## 然后：别的堡垒机收费的功能
+## 接下来
 
-- MySQL和PostgreSQL代理，带SQL审计。
-- Kubernetes访问。
-- 访问申请：申请资产，审批通过后获得，到期自动收回。
-- 自动修改资产上的密码。
-- 远程应用（RemoteApp），只发布单个Windows程序。
-- 从云账号导入资产。
+1. **录像和回放。** 每个会话都录像，SSH和图形会话都录，在浏览器里回放。
+2. **开箱即用。** 默认用SQLite代替MySQL，自带一个配好应用的Casdoor，一条命令就能跑起一个可以登录的Casvisor。
+3. **一个资产多个系统账号，自动改密。** 用户选择自己能用的账号，全程看不到密码；Casvisor按计划修改资产上的密码。
+4. **访问申请与审批。** 申请某个资产，审批通过后获得，到期自动收回。
+5. **内网agent。** 在内网放一个小agent，主动连回Casvisor，Casvisor直接连不到的资产可以经由它访问。
+6. **数据库和Kubernetes访问。** MySQL和PostgreSQL代理，带SQL审计；以及Kubernetes。
+7. **syslog转发。** 会话、命令和操作日志发到syslog，再接入SIEM。
 
 ## 再往后
 
+- **补全RDP，再用Go实现Telnet**：RDP的剪贴板、随窗口调整大小、磁盘映射、更多图像编码和远程应用（RemoteApp），然后是Telnet，让一个程序覆盖所有协议，不再需要guacd。
 - **AI智能体网关。** 给编程智能体和AI运维一个受控的SSH和MCP入口：命令要过策略，高危命令等人确认，全程记录。
 - **国内合规**：等保三级对堡垒机的要求，以及SM2、SM3、SM4国密算法。
 
