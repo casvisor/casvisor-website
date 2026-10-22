@@ -53,7 +53,7 @@ Casvisor is written in Go and React, licensed under Apache-2.0, and has no enter
 
 ## What it does not do yet
 
-Casvisor is being rebuilt as a full bastion host, and a few things a bastion host is expected to have are still on the [roadmap](../more/roadmap.md): recording sessions and playing them back, several system accounts per asset with automatic password changes, access requests with approval, reaching private networks through an agent, database and Kubernetes access, and forwarding logs to syslog. The SSH gateway, file transfer, command records and rules and live watching are on the master branch and not in a release yet. The pages of this manual describe what is in the current code, and say so where a setting has no effect yet.
+Casvisor is being rebuilt as a full bastion host, and a few things a bastion host is expected to have are still on the [roadmap](../more/roadmap.md): recording sessions and playing them back, several system accounts per asset with automatic password changes, access requests with approval, reaching private networks through an agent, database and Kubernetes access, and forwarding logs to syslog. The pages of this manual describe what is in the current code, and say so where a setting has no effect yet.
 
 ## Next
 

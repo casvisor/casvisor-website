@@ -34,5 +34,3 @@ There are several good open-source projects in this space. This page is meant to
 ## Where Casvisor is behind
 
 Session recording and playback, several system accounts per asset with password rotation, access requests, an agent for private networks, and database and Kubernetes access. Native clients cover SSH only. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have most of them.
-
-The SSH gateway, file transfer, command rules and live watching are on Casvisor's master branch and not in a release yet.

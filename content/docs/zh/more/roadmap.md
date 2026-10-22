@@ -14,9 +14,6 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - RDP用Go直接处理（[gordp](https://github.com/casvisor/gordp)），支持NLA，账号在服务器上填入（v1.110.0）。
 - 启动时自己去Casdoor取证书，能配任意Casdoor（v1.110.0）。
 - 密码和SSH私钥加密保存，SSH主机密钥和RDP证书在第一次连接时固定（v1.110.0）。
-
-已在master分支上，还没有发版：
-
 - [SSH网关](../assets/ssh-gateway.md)：经由Casvisor用`ssh`、`scp`、`sftp`、`rsync`和VS Code Remote连接，用公钥登录，和网页终端用同一套权限；新增端口转发动作**Forward**。
 - SSH资产的[文件传输](../assets/file-transfer.md)：网页终端旁的文件面板和SFTP，由上传、下载动作放行，并记进操作日志。
 - [命令记录和命令规则](../audit/commands.md)：在虚拟屏幕上读出SSH会话里的命令，按规则拦截或告警。

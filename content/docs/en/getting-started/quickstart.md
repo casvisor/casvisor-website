@@ -50,7 +50,7 @@ docker run -d --name casvisor -p 19000:19000 \
 
 The second volume keeps the database when the container is replaced. On first start Casvisor creates the `casvisor` database and its tables.
 
-The [SSH gateway](../assets/ssh-gateway.md), for connecting with your own `ssh`, `scp` and VS Code, is on the master branch. Images from the release after v1.110.0 run it on port 2222; add `-p 2222:2222` to the command above to use it.
+The image also runs the [SSH gateway](../assets/ssh-gateway.md) on port 2222, for connecting with your own `ssh`, `scp` and VS Code. Add `-p 2222:2222` to the command above to use it.
 
 ## 4. Sign in
 

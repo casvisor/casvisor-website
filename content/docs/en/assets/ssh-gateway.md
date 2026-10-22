@@ -5,8 +5,6 @@ description: "Reach SSH assets through Casvisor with your own ssh, scp, sftp, rs
 
 Besides the web terminal, Casvisor can accept SSH connections itself, so people reach SSH assets with the tools they already use: `ssh`, `scp`, `sftp`, `rsync`, Xshell, or VS Code Remote. They sign in to the gateway with a public key they registered in Casvisor; Casvisor then logs in to the asset with the asset's own account. The same [permissions](../access-control/permissions.md), [command rules](../audit/commands.md) and [session list](../audit/sessions.md) apply as in the browser.
 
-The SSH gateway is on the master branch and not in a release yet: v1.110.0 and its Docker images do not have it.
-
 ## Turning it on
 
 The gateway listens on the port in `sshGatewayPort`:

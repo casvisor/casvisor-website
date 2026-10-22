@@ -14,9 +14,6 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - RDP handled natively in Go with [gordp](https://github.com/casvisor/gordp), including NLA, with the account filled in on the server (v1.110.0).
 - The Casdoor certificate fetched at start, so any Casdoor works (v1.110.0).
 - Passwords and SSH private keys stored encrypted, and SSH host keys and RDP certificates pinned on first use (v1.110.0).
-
-On the master branch, not in a release yet:
-
 - The [SSH gateway](../assets/ssh-gateway.md): `ssh`, `scp`, `sftp`, `rsync` and VS Code Remote through Casvisor, signed in with a public key, under the same permissions as the web terminal, with a new **Forward** action for port forwarding.
 - [File transfer](../assets/file-transfer.md) for SSH assets, in a file panel beside the web terminal and over SFTP, allowed by the Upload and Download actions and written to the operation log.
 - [Command records and command rules](../audit/commands.md): the commands of SSH sessions read off a virtual screen, and rules that block or flag them.

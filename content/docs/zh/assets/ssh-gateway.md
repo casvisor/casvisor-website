@@ -5,8 +5,6 @@ description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经�
 
 除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。
 
-SSH网关在master分支上，还没有发版：v1.110.0和它的Docker镜像里没有这个功能。
-
 ## 开启
 
 网关监听`sshGatewayPort`指定的端口：

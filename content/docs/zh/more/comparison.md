@@ -34,5 +34,3 @@ description: "Casvisor和其他开源堡垒机、远程访问网关的比较：J
 ## Casvisor落后的地方
 
 会话录像和回放，一个资产多个系统账号与自动改密，访问申请，经内网agent访问，数据库和Kubernetes访问。本地客户端只支持SSH。这些是[路线图](./roadmap.md)上接下来的几项。如果你现在就需要，上面这些项目大多都有。
-
-SSH网关、文件传输、命令规则和实时旁观在Casvisor的master分支上，还没有发版。
