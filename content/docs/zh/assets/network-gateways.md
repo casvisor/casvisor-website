@@ -31,7 +31,7 @@ description: "经对方网络里的SSH跳板机，或经从内网主动连出来
 
 适用于Casvisor根本连不进去的网络，例如在NAT后面。在那个网络里任意一台机器上运行一个小的agent，它主动连到Casvisor并保持连接，Casvisor经这条连接访问资产。
 
-agent连的是[SSH网关](./ssh-gateway.md)的端口，所以要设置`sshGatewayPort`，运行agent的机器要能访问这个端口。反方向不用开放任何端口。
+agent经WebSocket连Casvisor的网页地址，也就是用户打开的那个HTTPS地址，所以能上HTTPS的地方它就能连出来，也和网页终端一样能经过[反向代理](../operations/reverse-proxy.md)。反方向不用开放任何端口。用`--server <主机>:<端口>`时改连[SSH网关](./ssh-gateway.md)的端口，这时要设置`sshGatewayPort`。
 
 ### 启动agent
 
@@ -39,19 +39,19 @@ agent连的是[SSH网关](./ssh-gateway.md)的端口，所以要设置`sshGatewa
 2. 弹窗里会显示令牌和启动agent的命令：
 
    ```shell
-   casvisor agent --server casvisor.example.com:2222 --token cva_... --fingerprint SHA256:...
+   casvisor agent --server https://casvisor.example.com --token cva_... --fingerprint SHA256:...
    ```
 
    现在就复制下来。令牌只显示这一次，Casvisor只保存它的哈希。
 3. 在对方网络里的一台机器上运行这条命令。agent就是服务端的同一个`casvisor`程序，用同一个版本。用Docker的话：
 
    ```shell
-   docker run -d --restart unless-stopped casbin/casvisor agent --server casvisor.example.com:2222 --token cva_... --fingerprint SHA256:...
+   docker run -d --restart unless-stopped casbin/casvisor agent --server https://casvisor.example.com --token cva_... --fingerprint SHA256:...
    ```
 
-   不想让令牌出现在进程列表里，可以不用`--token`，改放在环境变量`CASVISOR_AGENT_TOKEN`里。
+   不想让令牌出现在进程列表里，可以不用`--token`，把令牌写进文件再用`--token-file <路径>`，或者放在环境变量`CASVISOR_AGENT_TOKEN`里。
 
-`--fingerprint`是SSH网关的主机密钥，在**SSH公钥**页面也能看到。agent只和这个密钥的服务器通信，中间人没法冒充Casvisor，指使它去连你的内网地址。
+`--fingerprint`是Casvisor的SSH主机密钥（SSH网关用的同一个），开了SSH网关时在**SSH公钥**页面也能看到。走WebSocket时agent也在HTTPS之上再核对它，只和这个密钥的服务器通信，中间人没法冒充Casvisor，指使它去连你的内网地址。
 
 网关页面会显示agent是否**在线**、最后在线时间、agent版本和来源IP。**测试连接**检查agent是否有响应。连接断了agent会自己重连，每次间隔从1秒逐步加到30秒；连接假死时，Casvisor和agent各自在大约45秒内发现。agent离线期间，到它那些资产的连接会报错并给出最后在线时间，经它正在进行的会话会结束。
 

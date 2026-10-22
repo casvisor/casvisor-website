@@ -31,7 +31,7 @@ For each connection Casvisor logs in to the jump host and asks it to open a TCP 
 
 For networks Casvisor cannot connect into at all, for example behind NAT. A small agent runs on any machine in that network, connects out to Casvisor and keeps the connection open; Casvisor reaches the assets through that connection.
 
-The agent connects to the [SSH gateway](./ssh-gateway.md) port, so `sshGatewayPort` has to be set, and the machine running the agent has to be able to reach that port. Nothing has to be opened in the other direction.
+The agent connects to Casvisor's web address over WebSocket, the same HTTPS address users open, so it gets out wherever HTTPS does and passes through the [reverse proxy](../operations/reverse-proxy.md) like the web terminal. Nothing has to be opened in the other direction. With `--server <host>:<port>` it connects to the [SSH gateway](./ssh-gateway.md) port instead, which needs `sshGatewayPort` set.
 
 ### Starting an agent
 
@@ -39,19 +39,19 @@ The agent connects to the [SSH gateway](./ssh-gateway.md) port, so `sshGatewayPo
 2. The dialog shows the token and the command to start the agent with it:
 
    ```shell
-   casvisor agent --server casvisor.example.com:2222 --token cva_... --fingerprint SHA256:...
+   casvisor agent --server https://casvisor.example.com --token cva_... --fingerprint SHA256:...
    ```
 
    Copy it now. The token is shown only this once; Casvisor keeps only a hash of it.
 3. Run the command on a machine in the other network. The agent is the same `casvisor` binary as the server, from the same release. With Docker:
 
    ```shell
-   docker run -d --restart unless-stopped casbin/casvisor agent --server casvisor.example.com:2222 --token cva_... --fingerprint SHA256:...
+   docker run -d --restart unless-stopped casbin/casvisor agent --server https://casvisor.example.com --token cva_... --fingerprint SHA256:...
    ```
 
-   To keep the token out of the process list, put it in the environment variable `CASVISOR_AGENT_TOKEN` instead of `--token`.
+   To keep the token out of the process list, put it in a file and pass `--token-file <path>`, or put it in the environment variable `CASVISOR_AGENT_TOKEN`, instead of `--token`.
 
-`--fingerprint` is the host key of the SSH gateway, also shown on the **SSH keys** page. The agent refuses to talk to a server with any other key, so nobody in between can pose as Casvisor and send it to your internal addresses.
+`--fingerprint` is Casvisor's SSH host key, the one the SSH gateway uses, also shown on the **SSH keys** page when the SSH gateway is on. The agent checks it over WebSocket too, on top of HTTPS, and refuses to talk to a server with any other key, so nobody in between can pose as Casvisor and send it to your internal addresses.
 
 The gateway's page shows whether the agent is **Online**, when it was last online, its version and the address it connects from. **Test connection** checks that the agent answers. If the connection drops, the agent reconnects by itself, waiting from 1 up to 30 seconds between attempts; Casvisor and the agent each notice a dead connection within about 45 seconds. While the agent is offline, connections to its assets fail with an error giving the time it was last online, and sessions that were open through it end.
 
