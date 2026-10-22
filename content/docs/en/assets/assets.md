@@ -47,3 +47,5 @@ RDP assets have a **RemoteApp** table for publishing a single Windows program in
 ## Network placement
 
 Casvisor, and guacd for Telnet, open the connections, so they need to reach the assets' hosts and ports. A common layout is Casvisor on a host inside the private network, published to users over HTTPS, with the assets' firewalls only letting in Casvisor's address. Users then have no direct way to the servers at all, and every connection passes the permission check and lands in the [session list](../audit/sessions.md).
+
+Assets in networks that Casvisor cannot reach, such as another data center or an office behind NAT, are reached through a [network gateway](./network-gateways.md): an SSH jump host in that network, or an agent there that connects out to Casvisor.

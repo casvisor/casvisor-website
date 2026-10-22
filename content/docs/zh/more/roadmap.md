@@ -1,6 +1,6 @@
 ---
 title: "路线图"
-description: "Casvisor已经做完的和接下来要做的：会话录像和回放，开箱即用（SQLite、自带Casdoor），一个资产多个系统账号与自动改密，访问审批，内网agent，数据库和Kubernetes访问，syslog转发。"
+description: "Casvisor已经做完的和接下来要做的：会话录像和回放，开箱即用（SQLite、自带Casdoor），一个资产多个系统账号与自动改密，访问审批，数据库和Kubernetes访问，syslog转发。"
 ---
 
 Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先后顺序。进展会体现在[casvisor/casvisor](https://github.com/casvisor/casvisor)的提交和本手册的更新里。欢迎在[issue](https://github.com/casvisor/casvisor/issues)里提想法和反对意见。
@@ -17,6 +17,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [SSH网关](../assets/ssh-gateway.md)：经由Casvisor用`ssh`、`scp`、`sftp`、`rsync`和VS Code Remote连接，用公钥登录，和网页终端用同一套权限；新增端口转发动作**Forward**。
 - SSH资产的[文件传输](../assets/file-transfer.md)：网页终端旁的文件面板和SFTP，由上传、下载动作放行，并记进操作日志。
 - [命令记录和命令规则](../audit/commands.md)：在虚拟屏幕上读出SSH会话里的命令，按规则拦截或告警。
+- [网域网关](../assets/network-gateways.md)：经对方网络里的SSH跳板机，或经在内网主动连回Casvisor的agent，访问Casvisor直接连不到的资产。
 - [实时旁观SSH会话](../audit/sessions.md#实时旁观)，以及权限收回或到期时[立即断开会话](../audit/sessions.md#权限收回即断开)。
 
 ## 接下来
@@ -25,9 +26,8 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 2. **开箱即用。** 默认用SQLite代替MySQL，自带一个配好应用的Casdoor，一条命令就能跑起一个可以登录的Casvisor。
 3. **一个资产多个系统账号，自动改密。** 用户选择自己能用的账号，全程看不到密码；Casvisor按计划修改资产上的密码。
 4. **访问申请与审批。** 申请某个资产，审批通过后获得，到期自动收回。
-5. **内网agent。** 在内网放一个小agent，主动连回Casvisor，Casvisor直接连不到的资产可以经由它访问。
-6. **数据库和Kubernetes访问。** MySQL和PostgreSQL代理，带SQL审计；以及Kubernetes。
-7. **syslog转发。** 会话、命令和操作日志发到syslog，再接入SIEM。
+5. **数据库和Kubernetes访问。** MySQL和PostgreSQL代理，带SQL审计；以及Kubernetes。
+6. **syslog转发。** 会话、命令和操作日志发到syslog，再接入SIEM。
 
 ## 再往后
 

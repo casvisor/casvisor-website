@@ -4,6 +4,7 @@
     "assets",
     "connecting",
     "ssh-gateway",
+    "network-gateways",
     "file-transfer",
     "protocols"
   ]

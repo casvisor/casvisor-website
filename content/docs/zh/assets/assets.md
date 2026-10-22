@@ -47,3 +47,5 @@ RDP资产有一个**远程应用**表格，用来只发布一个Windows程序而
 ## 网络规划
 
 连接是Casvisor（Telnet是guacd）发起的，所以它们要能访问资产的主机和端口。常见的做法是把Casvisor放在内网的一台机器上，通过HTTPS对用户开放，资产的防火墙只放行Casvisor的地址。这样用户没有任何直连服务器的途径，每一次连接都要经过权限检查，并出现在[会话列表](../audit/sessions.md)里。
+
+Casvisor连不到的网络里的资产，例如另一个机房或在NAT后面的办公室，经[网域网关](./network-gateways.md)访问：对方网络里的SSH跳板机，或者在那里主动连回Casvisor的agent。
