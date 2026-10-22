@@ -5,7 +5,7 @@ description: "Put Casvisor behind nginx or another reverse proxy for HTTPS: pass
 
 Casvisor serves plain HTTP. In production, put it behind a reverse proxy that terminates HTTPS. Three things matter:
 
-1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-rdp`, `get-asset-vnc`, `get-asset-tunnel` (Telnet) and `get-session-monitor` (watching a session live). The proxy must pass the `Upgrade` and `Connection` headers through.
+1. **WebSockets.** Every connection runs over a WebSocket under `/api/`: `get-asset-ssh`, `get-asset-telnet`, `get-asset-rdp`, `get-asset-vnc`, `get-session-monitor` (watching a session live) and `connect-agent` ([network gateway agents](../assets/network-gateways.md)). The proxy must pass the `Upgrade` and `Connection` headers through.
 2. **Timeouts.** A terminal can sit idle for a long time. Raise the proxy's read timeout, or idle sessions are cut off after its default, often 60 seconds.
 3. **The client IP.** Permissions can be limited to [client IPs](../access-control/permissions.md#the-client-ip). When a request comes from a loopback or private address, Casvisor takes the last entry of `X-Forwarded-For`, so the proxy must set it to the address it received the connection from.
 
@@ -37,7 +37,7 @@ server {
 
 ## Casdoor's redirect URL
 
-Casdoor sends people back to the address they opened Casvisor at, so add the public one, `https://casvisor.example.com/callback`, to the application's **Redirect URLs**.
+With [Casdoor](../getting-started/casdoor.md), Casdoor sends people back to the address they opened Casvisor at, so add the public one, `https://casvisor.example.com/callback`, to the application's **Redirect URLs**.
 
 ## The SSH gateway
 
@@ -50,5 +50,4 @@ If SSH is reached at another name than the web UI, set `sshGatewayHost` to it, s
 ## Do not publish
 
 - Casvisor's own port 19000, once the proxy is in front. A request that reaches it directly from a private address could set `X-Forwarded-For` itself.
-- guacd's port 4822, which has no authentication.
-- MySQL.
+- MySQL, if you use it.

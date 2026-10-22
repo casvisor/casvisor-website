@@ -2,6 +2,7 @@
   "title": "Audit",
   "pages": [
     "sessions",
+    "recordings",
     "commands",
     "operation-logs"
   ]

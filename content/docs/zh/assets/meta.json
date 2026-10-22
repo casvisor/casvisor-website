@@ -6,6 +6,7 @@
     "ssh-gateway",
     "network-gateways",
     "file-transfer",
-    "protocols"
+    "protocols",
+    "patches"
   ]
 }

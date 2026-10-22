@@ -7,7 +7,8 @@ import { cn } from '@/lib/cn';
 const commands = [
   {
     label: 'Docker',
-    command: 'docker run -d -p 19000:19000 -v "$PWD/app.conf:/conf/app.conf" casbin/casvisor-all-in-one',
+    command:
+      'docker run -d --name casvisor -p 19000:19000 -p 2222:2222 -v casvisor-db:/db -v casvisor-recordings:/recordings casbin/casvisor',
   },
   {
     label: 'Source',

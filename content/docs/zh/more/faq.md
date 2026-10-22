@@ -1,6 +1,6 @@
 ---
 title: "常见问题"
-description: "关于Casvisor的常见问题：什么是堡垒机，是否必须用Casdoor，登录为什么失败，能否用自己的SSH客户端，资产密码存在哪里，去哪里求助。"
+description: "关于Casvisor的常见问题：什么是堡垒机，是否必须用Casdoor，初始密码，登录为什么失败，能否用自己的SSH客户端，资产密码和录像存在哪里，去哪里求助。"
 ---
 
 ## 什么是堡垒机？
@@ -9,9 +9,17 @@ description: "关于Casvisor的常见问题：什么是堡垒机，是否必须�
 
 ## 必须用Casdoor吗？
 
-是的。Casvisor只通过Casdoor登录，用户和用户组也来自Casdoor。Casdoor同样开源，它自己又能通过LDAP、SAML、OIDC或第三方登录来认证用户，所以Casvisor可以接在你现有的目录后面。见[对接Casdoor](../getting-started/casdoor.md)。
+不必。Casvisor开箱就有自己的账号，带用户组和管理员，见[用户和管理员](../access-control/users-and-admins.md)。需要单点登录、多因素认证，或者想通过LDAP、SAML、OIDC或第三方登录来认证用户、让Casvisor接在你现有的目录后面时，再对接同样开源的[Casdoor](../getting-started/casdoor.md)。
 
-## 登录时报错
+## 初始密码是什么？
+
+第一次启动时，Casvisor创建管理员`admin`，并把随机密码打印在日志里：Docker里用`docker logs casvisor`查看。想自己定，就在第一次启动前设置`adminPassword`。它只在一个用户都没有时创建。如果在新装的系统上丢了这个密码，删掉数据库（Docker里是`casvisor-db`卷）重新启动即可；已经有别的管理员时，任何一个管理员都可以在**用户**里给它设新密码。
+
+## 忘了自带账号的密码
+
+让管理员在**用户**里设一个新的。连续输错5次密码后，这个用户从这个地址登录会被拒绝15分钟。
+
+## 通过Casdoor登录时报错
 
 - **Redirect URI不被允许**：把`https://<你的Casvisor>/callback`加进Casdoor应用的Redirect URLs。
 - **从Casdoor跳回来后报签名或令牌错误**：Casvisor没拿到应用的证书。请用v1.110.0及以后的版本，并在日志里找`InitAuthConfig`：它在启动时去Casdoor取证书，见[关于证书](../getting-started/casdoor.md#关于证书)。
@@ -27,11 +35,11 @@ RDP由Casvisor自己连接，所以Casvisor服务器要能访问资产的3389端
 
 ## Telnet一连就失败
 
-Telnet经由guacd。检查guacd在`guacamoleEndpoint`上运行着，并且guacd本身能访问资产的主机和端口。
+Telnet由Casvisor自己连接，所以Casvisor服务器（或资产的网域网关）要能访问资产的主机和端口，默认是23。Casvisor在设备的`login:`和`password:`提示处输入保存的账号；提示不一样的设备不会自动输入，用户要自己登录。
 
 ## 能用自己的SSH客户端、scp或VS Code吗？
 
-SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**页面登记你的公钥，然后`ssh -p 2222 <资产>@<Casvisor主机>`。VS Code Remote还需要权限里有**端口转发**（Forward）。RDP和VNC只能在浏览器里连。
+SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**页面登记你的公钥，然后`ssh -p 2222 <资产>@<Casvisor主机>`。VS Code Remote还需要权限里有**端口转发**（Forward）。RDP、VNC和Telnet只能在浏览器里连。
 
 ## SSH网关提示“Permission denied (publickey)”
 
@@ -39,11 +47,11 @@ SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**
 
 ## 资产的密码存在哪里？
 
-存在Casvisor的MySQL数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。
+存在Casvisor的数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。
 
 ## Casvisor会录像吗？
 
-还没有可以回放的录像。会话列表记录了谁、从哪里、连了什么、连了多久；SSH会话里执行的[命令](../audit/commands.md)会保留；传过的文件和每一次改动记在操作日志里；管理员可以[实时旁观SSH会话](../audit/sessions.md#实时旁观)。录像和回放在[路线图](./roadmap.md)上。
+会，所有会话都录：SSH、Telnet、VNC和RDP，在**会话**里用浏览器回放。录像是`recordings/`下的文件，Docker里是`/recordings`；存在哪里、保留多久、怎么关掉，见[录像](../audit/recordings.md)。此外，SSH和Telnet会话里执行的[命令](../audit/commands.md)会保留，传过的文件和每一次改动记在操作日志里。
 
 ## 有托管版或企业版吗？
 

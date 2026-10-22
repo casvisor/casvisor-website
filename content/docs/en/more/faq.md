@@ -1,6 +1,6 @@
 ---
 title: "FAQ"
-description: "Common questions about Casvisor: what a bastion host is, whether Casdoor is required, why sign-in fails, using your own SSH client, where passwords are kept, and how to get help."
+description: "Common questions about Casvisor: what a bastion host is, whether Casdoor is required, the first password, why sign-in fails, using your own SSH client, where passwords and recordings are kept, and how to get help."
 ---
 
 ## What is a bastion host?
@@ -9,9 +9,17 @@ A server that sits between people and the systems they administer, so that every
 
 ## Is Casdoor required?
 
-Yes. Casvisor signs people in only through Casdoor and takes users and groups from it. Casdoor is open source as well, and can itself sign people in through LDAP, SAML, OIDC or social logins, so Casvisor can sit behind the directory you already have. See [Connect Casdoor](../getting-started/casdoor.md).
+No. Out of the box Casvisor keeps its own accounts, with groups and administrators; see [Users and administrators](../access-control/users-and-admins.md). Connect [Casdoor](../getting-started/casdoor.md), which is open source as well, when you want single sign-on, MFA, or sign-in through LDAP, SAML, OIDC or social logins, so that Casvisor sits behind the directory you already have.
 
-## Sign-in comes back with an error
+## What is the first password?
+
+On first start Casvisor creates the administrator `admin` and prints a random password in its log: `docker logs casvisor` in Docker. Set `adminPassword` before the first start to choose it instead. It is only created while there are no users at all. If you lose it on a fresh install, remove the database, the `casvisor-db` volume in Docker, and start again; once there are other administrators, any of them can set a new password under **Users**.
+
+## I forgot the password of a built-in account
+
+An administrator sets a new one under **Users**. After 5 wrong passwords, sign-in for that user from that address is refused for 15 minutes.
+
+## Sign-in through Casdoor comes back with an error
 
 - **Redirect URI not allowed**: add `https://<your Casvisor>/callback` to the Casdoor application's Redirect URLs.
 - **A signature or token error after Casdoor sends you back**: Casvisor does not have the application's certificate. Use v1.110.0 or later, and check its log for `InitAuthConfig`: it fetches the certificate from Casdoor at start; see [About the certificate](../getting-started/casdoor.md#about-the-certificate).
@@ -27,11 +35,11 @@ Casvisor connects to RDP itself, so the Casvisor server has to reach the asset's
 
 ## A Telnet connection fails straight away
 
-Telnet goes through guacd. Check that guacd is running at `guacamoleEndpoint` and that guacd itself can reach the asset's host and port.
+Casvisor connects to Telnet itself, so the Casvisor server, or the asset's network gateway, has to reach the asset's host and port, 23 by default. Casvisor types the stored account at the device's `login:` and `password:` prompts; a device with other prompts gets nothing typed, and the user logs in by hand.
 
 ## Can I use my own SSH client, scp or VS Code?
 
-Yes, for SSH assets, through the [SSH gateway](../assets/ssh-gateway.md): register your public key under **SSH keys**, then `ssh -p 2222 <asset>@<casvisor host>`. VS Code Remote also needs the **Forward** action in your permission. RDP and VNC are reached from the browser only.
+Yes, for SSH assets, through the [SSH gateway](../assets/ssh-gateway.md): register your public key under **SSH keys**, then `ssh -p 2222 <asset>@<casvisor host>`. VS Code Remote also needs the **Forward** action in your permission. RDP, VNC and Telnet are reached from the browser only.
 
 ## The SSH gateway answers "Permission denied (publickey)"
 
@@ -39,11 +47,11 @@ The gateway does not know the key your client offered. Check that the public key
 
 ## Where are the passwords of assets kept?
 
-In Casvisor's MySQL database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own.
+In Casvisor's database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own.
 
 ## Does Casvisor record sessions?
 
-Not as a replay yet. The session list records who connected to what, from where and for how long; the [commands](../audit/commands.md) run in SSH sessions are kept; files moved and every change go into the operation log; and administrators can [watch SSH sessions live](../audit/sessions.md#watching-a-session-live). Recording and playback are on the [roadmap](./roadmap.md).
+Yes, all of them: SSH, Telnet, VNC and RDP, replayed in the browser from **Sessions**. The recordings are files under `recordings/`, `/recordings` in Docker; see [Recordings](../audit/recordings.md) for where they go, how long they are kept and how to turn them off. Besides that, the [commands](../audit/commands.md) run in SSH and Telnet sessions are kept, and files moved and every change go into the operation log.
 
 ## Is there a hosted or enterprise version?
 

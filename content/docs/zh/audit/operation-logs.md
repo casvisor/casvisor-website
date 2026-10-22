@@ -25,7 +25,7 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 
 ## SSH和文件事件
 
-有些事发生在会话里，而不是通过接口调用，Casvisor会自己为它们写一条记录。这些记录的**方法**是`SSH`或`SFTP`，**请求URI**里是详情（例如路径），**对象**是资产。
+有些事发生在会话里，而不是通过接口调用，Casvisor会自己为它们写一条记录。这些记录的**方法**是`SSH`、`SFTP`或`RDP`（回放是`GET`），**请求URI**里是详情（例如路径），**对象**是资产。
 
 | 操作 | 什么时候 | 详情 |
 | --- | --- | --- |
@@ -33,12 +33,17 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 | `ssh-forward` | 网关连接第一次转发到某个目标 | `主机:端口`，或socket路径 |
 | `sftp-download` | 经SFTP打开文件读取，或在[文件面板](../assets/file-transfer.md)里下载 | 路径 |
 | `sftp-upload` | 经SFTP打开文件写入，或在文件面板里上传 | 路径 |
-| `sftp-mkdir`、`sftp-rmdir`、`sftp-remove` | 经SFTP新建或删除文件夹，或删除文件 | 路径 |
-| `sftp-rename` | 经SFTP重命名文件或文件夹 | `旧 -> 新` |
+| `sftp-mkdir`、`sftp-rmdir`、`sftp-remove` | 经SFTP新建或删除文件夹，或删除文件；或在文件面板里新建文件夹 | 路径 |
+| `sftp-delete` | 在SSH会话的文件面板里删除文件或文件夹 | 路径 |
+| `sftp-rename` | 经SFTP或在文件面板里重命名文件或文件夹 | `旧 -> 新` |
 | `sftp-symlink`、`sftp-link` | 经SFTP建链接 | `链接 -> 目标` |
+| `file-upload`、`file-download`、`file-mkdir`、`file-rename`、`file-delete` | 在[RDP会话](../assets/file-transfer.md#rdp)的文件面板里做同样的操作 | 路径，或`旧 -> 新` |
+| `file-create`、`file-mkdir`、`file-read`、`file-write`、`file-rename`、`file-delete` | 远程桌面使用RDP会话里重定向的磁盘；`file-write`在文件关闭时记一次 | 路径，`file-write`还带写入的字节数 |
+| `clipboard-copy`、`clipboard-paste` | 从[RDP会话](../assets/protocols.md#剪贴板)里复制出文字，或往里粘贴文字 | 文字内容，最多1000字节 |
 | `session-monitor` | 管理员打开某个会话的[实时旁观](./sessions.md#实时旁观) | 会话 |
+| `session-replay` | 管理员回放或下载[录像](./recordings.md) | 录像文件 |
 
-这些记录不受`logPostOnly`影响，总会写入。SSH会话里执行的命令不在这里，在[命令记录](./commands.md)页面。
+这些记录不受`logPostOnly`影响，总会写入。SSH和Telnet会话里执行的命令不在这里，在[命令记录](./commands.md)页面。
 
 ## 保留期限
 

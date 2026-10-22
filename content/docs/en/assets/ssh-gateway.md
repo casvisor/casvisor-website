@@ -21,14 +21,14 @@ The gateway is plain SSH on its own TCP port and does not pass through the HTTPS
 
 ## Registering a public key
 
-The gateway only accepts public keys. There is no password sign-in, so it never sees a Casdoor password, and the MFA of the web sign-in does not apply to it.
+The gateway only accepts public keys. There is no password sign-in, so it never sees the password of a Casvisor or Casdoor account, and the MFA of the web sign-in does not apply to it.
 
 1. If you have no key yet, create one with `ssh-keygen -t ed25519`.
 2. In Casvisor, open **SSH keys** (`/ssh-keys`), click **Add SSH key**, and paste the content of `~/.ssh/id_ed25519.pub`.
 
 Every user can manage their own keys there; administrators are not needed. A key can belong to only one user. The page lists each key's fingerprint and when it was last used, and deleting a key stops it from signing in at once.
 
-At every connection the gateway reads the user from Casdoor again: a user who is disabled or deleted in Casdoor, or who is not in `allowedUsers`, is refused even with a registered key. Their groups and administrator flag are also read fresh, rather than from an earlier web sign-in.
+At every connection the gateway reads the user again, from the built-in accounts or from Casdoor: a user who is forbidden, disabled or deleted, or who is not in `allowedUsers`, is refused even with a registered key. Their groups and administrator flag are also read fresh, rather than from an earlier web sign-in.
 
 ## Connecting
 
@@ -78,6 +78,6 @@ Always refused: remote port forwarding (`ssh -R`), agent forwarding (`ssh -A`) a
 
 ## Sessions, commands and the audit log
 
-One SSH connection through the gateway is one [session](../audit/sessions.md), however many shells, transfers and forwards it carries. Its user agent is the client's SSH version, such as `SSH-2.0-OpenSSH_9.6`. Administrators can stop it like any other session, and it is cut off when the permission that allows it is revoked.
+One SSH connection through the gateway is one [session](../audit/sessions.md), however many shells, transfers and forwards it carries. Its user agent is the client's SSH version, such as `SSH-2.0-OpenSSH_9.6`. Administrators can stop it like any other session, and it is cut off when the permission that allows it is revoked. Interactive shells are [recorded](../audit/recordings.md) and can be watched live; a connection that only runs a command, transfers files or forwards ports has no recording.
 
 Commands are recorded and checked against the [command rules](../audit/commands.md): commands typed in an interactive shell as in the web terminal, and commands given on the `ssh` command line as they were sent. The connection to the asset, each new forwarding destination, and every file read or written over SFTP, along with new folders, renames, removals and links, go into the [operation log](../audit/operation-logs.md#ssh-and-file-events).

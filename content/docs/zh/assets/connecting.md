@@ -25,12 +25,14 @@ description: "用户从工作台连接，工作台列出他们能访问的资产
 
 1. 浏览器请求Casvisor为这个资产建立会话。
 2. Casvisor检查用户已登录，并且有[权限](../access-control/permissions.md)允许他此刻、从他所在的IP对这个资产**连接**。管理员跳过这一步。
-3. Casvisor为会话打开WebSocket，再检查一次会话是同一个用户发起的、权限仍然有效，然后连资产：SSH、RDP和VNC直接连，Telnet经由guacd。
-4. 在用户关掉标签页或管理员停止它之前，会话在会话列表里显示为**在线**。
+3. Casvisor为会话打开WebSocket，再检查一次会话是同一个用户发起的、权限仍然有效，然后连资产，资产配了[网域网关](./network-gateways.md)时经由它连。
+4. 在用户关掉标签页或管理员停止它之前，会话在会话列表里显示为**在线**，同时被[录像](../audit/recordings.md)。
 
 检查不通过时，标签页里会显示原因，例如*you have no permission to connect to the asset*。
 
 ## 键盘和剪贴板
 
-- **SSH**运行在xterm.js终端里：支持颜色，随窗口调整大小，复制粘贴用浏览器自己的。权限里有上传或下载时，右上角的**文件**按钮会在终端旁边打开[文件面板](./file-transfer.md#文件面板)。
-- **RDP、VNC和Telnet**运行在画布里，按键原样发给远端。VNC和Telnet的剪贴板能否共享取决于用户权限里的**复制**和**粘贴**动作；RDP暂时没有剪贴板。见[协议](./protocols.md)。
+- **SSH和Telnet**运行在xterm.js终端里：支持颜色，随窗口调整大小，复制粘贴用浏览器自己的。SSH的权限里有上传或下载时，右上角的**文件**按钮会在终端旁边打开[文件面板](./file-transfer.md#文件面板)。
+- **RDP和VNC**运行在画布里，工具栏有全屏、剪贴板和Ctrl+Alt+Del等组合键。按键原样发给远端。剪贴板能否共享取决于用户权限里的**复制**和**粘贴**动作。RDP跟随浏览器窗口调整大小，有上传或下载权限时还有**文件**按钮，用来[传文件](./file-transfer.md#rdp)。
+
+各协议的细节见[协议](./protocols.md)。

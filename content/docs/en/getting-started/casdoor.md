@@ -1,9 +1,11 @@
 ---
 title: "Connect Casdoor"
-description: "Casvisor signs people in through Casdoor. Create an organization and an application for it, set the redirect URL and certificate, and copy the client ID and secret into app.conf."
+description: "Sign in to Casvisor through Casdoor instead of its built-in accounts: create an organization and an application for it, set the redirect URL, and copy the client ID and secret into app.conf."
 ---
 
-Casvisor has no user table and no login form. People sign in through [Casdoor](https://casdoor.ai) with OAuth 2.0, and Casvisor takes their name, organization, groups and administrator flag from the token Casdoor gives back. Anything Casdoor supports at sign-in, such as MFA, passkeys, LDAP, SAML or GitHub and Google logins, therefore works for Casvisor without further setup.
+Out of the box Casvisor signs people in with its own accounts (see [Users and administrators](../access-control/users-and-admins.md)). Connect it to [Casdoor](https://casdoor.ai) when you want single sign-on with your other applications, or anything the built-in accounts do not have.
+
+With Casdoor, Casvisor keeps no accounts of its own. People sign in through Casdoor with OAuth 2.0, and Casvisor takes their name, organization, groups and administrator flag from the token Casdoor gives back. Anything Casdoor supports at sign-in, such as MFA, passkeys, LDAP, SAML or GitHub and Google logins, therefore works for Casvisor without further setup.
 
 ## In Casdoor
 
@@ -25,7 +27,7 @@ casdoorOrganization = "my-org"
 casdoorApplication = "app-casvisor"
 ```
 
-`casdoorEndpoint` is Casdoor's address with no trailing slash. It has to work both from people's browsers, which are sent there to sign in, and from the Casvisor server, which exchanges the sign-in code for a token there. Restart Casvisor after changing it. The web UI reads the same four values, so nothing needs to be rebuilt. Each of these keys can also be given as an environment variable of the same name, for example `docker run -e casdoorEndpoint=https://door.example.com ...`, which takes precedence over the file.
+Setting `casdoorEndpoint` is what switches Casvisor from its own accounts to Casdoor. It is Casdoor's address with no trailing slash. It has to work both from people's browsers, which are sent there to sign in, and from the Casvisor server, which exchanges the sign-in code for a token there. Restart Casvisor after changing it. The web UI reads the same four values, so nothing needs to be rebuilt. Each of these keys can also be given as an environment variable of the same name, for example `docker run -e casdoorEndpoint=https://door.example.com ...`, which takes precedence over the file.
 
 ## About the certificate
 
@@ -38,3 +40,9 @@ Versions before v1.110.0 only knew that old key, so with a Casdoor installed fro
 ## Who becomes an administrator
 
 A user who signs in is an administrator of Casvisor when **Is admin** is on for them in Casdoor, or when they belong to Casdoor's `built-in` organization. Administrators see the management pages and can reach every asset. Everyone else gets the workbench and only the assets a permission gives them. See [Users and administrators](../access-control/users-and-admins.md).
+
+## Moving from the built-in accounts
+
+Assets, permissions and command rules belong to an organization. With the built-in accounts that is the one named by `casdoorOrganization`, `casvisor` unless you changed it. After switching to Casdoor, users see the assets of their own Casdoor organization. So if you plan to move to Casdoor later, set `casdoorOrganization` to the name of that Casdoor organization from the start, or give the Casdoor organization the name `casvisor`.
+
+The built-in accounts are not used while `casdoorEndpoint` is set. They stay in the database, and emptying `casdoorEndpoint` again brings them back.

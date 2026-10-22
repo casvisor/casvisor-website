@@ -1,9 +1,9 @@
 ---
 title: "Commands and command rules"
-description: "Casvisor records the commands run in SSH sessions, from the web terminal and the SSH gateway, and command rules block or flag the ones that match a regular expression, for chosen users, groups, assets and asset tags."
+description: "Casvisor records the commands run in SSH and Telnet sessions, from the web terminal and the SSH gateway, and command rules block or flag the ones that match a regular expression, for chosen users, groups, assets and asset tags."
 ---
 
-Casvisor keeps the commands people run on SSH assets, whether from the web terminal or through the [SSH gateway](../assets/ssh-gateway.md), and can stop the ones you name before they run. RDP, VNC and Telnet sessions have no command records.
+Casvisor keeps the commands people run on SSH and Telnet assets, whether from the web terminal or, for SSH, through the [SSH gateway](../assets/ssh-gateway.md), and can stop the ones you name before they run. RDP and VNC sessions have no command records; their screens are in the [recordings](./recordings.md).
 
 Both pages are for administrators: **Commands** (`/commands`) and **Command rules** (`/command-rules`).
 
@@ -20,7 +20,7 @@ Both pages are for administrators: **Commands** (`/commands`) and **Command rule
 
 ## The Commands page
 
-Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. The list can be searched by command, user, asset, client IP and session. In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH session and links to them.
+Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. The list can be searched by command, user, asset, client IP and session. In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH session and links to them. The player of a [recording](./recordings.md) lists the commands of SSH and Telnet sessions beside the screen; clicking one jumps to it.
 
 ## Command rules
 

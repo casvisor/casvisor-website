@@ -5,7 +5,7 @@ description: "用nginx等反向代理为Casvisor提供HTTPS：放行连接用的
 
 Casvisor本身只提供HTTP。生产环境里请放在一个终结HTTPS的反向代理后面，注意三件事：
 
-1. **WebSocket。** 每个连接都跑在`/api/`下的WebSocket上：`get-asset-ssh`、`get-asset-rdp`、`get-asset-vnc`、`get-asset-tunnel`（Telnet）和`get-session-monitor`（实时旁观）。代理要透传`Upgrade`和`Connection`头。
+1. **WebSocket。** 每个连接都跑在`/api/`下的WebSocket上：`get-asset-ssh`、`get-asset-telnet`、`get-asset-rdp`、`get-asset-vnc`、`get-session-monitor`（实时旁观）和`connect-agent`（[网域网关的agent](../assets/network-gateways.md)）。代理要透传`Upgrade`和`Connection`头。
 2. **超时。** 终端可能很久没有输入。调长代理的读超时，否则空闲会话会在它的默认超时（常见是60秒）后被断开。
 3. **客户端IP。** 权限可以限定[来源IP](../access-control/permissions.md#客户端ip)。请求来自本机或内网地址时，Casvisor取`X-Forwarded-For`的最后一项，所以代理必须把它设成代理收到连接时看到的地址。
 
@@ -37,7 +37,7 @@ server {
 
 ## Casdoor的回调地址
 
-Casdoor会把用户送回他们打开Casvisor时的地址，所以要把对外的地址`https://casvisor.example.com/callback`加进应用的**Redirect URLs**。
+对接了[Casdoor](../getting-started/casdoor.md)时，Casdoor会把用户送回他们打开Casvisor时的地址，所以要把对外的地址`https://casvisor.example.com/callback`加进应用的**Redirect URLs**。
 
 ## SSH网关
 
@@ -50,5 +50,4 @@ Casvisor用SSH连接的来源地址去比对[来源IP](../access-control/permiss
 ## 不要对外开放
 
 - 有了代理以后，Casvisor自己的19000端口。直接从内网地址访问它的请求可以自己伪造`X-Forwarded-For`。
-- guacd的4822端口，它没有认证。
-- MySQL。
+- MySQL（如果用了的话）。

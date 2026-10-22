@@ -12,8 +12,8 @@ There are several good open-source projects in this space. This page is meant to
 | Written in | Go | Python, Go | Go | Rust | C, Java |
 | Browser access | SSH, RDP, VNC, Telnet | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC | SSH, RDP, VNC, Telnet, K8s |
 | Native clients (`ssh`, `scp`, database clients) | SSH only: `ssh`, `scp`, `sftp`, `rsync`, port forwarding | Yes | Yes | Yes | No |
-| Session recording | Not yet | Yes | Yes | Yes | Yes |
-| Identity | Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC | Built in, extensions for LDAP, SSO |
+| Session recording | SSH, Telnet, VNC, RDP, played in the browser | Yes | Yes | Yes | Yes |
+| Identity | Built in, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC | Built in, extensions for LDAP, SSO |
 | Access policy | Casbin: users, groups, assets, tags, actions, IPs, time windows | RBAC, asset authorizations | RBAC with labels | Roles on targets | Connection permissions |
 
 ## When to pick which
@@ -21,16 +21,17 @@ There are several good open-source projects in this space. This page is meant to
 - **JumpServer** is the most complete option, and the established one in China. Some of its connectors, such as the proxies for native RDP and database clients, are part of the enterprise edition.
 - **Teleport** issues short-lived certificates and covers the widest range of infrastructure. Since v16, its community edition binaries are free to use only for companies with fewer than 100 employees and under $10 million a year in revenue.
 - **Warpgate** is a single Rust binary that proxies SSH, HTTPS, Kubernetes, MySQL, PostgreSQL, RDP and VNC transparently, with recording and live view, and no paid edition. Today it does more than Casvisor on the protocol side.
-- **Apache Guacamole** is a browser remote desktop gateway with its own users and connection permissions. Casvisor uses its daemon, guacd, for Telnet.
+- **Apache Guacamole** is a browser remote desktop gateway with its own users and connection permissions.
 - **HashiCorp Boundary** archived its open-source repository in October 2026; it continues as HCP Boundary and Boundary Enterprise.
 
 ## Where Casvisor differs
 
-- **Identity is Casdoor's.** If you already run Casdoor, or want its single sign-on, MFA, LDAP and SAML, Casvisor uses those directly, including Casdoor's groups in permissions, rather than keeping a second user directory.
+- **One binary.** SSH, RDP, VNC and Telnet, the SSH gateway, recording and the network gateway agent are all in one Go program, on SQLite by default, with nothing installed on the servers.
+- **Identity can be Casdoor's.** Casvisor has its own accounts, but if you already run Casdoor, or want its single sign-on, MFA, LDAP and SAML, Casvisor uses those directly, including Casdoor's groups in permissions, rather than keeping a second user directory.
 - **Policy is Casbin's.** Permissions combine users and groups, assets and tags, actions, client IP ranges and time windows, and are evaluated by a model you can read on the [permissions page](../access-control/permissions.md#the-casbin-model).
-- **Command rules follow the same scopes as permissions.** A rule applies to users, Casdoor groups, assets and asset tags, and covers the web terminal and native SSH clients alike, since both go through the same check. See [Commands and command rules](../audit/commands.md).
+- **Command rules follow the same scopes as permissions.** A rule applies to users, groups, assets and asset tags, and covers the web terminal and native SSH clients alike, since both go through the same check. See [Commands and command rules](../audit/commands.md).
 - **No enterprise edition.** What is on the [roadmap](./roadmap.md), including database proxies and access requests, is planned for the open-source project itself.
 
 ## Where Casvisor is behind
 
-Session recording and playback, several system accounts per asset with password rotation, access requests, and database and Kubernetes access. Native clients cover SSH only. These are the next items on the [roadmap](./roadmap.md). If you need them today, the projects above have most of them.
+Several system accounts per asset with password rotation, access requests, and database and Kubernetes access, which are the next items on the [roadmap](./roadmap.md). Native clients cover SSH only, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.

@@ -25,12 +25,14 @@ When the SSH gateway is on, SSH assets also have a **Copy SSH command** button, 
 
 1. The browser asks Casvisor to start a session for the asset.
 2. Casvisor checks that the user is signed in and that a [permission](../access-control/permissions.md) gives them **Connect** on this asset, from their IP address, right now. Administrators skip this check.
-3. Casvisor opens a WebSocket for the session. It checks again that the session was started by the same user and that the permission still holds, then connects to the asset, natively for SSH, RDP and VNC and through guacd for Telnet.
-4. The session shows as **Online** in the session list until the tab is closed or an administrator stops it.
+3. Casvisor opens a WebSocket for the session. It checks again that the session was started by the same user and that the permission still holds, then connects to the asset, through its [network gateway](./network-gateways.md) if it has one.
+4. The session shows as **Online** in the session list until the tab is closed or an administrator stops it, and is [recorded](../audit/recordings.md) as it goes.
 
 If the check fails, the tab shows why, for example *you have no permission to connect to the asset*.
 
 ## Keyboard and clipboard
 
-- **SSH** runs in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser. With Upload or Download in the permission, the **Files** button in the top right corner opens a [file panel](./file-transfer.md#the-file-panel) beside the terminal.
-- **RDP, VNC and Telnet** run in a canvas. Keys go to the remote side as typed. For VNC and Telnet, clipboard sharing follows the **Copy** and **Paste** actions of the user's permission; RDP has no clipboard yet. See [Protocols](./protocols.md).
+- **SSH and Telnet** run in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser. For SSH, with Upload or Download in the permission, the **Files** button in the top right corner opens a [file panel](./file-transfer.md#the-file-panel) beside the terminal.
+- **RDP and VNC** run in a canvas, with a toolbar for full screen, the clipboard and key combinations such as Ctrl+Alt+Del. Keys go to the remote side as typed. Clipboard sharing follows the **Copy** and **Paste** actions of the user's permission. RDP follows the size of the browser window and, with Upload or Download, has a **Files** button for [moving files](./file-transfer.md#rdp).
+
+See [Protocols](./protocols.md) for the details of each.

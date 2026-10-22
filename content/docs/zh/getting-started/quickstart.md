@@ -1,77 +1,69 @@
 ---
 title: "用Docker快速上手"
-description: "用自带MariaDB和guacd的all-in-one Docker镜像运行Casvisor，通过Casdoor登录，连上第一台服务器。"
+description: "一条docker run运行Casvisor：开箱即用SQLite和自带账号，在日志里找到管理员密码，然后添加服务器并连接。"
 ---
 
-试用Casvisor最快的办法是all-in-one镜像`casbin/casvisor-all-in-one`。除了Casvisor本身，它还带了做数据库用的MariaDB和连Telnet用的guacd，一个容器就能跑。外面只需要一个用来登录的Casdoor。
+Casvisor开箱就能独立运行：数据库用SQLite，没有配置Casdoor时用它自己的账号登录。试用只需要一个容器。
 
-## 1. 准备Casdoor
-
-Casvisor没有自己的登录。请用v1.110.0及以后的镜像：更早的版本配v4.10及以后新装的Casdoor时登录不了（见[关于证书](./casdoor.md#关于证书)）。
-
-如果你已经有Casdoor，照[对接Casdoor](./casdoor.md)为Casvisor建一个应用，拿到它的Client ID和Client secret再回来。
-
-如果还没有，就在旁边起一个：
+## 1. 启动Casvisor
 
 ```bash
-docker run -d --name casdoor -p 8000:8000 casbin/casdoor-all-in-one
+docker run -d --name casvisor -p 19000:19000 -p 2222:2222 \
+  -v casvisor-db:/db -v casvisor-recordings:/recordings \
+  casbin/casvisor
 ```
 
-打开`http://<你的IP>:8000`，用`admin` / `123`登录，先改掉这个密码，再照[对接Casdoor](./casdoor.md)建应用。全程都用机器的IP或主机名，不要用`localhost`：Casvisor的容器访问Casdoor用的是和浏览器同一个地址，而在容器里`localhost`指的是容器自己。
+- 19000端口是网页和接口。2222端口是[SSH网关](../assets/ssh-gateway.md)，用来以本地的`ssh`、`scp`和VS Code连接；用不到的话可以去掉`-p 2222:2222`。
+- `casvisor-db`卷保存SQLite数据库，`casvisor-recordings`卷保存[会话录像](../audit/recordings.md)，换容器时都不会丢。镜像以UID 1000运行，如果挂载的是宿主机目录而不是命名卷，要让这个用户能写。
 
-## 2. 写app.conf
+## 2. 找到管理员密码
 
-下载默认配置：
+第一次启动、还没有任何用户时，Casvisor会创建管理员`admin`，生成一个随机密码并打印在日志里：
 
 ```bash
-curl -fsSLo app.conf https://raw.githubusercontent.com/casvisor/casvisor/master/conf/app.conf
+docker logs casvisor
 ```
 
-把其中五项Casdoor配置改成你自己的：
-
-```ini
-casdoorEndpoint = http://192.168.1.20:8000
-clientId = <应用的Client ID>
-clientSecret = <应用的Client secret>
-casdoorOrganization = "<应用所在的组织>"
-casdoorApplication = "<应用名>"
+```text
+========================================================================
+Casvisor created the administrator "admin" with the password: 7kQm2xT9wRp4ZbNa , sign in and change it in My Account
+========================================================================
 ```
 
-`dataSourceName`和`guacamoleEndpoint`保持不变：它们指向镜像里的MariaDB和guacd。每一项的含义见[配置](../operations/configuration.md)。
+想自己定初始密码，就在`docker run`命令里加上`-e adminPassword=<密码>`，至少8个字符。它只在创建第一个账号时使用，之后改密码要在**我的账户**里改。
 
-## 3. 启动Casvisor
+## 3. 登录
 
-```bash
-docker run -d --name casvisor -p 19000:19000 \
-  -v "$PWD/app.conf:/conf/app.conf" \
-  -v casvisor-db:/var/lib/mysql \
-  casbin/casvisor-all-in-one
-```
+打开`http://<你的IP>:19000`，用`admin`和这个密码登录。然后在右上角的菜单里打开**我的账户**，改掉密码。
 
-第二个卷用来保存数据库，换容器时数据不会丢。第一次启动时Casvisor会建好`casvisor`库和表。
-
-镜像还会在2222端口上运行[SSH网关](../assets/ssh-gateway.md)，用来以本地的`ssh`、`scp`和VS Code连接。要用的话在上面的命令里加上`-p 2222:2222`。
-
-## 4. 登录
-
-打开`http://<你的IP>:19000`，页面会跳到Casdoor再跳回来。用应用所在组织的管理员账号（Casdoor里该用户打开了**Is admin**）登录才能看到管理页面；其他用户只有工作台。
-
-如果Casdoor提示重定向地址不被允许，就把`http://<你的IP>:19000/callback`加进应用的**Redirect URLs**。
-
-## 5. 添加服务器并连接
+## 4. 添加服务器并连接
 
 1. 打开**资产**，点**添加**，填好协议、主机、端口，需要的话再填登录用的账号。见[资产](../assets/assets.md)。
 2. 点资产上的**连接**，会在新标签页里打开终端或桌面。
 
-管理员能访问所有资产。要让别人也能用，就建一条[权限](../access-control/permissions.md)，写上他们的名字，或者他们所在的Casdoor用户组。
+管理员能访问所有资产。要让别人也能用，就在**用户**里加上他们（见[用户和管理员](../access-control/users-and-admins.md)），再给他们一条[权限](../access-control/permissions.md)。每个会话都会录像，在**会话**里回放。
 
-## 不用all-in-one镜像
+## 用Docker Compose
 
-`casbin/casvisor`是不带MariaDB和guacd的Casvisor。已经有MySQL的时候用它；要连Telnet，再在旁边起一个guacd：
+仓库里的[docker-compose.yml](https://github.com/casvisor/casvisor/blob/master/docker-compose.yml)做的是同样的事：开放19000和2222端口，用卷保存数据库，并留了一项`adminPassword`用来设初始密码。
+
+## 用MySQL
+
+一个Casvisor用SQLite就够了。要把数据放在MySQL或MariaDB里，用环境变量传入数据库配置：
 
 ```bash
-docker run -d --name guacd -p 4822:4822 guacamole/guacd
-docker run -d --name casvisor -p 19000:19000 -v "$PWD/app.conf:/conf/app.conf" casbin/casvisor
+docker run -d --name casvisor -p 19000:19000 -p 2222:2222 \
+  -e driverName=mysql \
+  -e dataSourceName='casvisor:secret@tcp(192.168.1.30:3306)/' \
+  -e dbName=casvisor \
+  -v casvisor-recordings:/recordings \
+  casbin/casvisor
 ```
 
-然后把`dataSourceName`改成你的MySQL，把`guacamoleEndpoint`改成guacd容器，地址要是Casvisor容器能访问到的。仓库里的[docker-compose.yml](https://github.com/casvisor/casvisor/blob/master/docker-compose.yml)会把三个一起启动。
+Casvisor第一次启动时会建好数据库和表，所以这个账号要有建库的权限。见[配置](../operations/configuration.md#数据库)。
+
+镜像`casbin/casvisor-all-in-one`自带MariaDB并已配置好使用它，同样可以单独运行。它把数据库放在`/var/lib/mysql`，要在这里挂一个卷（`-v casvisor-db:/var/lib/mysql`），否则数据会随容器一起删掉。
+
+## 用Casdoor登录
+
+Casvisor也可以不用自己的账号，改为通过[Casdoor](https://casdoor.ai)登录，以使用单点登录、多因素认证、LDAP、SAML和第三方登录，并在权限里使用Casdoor的用户组。设置了`casdoorEndpoint`就会切换过去。见[对接Casdoor](./casdoor.md)。

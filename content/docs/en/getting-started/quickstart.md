@@ -1,77 +1,69 @@
 ---
 title: "Quick start with Docker"
-description: "Run Casvisor with the all-in-one Docker image, which carries its own MariaDB and guacd, sign in through Casdoor and connect to the first server."
+description: "Run Casvisor with one docker run: SQLite and its own accounts out of the box, the administrator password in the log, then add a server and connect."
 ---
 
-The quickest way to try Casvisor is the all-in-one image `casbin/casvisor-all-in-one`. Besides Casvisor it carries MariaDB for the database and guacd for Telnet, so it runs on its own. The only thing it needs from outside is a Casdoor to sign in with.
+Casvisor runs on its own out of the box: the database is SQLite, and when no Casdoor is configured it keeps its own user accounts. One container is enough to try it.
 
-## 1. Prepare Casdoor
-
-Casvisor has no login of its own. Use image v1.110.0 or later: earlier ones cannot sign in with a Casdoor installed from v4.10 on (see [About the certificate](./casdoor.md#about-the-certificate)).
-
-If you already run Casdoor, create an application for Casvisor as described in [Connect Casdoor](./casdoor.md) and come back with its client ID and secret.
-
-If you do not, start one next to it:
+## 1. Start Casvisor
 
 ```bash
-docker run -d --name casdoor -p 8000:8000 casbin/casdoor-all-in-one
+docker run -d --name casvisor -p 19000:19000 -p 2222:2222 \
+  -v casvisor-db:/db -v casvisor-recordings:/recordings \
+  casbin/casvisor
 ```
 
-Open `http://<your-ip>:8000`, sign in as `admin` / `123`, change that password, and create the application as in [Connect Casdoor](./casdoor.md). Use the machine's IP address or host name rather than `localhost` throughout: Casvisor's container calls Casdoor at the same address your browser uses, and inside the container `localhost` is the container itself.
+- Port 19000 is the web UI and the API. Port 2222 is the [SSH gateway](../assets/ssh-gateway.md), for connecting with your own `ssh`, `scp` and VS Code; leave out `-p 2222:2222` if you do not need it.
+- The `casvisor-db` volume keeps the SQLite database, and `casvisor-recordings` the [session recordings](../audit/recordings.md), when the container is replaced. The image runs as UID 1000, so if you mount host directories instead of named volumes, make them writable for that user.
 
-## 2. Write app.conf
+## 2. Find the administrator password
 
-Download the default configuration:
+On first start, with no users yet, Casvisor creates the administrator `admin` with a random password and prints it in its log:
 
 ```bash
-curl -fsSLo app.conf https://raw.githubusercontent.com/casvisor/casvisor/master/conf/app.conf
+docker logs casvisor
 ```
 
-and change the five Casdoor keys to your own:
-
-```ini
-casdoorEndpoint = http://192.168.1.20:8000
-clientId = <client ID of the application>
-clientSecret = <client secret of the application>
-casdoorOrganization = "<organization of the application>"
-casdoorApplication = "<name of the application>"
+```text
+========================================================================
+Casvisor created the administrator "admin" with the password: 7kQm2xT9wRp4ZbNa , sign in and change it in My Account
+========================================================================
 ```
 
-Leave `dataSourceName` and `guacamoleEndpoint` as they are: they point at the MariaDB and guacd inside the image. [Configuration](../operations/configuration.md) lists every key.
+To choose the first password yourself, add `-e adminPassword=<password>` to the `docker run` command, with at least 8 characters. It is only used when the first account is created; later changes go through **My Account**.
 
-## 3. Start Casvisor
+## 3. Sign in
 
-```bash
-docker run -d --name casvisor -p 19000:19000 \
-  -v "$PWD/app.conf:/conf/app.conf" \
-  -v casvisor-db:/var/lib/mysql \
-  casbin/casvisor-all-in-one
-```
+Open `http://<your-ip>:19000` and sign in as `admin` with that password. Then open **My Account** in the menu at the top right and change the password.
 
-The second volume keeps the database when the container is replaced. On first start Casvisor creates the `casvisor` database and its tables.
-
-The image also runs the [SSH gateway](../assets/ssh-gateway.md) on port 2222, for connecting with your own `ssh`, `scp` and VS Code. Add `-p 2222:2222` to the command above to use it.
-
-## 4. Sign in
-
-Open `http://<your-ip>:19000`. You are sent to Casdoor and back. Sign in with an account that is an administrator of the application's organization (**Is admin** on the user in Casdoor) to see the management pages; other users only get the workbench.
-
-If Casdoor says the redirect URI is not allowed, add `http://<your-ip>:19000/callback` to the application's **Redirect URLs**.
-
-## 5. Add a server and connect
+## 4. Add a server and connect
 
 1. Go to **Assets**, click **Add**, and fill in the protocol, host, port and, if you like, the account to log in with. See [Assets](../assets/assets.md).
 2. Click **Connect** on the asset. A new tab opens with the terminal or desktop.
 
-As an administrator you can reach every asset. To let other people in, create a [permission](../access-control/permissions.md) that names them, or a Casdoor group they are in.
+As an administrator you can reach every asset. To let other people in, add them under **Users** (see [Users and administrators](../access-control/users-and-admins.md)) and give them a [permission](../access-control/permissions.md). Every session is recorded; replay it from **Sessions**.
 
-## Without the all-in-one image
+## With Docker Compose
 
-`casbin/casvisor` is the same Casvisor without MariaDB and guacd. Use it when you already have a MySQL server, and run guacd beside it if you need Telnet:
+The repository's [docker-compose.yml](https://github.com/casvisor/casvisor/blob/master/docker-compose.yml) does the same: it publishes 19000 and 2222, keeps the database in a volume, and has an `adminPassword` entry for the first password.
+
+## With MySQL
+
+SQLite is enough for a single Casvisor. To keep the data in MySQL or MariaDB instead, pass the database settings as environment variables:
 
 ```bash
-docker run -d --name guacd -p 4822:4822 guacamole/guacd
-docker run -d --name casvisor -p 19000:19000 -v "$PWD/app.conf:/conf/app.conf" casbin/casvisor
+docker run -d --name casvisor -p 19000:19000 -p 2222:2222 \
+  -e driverName=mysql \
+  -e dataSourceName='casvisor:secret@tcp(192.168.1.30:3306)/' \
+  -e dbName=casvisor \
+  -v casvisor-recordings:/recordings \
+  casbin/casvisor
 ```
 
-Then set `dataSourceName` to your MySQL server and `guacamoleEndpoint` to the guacd container, by an address the Casvisor container can reach. The repository's [docker-compose.yml](https://github.com/casvisor/casvisor/blob/master/docker-compose.yml) starts the three together.
+Casvisor creates the database and its tables on first start, so the account needs the right to create a database. See [Configuration](../operations/configuration.md#database).
+
+The image `casbin/casvisor-all-in-one` carries its own MariaDB and is set up to use it, so it runs on its own as well. It keeps the database in `/var/lib/mysql`; mount a volume there (`-v casvisor-db:/var/lib/mysql`) or the data goes with the container.
+
+## Sign in with Casdoor
+
+Instead of its own accounts, Casvisor can sign people in through [Casdoor](https://casdoor.ai), for single sign-on, MFA, LDAP, SAML and social logins, and use Casdoor's groups in permissions. Setting `casdoorEndpoint` switches it over. See [Connect Casdoor](./casdoor.md).

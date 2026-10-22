@@ -1,6 +1,6 @@
 ---
 title: "Permissions"
-description: "A permission gives users or Casdoor groups a set of actions on assets or asset tags, optionally only from certain IP addresses and only inside a time window. Casvisor evaluates permissions with Casbin on every connection."
+description: "A permission gives users or groups a set of actions on assets or asset tags, optionally only from certain IP addresses and only inside a time window. Casvisor evaluates permissions with Casbin on every connection."
 ---
 
 A **permission** says: these people may do these things on these assets, from these addresses, during this time. Users who are not [administrators](./users-and-admins.md) can only reach an asset when a permission says so.
@@ -11,9 +11,9 @@ Administrators manage permissions under **Permissions**.
 
 | Field | Meaning |
 | --- | --- |
-| Organization, Name | Like assets, a permission belongs to one Casdoor organization and applies to its users and assets only. |
+| Organization, Name | Like assets, a permission belongs to one organization and applies to its users and assets only. |
 | Users | Users by name. `*` means every user of the organization. |
-| Groups | Casdoor groups. Every member is covered. |
+| Groups | Groups of the [built-in accounts](./users-and-admins.md#built-in-accounts) or of Casdoor. Every member is covered. |
 | Assets | Assets by name. `*` means every asset of the organization. |
 | Asset tags | Every asset whose **Tag** is one of these, including assets tagged later. |
 | Actions | Any of `Connect`, `Copy`, `Paste`, `Upload`, `Download`, `Forward`. |
@@ -28,13 +28,13 @@ A permission covers everyone in **Users** and everyone in **Groups**, for every 
 | Action | What it allows |
 | --- | --- |
 | Connect | Seeing the asset in the workbench and opening a session to it, in the browser or through the [SSH gateway](../assets/ssh-gateway.md). Without it, the other actions give nothing. |
-| Copy | Text from the remote clipboard reaching the user's browser. |
-| Paste | Text from the user's clipboard reaching the remote side. |
-| Upload | Sending files to an SSH asset, and creating, renaming and deleting files there, in the file panel or over SFTP, `scp` and `rsync`. See [File transfer](../assets/file-transfer.md). |
-| Download | Fetching files from an SSH asset, in the file panel or over SFTP, `scp` and `rsync`. Upload or Download is also needed to browse the files at all. |
+| Copy | Text from the remote clipboard reaching the user's browser, for RDP and VNC. |
+| Paste | Text from the user's clipboard reaching the remote side, for RDP and VNC. |
+| Upload | Sending files to an SSH or RDP asset, and creating, renaming and deleting files there, in the file panel, over SFTP, `scp` and `rsync`, or through the drive of an RDP session. See [File transfer](../assets/file-transfer.md). |
+| Download | Fetching files from an SSH or RDP asset, the same ways. Upload or Download is also needed to browse the files at all. |
 | Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs. |
 
-[Protocols](../assets/protocols.md#ssh) lists where Copy and Paste are enforced: by guacd for Telnet and by the web client for VNC. SSH does not restrict them yet, and RDP has no clipboard yet.
+[Protocols](../assets/protocols.md) lists where Copy and Paste are enforced: by the server for RDP and by the web client for VNC. The SSH and Telnet terminals use the browser's own copy and paste, which these actions do not restrict.
 
 ## How permissions combine
 
@@ -47,7 +47,7 @@ Some examples:
 | The ops team on all Linux servers, from the office | group `ops` | tag `linux` | Connect, Copy, Paste | `198.51.100.0/24` | |
 | Developers with VS Code Remote and file transfer on the test servers | group `dev` | tag `test` | Connect, Upload, Download, Forward | | |
 | A contractor on two servers for a week, no clipboard | user `alice` | `web-01`, `web-02` | Connect | | 2026-11-01 to 2026-11-08 |
-| Everyone on the jump desktop | `*` | `jump-desktop` | Connect, Paste | | |
+| Everyone on the jump desktop, able to paste in but not copy out | `*` | `jump-desktop` | Connect, Paste | | |
 
 ## When it is checked
 
@@ -55,7 +55,7 @@ Casvisor checks permissions when it lists the assets of a user's workbench, when
 
 Open sessions are checked again too: right after a permission or an asset is edited or deleted, and every 30 seconds, which is how a permission that reaches its **End time** takes effect. A session that is no longer allowed is disconnected; see [Disconnected when the permission goes](../audit/sessions.md#disconnected-when-the-permission-goes).
 
-Group membership is read when the user signs in; see [When changes in Casdoor take effect](./users-and-admins.md#when-changes-in-casdoor-take-effect).
+With the built-in accounts, a change of groups counts at once. With Casdoor, group membership is read when the user signs in; see [When changes in Casdoor take effect](./users-and-admins.md#when-changes-in-casdoor-take-effect).
 
 ## The client IP
 

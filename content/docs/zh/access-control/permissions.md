@@ -1,6 +1,6 @@
 ---
 title: "权限"
-description: "一条权限把一组动作授给用户或Casdoor用户组，作用在资产或资产标签上，还可以限定来源IP和有效期。Casvisor在每次连接时用Casbin判断权限。"
+description: "一条权限把一组动作授给用户或用户组，作用在资产或资产标签上，还可以限定来源IP和有效期。Casvisor在每次连接时用Casbin判断权限。"
 ---
 
 一条**权限**说的是：这些人，可以在这段时间里，从这些地址，对这些资产做这些事。不是[管理员](./users-and-admins.md)的用户，只有在权限允许时才能访问资产。
@@ -11,9 +11,9 @@ description: "一条权限把一组动作授给用户或Casdoor用户组，作�
 
 | 字段 | 含义 |
 | --- | --- |
-| 组织、名称 | 和资产一样，权限属于一个Casdoor组织，只对这个组织的用户和资产生效。 |
+| 组织、名称 | 和资产一样，权限属于一个组织，只对这个组织的用户和资产生效。 |
 | 用户 | 按用户名填。`*`表示组织里的所有用户。 |
-| 用户组 | Casdoor用户组，组里所有成员都算在内。 |
+| 用户组 | [自带账号](./users-and-admins.md#自带账号)或Casdoor的用户组，组里所有成员都算在内。 |
 | 资产 | 按资产名称填。`*`表示组织里的所有资产。 |
 | 资产标签 | **标签**是其中之一的所有资产，包括以后才打上这个标签的。 |
 | 动作 | `Connect`、`Copy`、`Paste`、`Upload`、`Download`、`Forward`中的任意几个。 |
@@ -28,13 +28,13 @@ description: "一条权限把一组动作授给用户或Casdoor用户组，作�
 | 动作 | 允许什么 |
 | --- | --- |
 | Connect（连接） | 在工作台里看到这个资产并建立会话，不论在浏览器里还是经由[SSH网关](../assets/ssh-gateway.md)。没有它，其他动作都没有意义。 |
-| Copy（复制） | 远端剪贴板里的文字能传到用户的浏览器。 |
-| Paste（粘贴） | 用户剪贴板里的文字能传到远端。 |
-| Upload（上传） | 在文件面板里或经SFTP、`scp`、`rsync`往SSH资产传文件，以及在上面新建、重命名、删除文件。见[文件传输](../assets/file-transfer.md)。 |
-| Download（下载） | 在文件面板里或经SFTP、`scp`、`rsync`从SSH资产取文件。要浏览文件，也得有上传或下载其中之一。 |
+| Copy（复制） | RDP和VNC：远端剪贴板里的文字能传到用户的浏览器。 |
+| Paste（粘贴） | RDP和VNC：用户剪贴板里的文字能传到远端。 |
+| Upload（上传） | 往SSH或RDP资产传文件，以及在上面新建、重命名、删除文件：通过文件面板、SFTP、`scp`、`rsync`，或RDP会话里重定向的磁盘。见[文件传输](../assets/file-transfer.md)。 |
+| Download（下载） | 用同样的方式从SSH或RDP资产取文件。要浏览文件，也得有上传或下载其中之一。 |
 | Forward（端口转发） | 经由SSH网关做端口转发（`ssh -L`），VS Code Remote需要它。 |
 
-复制和粘贴在哪里执行，见[协议](../assets/protocols.md#ssh)：Telnet由guacd执行，VNC由前端执行；SSH暂未限制，RDP暂时没有剪贴板。
+复制和粘贴在哪里执行，见[协议](../assets/protocols.md)：RDP由服务端执行，VNC由前端执行。SSH和Telnet终端用的是浏览器自己的复制粘贴，这两个动作限制不了。
 
 ## 多条权限怎么叠加
 
@@ -47,7 +47,7 @@ description: "一条权限把一组动作授给用户或Casdoor用户组，作�
 | 运维组从办公网访问所有Linux服务器 | 用户组`ops` | 标签`linux` | Connect、Copy、Paste | `198.51.100.0/24` | |
 | 开发人员在测试服务器上用VS Code Remote和传文件 | 用户组`dev` | 标签`test` | Connect、Upload、Download、Forward | | |
 | 外包人员访问两台服务器一周，不能用剪贴板 | 用户`alice` | `web-01`、`web-02` | Connect | | 2026-11-01至2026-11-08 |
-| 所有人都能用跳板桌面 | `*` | `jump-desktop` | Connect、Paste | | |
+| 所有人都能用跳板桌面，能往里粘贴、不能往外复制 | `*` | `jump-desktop` | Connect、Paste | | |
 
 ## 什么时候检查
 
@@ -55,7 +55,7 @@ Casvisor在列出用户工作台里的资产时、建立会话时、打开会话
 
 已经打开的会话也会重新检查：修改或删除权限、资产之后立刻检查一次，另外每30秒检查一次，权限到了**结束时间**就是这样生效的。不再被允许的会话会被断开，见[权限收回即断开](../audit/sessions.md#权限收回即断开)。
 
-用户组成员关系在用户登录时读取，见[Casdoor里的改动什么时候生效](./users-and-admins.md#casdoor里的改动什么时候生效)。
+用自带账号时，改用户组立刻生效。用Casdoor时，用户组成员关系在用户登录时读取，见[Casdoor里的改动什么时候生效](./users-and-admins.md#casdoor里的改动什么时候生效)。
 
 ## 客户端IP
 
