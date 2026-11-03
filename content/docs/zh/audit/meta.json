@@ -1,6 +1,7 @@
 {
   "title": "审计",
   "pages": [
+    "index",
     "sessions",
     "recordings",
     "commands",

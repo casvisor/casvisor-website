@@ -1,6 +1,7 @@
 {
   "title": "Audit",
   "pages": [
+    "index",
     "sessions",
     "recordings",
     "commands",

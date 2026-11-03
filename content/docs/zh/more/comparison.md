@@ -1,6 +1,7 @@
 ---
-title: "对比"
-description: "Casvisor和其他开源堡垒机、远程访问网关的比较：JumpServer、Teleport、Warpgate、Apache Guacamole和HashiCorp Boundary，截至2026年10月。"
+title: "对比和其他选择"
+seoTitle: "Casvisor与JumpServer、Teleport、Warpgate对比：开源堡垒机怎么选"
+description: "Casvisor与JumpServer、Teleport、Warpgate等开源堡垒机的对比：功能、许可证、收费版和差距。"
 ---
 
 这个领域有好几个不错的开源项目。这一页是为了帮你选型，所以既写Casvisor不一样的地方，也写它落后的地方。内容截至2026年10月，各项目的最新情况请看它们自己的网站。
@@ -16,13 +17,29 @@ description: "Casvisor和其他开源堡垒机、远程访问网关的比较：J
 | 身份 | 自带，或Casdoor：单点登录、多因素、LDAP、SAML、OAuth、用户组 | 自带、LDAP、单点登录 | 自带、单点登录 | 自带、TOTP、OIDC | 自带，可扩展LDAP、单点登录 |
 | 访问策略 | Casbin：用户、用户组、资产、标签、动作、IP、有效期 | RBAC、资产授权 | 基于标签的RBAC | 目标上的角色 | 连接权限 |
 
-## 各自适合什么情况
+## 开源堡垒机的其他选择
 
-- **JumpServer**功能最全，也是国内的事实标准。它的一部分连接器，例如给本地RDP客户端和数据库客户端用的代理，属于企业版。
-- **Teleport**用短期证书做身份，覆盖的基础设施最广。从v16起，社区版二进制只对员工不到100人、年收入低于1000万美元的公司免费。
-- **Warpgate**是一个Rust写的单文件程序，透明代理SSH、HTTPS、Kubernetes、MySQL、PostgreSQL、RDP和VNC，带录像和实时查看，没有收费版。目前在协议这一块它比Casvisor做得多。
-- **Apache Guacamole**是浏览器远程桌面网关，有自己的用户和连接权限。
-- **HashiCorp Boundary**在2026年10月归档了开源仓库，之后只有HCP Boundary和Boundary Enterprise。
+Casvisor不是这个领域唯一的选择。下面是最常被拿来和它比较的几个项目。
+
+### JumpServer的替代品
+
+JumpServer功能最全，也是国内的事实标准。它的一部分连接器，例如给本地RDP客户端和数据库客户端用的代理，属于企业版。Casvisor保持Apache-2.0、没有收费版，目前功能也更少。
+
+### Teleport的替代品
+
+Teleport用短期证书做身份，覆盖的基础设施最广。从v16起，社区版二进制只对员工不到100人、年收入低于1000万美元的公司免费。Casvisor用Casbin管权限、有会话录像，不需要自建证书体系。
+
+### Warpgate的替代品
+
+Warpgate是一个Rust写的单文件程序，透明代理SSH、HTTPS、Kubernetes、MySQL、PostgreSQL、RDP和VNC，带录像和实时查看，没有收费版。目前在协议这一块它比Casvisor做得多；Casvisor带自带账号、Casdoor身份和Casbin策略。
+
+### Apache Guacamole的替代品
+
+Apache Guacamole是浏览器远程桌面网关，有自己的用户和连接权限。Casvisor多了SSH、Telnet和SSH网关，用户和用户组也可以直接用Casdoor的。
+
+### Boundary的替代品
+
+HashiCorp Boundary在2026年10月归档了开源仓库，之后只有HCP Boundary和Boundary Enterprise。Casvisor保持Apache-2.0，跑在自己的服务器上。
 
 ## Casvisor不一样的地方
 

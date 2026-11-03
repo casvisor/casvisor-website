@@ -16,6 +16,7 @@ import type { ComponentProps } from 'react';
 import { getPageImageUrl, getPageMarkdownUrl, getPageSourceUrl } from '@/lib/shared';
 import { i18n } from '@/lib/i18n';
 import { alternates } from '@/lib/seo';
+import { readFaq } from '@/lib/faq';
 
 export default async function Page(props: PageProps<'/[lang]/docs/[[...slug]]'>) {
   const { lang, slug } = await props.params;
@@ -25,6 +26,19 @@ export default async function Page(props: PageProps<'/[lang]/docs/[[...slug]]'>)
   const MDX = page.data.body;
   const markdownUrl = getPageMarkdownUrl(page).url;
   const sourceUrl = getPageSourceUrl(page.path);
+  const faq = page.path.endsWith('more/faq.md') ? await readFaq(page.path) : [];
+  const faqJsonLd =
+    faq.length > 0
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'FAQPage',
+          mainEntity: faq.map(({ question, answer }) => ({
+            '@type': 'Question',
+            name: question,
+            acceptedAnswer: { '@type': 'Answer', text: answer },
+          })),
+        }
+      : null;
 
   // The description is the first paragraph, which the body already opens with.
   return (
@@ -35,6 +49,9 @@ export default async function Page(props: PageProps<'/[lang]/docs/[[...slug]]'>)
         <ViewOptionsPopover markdownUrl={markdownUrl} githubUrl={sourceUrl} />
       </div>
       <DocsBody>
+        {faqJsonLd && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+        )}
         <MDX
           components={getMDXComponents({
             a: RelativeLink(lang, page.path),
@@ -70,7 +87,7 @@ export async function generateMetadata(props: PageProps<'/[lang]/docs/[[...slug]
 
   const langs = i18n.languages.filter((l) => source.getPage(slug, l));
   return {
-    title: page.data.title,
+    title: page.data.seoTitle ? { absolute: page.data.seoTitle } : page.data.title,
     description: page.data.description,
     alternates: alternates(lang, page.url.slice(lang.length + 1), langs),
     openGraph: {

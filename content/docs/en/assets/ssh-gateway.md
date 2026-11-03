@@ -1,5 +1,6 @@
 ---
 title: "SSH gateway"
+seoTitle: "Casvisor SSH gateway for ssh, scp and VS Code"
 description: "Reach SSH assets through Casvisor with your own ssh, scp, sftp, rsync, Xshell or VS Code Remote: sign in with a registered public key, name the asset in the username, and keep the same permissions, command rules and session list as the web terminal."
 ---
 

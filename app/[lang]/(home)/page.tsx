@@ -11,7 +11,7 @@ import { appName, repoUrl, siteUrl } from '@/lib/shared';
 export async function generateMetadata({ params }: PageProps<'/[lang]'>): Promise<Metadata> {
   const { lang } = await params;
   const t = getText(lang);
-  const description = `${t.subtitle} ${t.lead}`;
+  const description = t.seoDescription;
   const image = `/${lang}/og/image.png`;
   return {
     title: { absolute: t.seoTitle },
@@ -73,7 +73,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           className="pointer-events-none absolute inset-x-0 -top-40 mx-auto h-80 max-w-4xl rounded-full bg-fd-primary/15 blur-3xl"
         />
         <div className="relative mx-auto flex max-w-5xl flex-col items-center px-4 pt-16 pb-12 text-center sm:pt-24">
-          <img src="/logo192.png" alt="" width={72} height={72} className="mb-6" />
+          <img src="/logo192.png" alt="Casvisor logo" width={72} height={72} className="mb-6" />
           <p className="mb-6 rounded-full border bg-fd-card px-3 py-1 text-xs font-medium text-fd-muted-foreground">
             {t.badge}
           </p>

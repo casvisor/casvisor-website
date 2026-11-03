@@ -1,5 +1,6 @@
 ---
 title: "Quick start with Docker"
+seoTitle: "Install Casvisor with Docker"
 description: "Run Casvisor with one docker run: SQLite and its own accounts out of the box, the administrator password in the log, then add a server and connect."
 ---
 

@@ -1,5 +1,6 @@
 ---
 title: "协议"
+seoTitle: "Casvisor：在浏览器里连SSH、RDP、VNC和Telnet"
 description: "Casvisor用Go直接连接SSH、RDP、VNC和Telnet。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
 ---
 

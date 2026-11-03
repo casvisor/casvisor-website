@@ -1,5 +1,6 @@
 ---
 title: "补丁管理"
+seoTitle: "Casvisor：Linux和Windows补丁管理"
 description: "Casvisor扫描SSH资产上待装的系统更新，安装更新并重启资产：Windows走Windows Update，Linux用apt、dnf或yum，还会定时重新扫描。"
 ---
 

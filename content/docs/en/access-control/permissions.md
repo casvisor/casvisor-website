@@ -1,5 +1,6 @@
 ---
 title: "Permissions"
+seoTitle: "Casvisor: bastion host permissions with Casbin"
 description: "A permission gives users or groups a set of actions on assets or asset tags, optionally only from certain IP addresses and only inside a time window. Casvisor evaluates permissions with Casbin on every connection."
 ---
 

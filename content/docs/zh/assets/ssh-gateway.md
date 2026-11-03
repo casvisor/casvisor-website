@@ -1,5 +1,6 @@
 ---
 title: "SSH网关"
+seoTitle: "Casvisor SSH网关：用本地ssh、scp和VS Code连接"
 description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产：用登记过的公钥登录，在用户名里写资产名，和网页终端用同一套权限、命令规则和会话列表。"
 ---
 

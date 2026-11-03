@@ -36,7 +36,16 @@ export default function proxy(request: NextRequest, event: NextFetchEvent) {
     }
   }
 
-  return i18nProxy(request, event);
+  const response = i18nProxy(request, event);
+  if (request.nextUrl.pathname === '/' && response instanceof Response) {
+    const location = response.headers.get('location');
+    if (location) {
+      const permanent = NextResponse.redirect(location, 308);
+      permanent.headers.set('Vary', 'Accept-Language');
+      return permanent;
+    }
+  }
+  return response;
 }
 
 export const config = {

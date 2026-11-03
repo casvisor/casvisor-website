@@ -4,6 +4,8 @@ import { KeyRound, MonitorPlay, Package, ScrollText, ShieldCheck, UserRoundCheck
 const text = {
   en: {
     seoTitle: 'Casvisor: Open-Source Bastion Host for SSH, RDP, VNC and Telnet',
+    seoDescription:
+      'Open-source bastion host for SSH, RDP, VNC and Telnet, with per-user permissions and every session checked and recorded.',
     badge: 'Apache-2.0, no enterprise edition',
     title: 'The open-source bastion host',
     subtitle: 'SSH, RDP, VNC and Telnet in the browser, every session checked and recorded.',
@@ -79,6 +81,7 @@ const text = {
   },
   zh: {
     seoTitle: 'Casvisor：开源堡垒机，支持SSH、RDP、VNC和Telnet',
+    seoDescription: '开源堡垒机：在浏览器里连SSH、RDP、VNC和Telnet，按Casbin授权，每个会话都检查、都录像。',
     badge: 'Apache-2.0许可证，没有企业版',
     title: '开源堡垒机',
     subtitle: '在浏览器里连SSH、RDP、VNC和Telnet，每个会话都检查、都录像。',

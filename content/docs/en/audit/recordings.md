@@ -1,5 +1,6 @@
 ---
 title: "Recordings"
+seoTitle: "Casvisor: SSH and RDP session recording"
 description: "Casvisor records SSH, Telnet, VNC and RDP sessions and replays them in the browser, with speed, seeking, skipping idle time and the commands of the session; terminal recordings download as asciicast."
 ---
 

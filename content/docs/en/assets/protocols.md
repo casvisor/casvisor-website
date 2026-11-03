@@ -1,5 +1,6 @@
 ---
 title: "Protocols"
+seoTitle: "Casvisor: SSH, RDP, VNC and Telnet in the browser"
 description: "Casvisor connects to SSH, RDP, VNC and Telnet natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
 ---
 

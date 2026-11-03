@@ -1,6 +1,7 @@
 ---
-title: "Comparison"
-description: "How Casvisor compares with other open-source bastion hosts and remote access gateways: JumpServer, Teleport, Warpgate, Apache Guacamole and HashiCorp Boundary, as of October 2026."
+title: "Comparison and alternatives"
+seoTitle: "Casvisor vs JumpServer, Teleport and Warpgate"
+description: "How Casvisor compares with JumpServer, Teleport, Warpgate, Apache Guacamole and HashiCorp Boundary: features, licenses, paid editions and gaps."
 ---
 
 There are several good open-source projects in this space. This page is meant to help you choose, so it says where Casvisor is behind as well as where it differs. It reflects October 2026; check each project's own site for the current state.
@@ -16,13 +17,29 @@ There are several good open-source projects in this space. This page is meant to
 | Identity | Built in, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC | Built in, extensions for LDAP, SSO |
 | Access policy | Casbin: users, groups, assets, tags, actions, IPs, time windows | RBAC, asset authorizations | RBAC with labels | Roles on targets | Connection permissions |
 
-## When to pick which
+## Open-source bastion host alternatives
 
-- **JumpServer** is the most complete option, and the established one in China. Some of its connectors, such as the proxies for native RDP and database clients, are part of the enterprise edition.
-- **Teleport** issues short-lived certificates and covers the widest range of infrastructure. Since v16, its community edition binaries are free to use only for companies with fewer than 100 employees and under $10 million a year in revenue.
-- **Warpgate** is a single Rust binary that proxies SSH, HTTPS, Kubernetes, MySQL, PostgreSQL, RDP and VNC transparently, with recording and live view, and no paid edition. Today it does more than Casvisor on the protocol side.
-- **Apache Guacamole** is a browser remote desktop gateway with its own users and connection permissions.
-- **HashiCorp Boundary** archived its open-source repository in October 2026; it continues as HCP Boundary and Boundary Enterprise.
+Casvisor is not the only choice in this space. These are the projects people compare it with most often.
+
+### If you are looking for a JumpServer alternative
+
+JumpServer is the most complete option, and the established one in China. Some of its connectors, such as the proxies for native RDP and database clients, are part of the enterprise edition. Casvisor stays Apache-2.0, has no paid edition, and does less today.
+
+### If you are looking for a Teleport alternative
+
+Teleport issues short-lived certificates and covers the widest range of infrastructure. Since v16, its community edition binaries are free to use only for companies with fewer than 100 employees and under $10 million a year in revenue. Casvisor keeps permissions in Casbin and records sessions without the certificate infrastructure.
+
+### If you are looking for a Warpgate alternative
+
+Warpgate is a single Rust binary that proxies SSH, HTTPS, Kubernetes, MySQL, PostgreSQL, RDP and VNC transparently, with recording and live view, and no paid edition. Today it does more than Casvisor on the protocol side; Casvisor answers with built-in accounts, Casdoor identity and Casbin policy.
+
+### If you are looking for an Apache Guacamole alternative
+
+Apache Guacamole is a browser remote desktop gateway with its own users and connection permissions. Casvisor adds SSH, Telnet and an SSH gateway, and can take users and groups from Casdoor.
+
+### If you are looking for a Boundary alternative
+
+HashiCorp Boundary archived its open-source repository in October 2026; it continues as HCP Boundary and Boundary Enterprise. Casvisor stays Apache-2.0 and runs on your own servers.
 
 ## Where Casvisor differs
 

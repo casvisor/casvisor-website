@@ -1,5 +1,6 @@
 ---
 title: "权限"
+seoTitle: "Casvisor权限：用Casbin管理SSH和RDP访问"
 description: "一条权限把一组动作授给用户或用户组，作用在资产或资产标签上，还可以限定来源IP和有效期。Casvisor在每次连接时用Casbin判断权限。"
 ---
 

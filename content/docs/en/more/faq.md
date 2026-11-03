@@ -1,5 +1,6 @@
 ---
 title: "FAQ"
+seoTitle: "Casvisor FAQ: bastion host questions"
 description: "Common questions about Casvisor: what a bastion host is, whether Casdoor is required, the first password, why sign-in fails, using your own SSH client, where passwords and recordings are kept, and how to get help."
 ---
 

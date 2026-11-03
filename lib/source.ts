@@ -5,10 +5,15 @@ import { i18n } from './i18n';
 import { defineDocs } from 'fumadocs-mdx/macro';
 import { metaSchema, pageSchema } from 'fumadocs-core/source/schema';
 
+// The browser title can name competitors or a use case while the page title stays short for the sidebar.
+const docsSchema = pageSchema.extend({
+  seoTitle: pageSchema.shape.title.optional(),
+});
+
 const docs = defineDocs({
   dir: 'content/docs',
   docs: {
-    schema: pageSchema,
+    schema: docsSchema,
     postprocess: {
       includeProcessedMarkdown: true,
     },

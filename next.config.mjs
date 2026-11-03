@@ -5,13 +5,14 @@ const withMDX = createMDX();
 // Pages of the old Docusaurus site, so that links and search results keep working.
 const oldDocs = {
   overview: 'getting-started/introduction',
-  'basic/installation': 'getting-started/casdoor',
+  'basic/installation': 'getting-started/quickstart',
   'basic/try-with-docker': 'getting-started/quickstart',
   'asset/overview': 'assets/assets',
   'asset/rdp': 'assets/protocols',
   'asset/vnc': 'assets/protocols',
   'asset/database': 'more/roadmap',
   'asset/intranet': 'assets/assets',
+  command: 'audit/commands',
   'command/command': 'audit/commands',
 };
 

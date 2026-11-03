@@ -1,5 +1,6 @@
 ---
 title: "用Docker快速上手"
+seoTitle: "用Docker安装Casvisor"
 description: "一条docker run运行Casvisor：开箱即用SQLite和自带账号，在日志里找到管理员密码，然后添加服务器并连接。"
 ---
 

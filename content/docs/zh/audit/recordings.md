@@ -1,5 +1,6 @@
 ---
 title: "录像"
+seoTitle: "Casvisor：SSH和RDP会话录像"
 description: "Casvisor为SSH、Telnet、VNC和RDP会话录像，在浏览器里回放，可以调速、拖动、跳过空闲，并列出会话里的命令；终端录像可以下载成asciicast。"
 ---
 

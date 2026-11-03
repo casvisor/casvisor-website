@@ -14,14 +14,17 @@ const inter = Inter({
   subsets: ['latin'],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: {
-    template: `%s | ${appName}`,
-    default: appName,
-  },
-  icons: { icon: '/favicon.ico', apple: '/logo192.png' },
-};
+export async function generateMetadata({ params }: LayoutProps<'/[lang]'>): Promise<Metadata> {
+  const { lang } = await params;
+  return {
+    metadataBase: new URL(siteUrl),
+    title: {
+      template: lang === 'zh' ? '%s | Casvisor 开源堡垒机' : '%s | Casvisor Bastion Host',
+      default: appName,
+    },
+    icons: { icon: '/favicon.ico', apple: '/logo192.png' },
+  };
+}
 
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }));

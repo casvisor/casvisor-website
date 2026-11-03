@@ -1,5 +1,6 @@
 ---
 title: "常见问题"
+seoTitle: "Casvisor常见问题：堡垒机使用和排错"
 description: "关于Casvisor的常见问题：什么是堡垒机，是否必须用Casdoor，初始密码，登录为什么失败，能否用自己的SSH客户端，资产密码和录像存在哪里，去哪里求助。"
 ---
 

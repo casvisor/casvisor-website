@@ -1,5 +1,6 @@
 ---
 title: "Patch management"
+seoTitle: "Casvisor: Linux and Windows patch management"
 description: "Casvisor scans SSH assets for pending system updates, installs them and restarts the assets, on Windows through Windows Update and on Linux with apt, dnf or yum, and rescans them on a schedule."
 ---
 
