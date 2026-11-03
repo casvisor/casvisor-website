@@ -122,6 +122,7 @@ export function footerLinks(lang: string) {
       title: zh ? '相关项目' : 'Related',
       items: [
         { text: 'Casdoor', url: 'https://casdoor.ai' },
+        { text: 'CasWAF', url: 'https://caswaf.org' },
         { text: 'Apache Casbin', url: 'https://casbin.apache.org' },
         { text: 'Apache Guacamole', url: 'https://guacamole.apache.org' },
       ],
