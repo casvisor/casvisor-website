@@ -58,3 +58,5 @@ The command runs as usual and is recorded with the action `Alert` and the rule, 
 ## What a rule cannot stop
 
 A rule sees the command line as typed. It can be worked around: by putting the command in a script and running the script, by building it from variables or aliases, by running it inside a full-screen program, or with commands that a pattern does not foresee. Treat Block as a guard against mistakes, and keep the permissions themselves narrow.
+
+Rules also only see commands. Files and the clipboard move through channels of their own: the file panel, SFTP, `scp` and `rsync`, the redirected drive and the clipboard of RDP, and the clipboard of VNC. Those are governed by the **Upload**, **Download**, **Copy** and **Paste** actions of a [permission](../access-control/permissions.md), which Casvisor checks on each of them. A command on the `ssh` command line or a shell without a terminal can pipe files in and out too, so the gateway only allows them with both Upload and Download. To keep data from leaving an asset, leave Download and Copy out of the permission; a user can still read what is shown on the screen, which the [recording](./recordings.md) keeps.

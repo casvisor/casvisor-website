@@ -10,7 +10,7 @@ description: "Casvisor connects to SSH, RDP, VNC and Telnet natively in Go. What
 | Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) |
 | In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal |
 | Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts |
-| Copy and Paste actions | Not enforced | Enforced by the web client | Enforced by the server | Not enforced |
+| Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced |
 | File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No |
 | Command records and rules | Yes | No | No | Yes |
 | Recording | Yes | Yes | Yes | Yes |
@@ -35,7 +35,9 @@ The terminal uses the browser's own copy and paste, so the **Copy** and **Paste*
 
 Casvisor opens the TCP connection to the VNC server and performs the RFB handshake itself, including VNC password authentication. The browser, running noVNC, is then offered a connection with no authentication, so the VNC password stays on the server. If the server rejects the password, the reason it gives is shown to the user.
 
-The toolbar over the screen has full screen, a clipboard dialog and key combinations such as Ctrl+Alt+Del. Clipboard text from the server is only passed on when the user's permission includes **Copy**, and text is only sent to the server with **Paste**. This check is made in the web client.
+The toolbar over the screen has full screen, a clipboard dialog and key combinations such as Ctrl+Alt+Del. Clipboard text from the server is only passed on when the user's permission includes **Copy**, and text is only sent to the server with **Paste**. Casvisor enforces this itself: it reads the RFB messages between the browser and the server and drops the clipboard messages the user may not send or receive, so a modified client gets no further.
+
+When Copy or Paste is missing, the extended clipboard is not offered to the server, so the clipboard that is allowed carries Latin-1 text. Without Copy, Casvisor also offers the server only the encodings whose messages it can read through (Raw, CopyRect and ZRLE), which can take more bandwidth than Tight. A server that sends something else ends the session with the reason.
 
 ## RDP
 

@@ -65,11 +65,15 @@ Host web-01
 
 | 用途 | 需要的动作 |
 | --- | --- |
-| 交互式shell（`ssh`），执行命令（`ssh web-01 uptime`），退出码原样返回 | Connect |
+| 交互式shell（`ssh`） | Connect |
+| 执行命令（`ssh web-01 uptime`，退出码原样返回），以及不带终端的shell（`ssh -T`） | Connect、Upload和Download |
 | `sftp`，以及OpenSSH 9.0起默认走SFTP的`scp` | Connect，写文件要Upload，读文件要Download |
 | `scp -O`（旧版scp协议） | Connect，按方向要Upload或Download |
 | 经SSH的`rsync` | Connect，按方向要Upload或Download |
-| 本地端口转发（`ssh -L`）和Unix socket转发，VS Code Remote要用 | Connect和Forward |
+| 本地端口转发（`ssh -L`）和Unix socket转发 | Connect和Forward |
+| VS Code Remote：用命令启动它的服务端，再经转发的socket和它通信 | Connect、Upload、Download和Forward |
+
+`ssh`命令行上的命令和不带终端的shell会把客户端的输入、资产的输出原样转过去，文件可以从这里管道进出（`ssh web-01 'cat backup.tar' > backup.tar`），而且不带终端的shell执行了什么，没有屏幕能看到。所以它们要Upload和Download。带终端的交互式shell只要Connect：它的命令会按[命令规则](../audit/commands.md)检查，屏幕也会录下来。
 
 每种文件操作需要Upload还是Download，见[文件传输](./file-transfer.md)。
 

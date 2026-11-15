@@ -52,7 +52,7 @@ The drive lives only as long as the session: its folder is deleted when the sess
 
 With only Download, `sftp` can browse and fetch but every change fails with *Permission denied*. With neither, `sftp` is refused with *you have no permission to transfer files on the asset*.
 
-`scp -O`, the old protocol, and `rsync` do not use SFTP. For them the gateway reads the direction from the command the client runs on the asset: receiving files needs Upload, sending them needs Download.
+`scp -O`, the old protocol, and `rsync` do not use SFTP. For them the gateway reads the direction from the command the client runs on the asset: receiving files needs Upload, sending them needs Download. Only the plain `scp` or `rsync` command counts as a transfer; a line with anything more, such as `;`, `|`, `&&` or `$(...)`, is an ordinary command, which needs both Upload and Download, as every other command on the `ssh` command line does.
 
 ## What is logged
 

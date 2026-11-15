@@ -31,11 +31,11 @@ A permission covers everyone in **Users** and everyone in **Groups**, for every 
 | Connect | Seeing the asset in the workbench and opening a session to it, in the browser or through the [SSH gateway](../assets/ssh-gateway.md). Without it, the other actions give nothing. |
 | Copy | Text from the remote clipboard reaching the user's browser, for RDP and VNC. |
 | Paste | Text from the user's clipboard reaching the remote side, for RDP and VNC. |
-| Upload | Sending files to an SSH or RDP asset, and creating, renaming and deleting files there, in the file panel, over SFTP, `scp` and `rsync`, or through the drive of an RDP session. See [File transfer](../assets/file-transfer.md). |
+| Upload | Sending files to an SSH or RDP asset, and creating, renaming and deleting files there, in the file panel, over SFTP, `scp` and `rsync`, or through the drive of an RDP session. See [File transfer](../assets/file-transfer.md). Together with Download, it also allows commands on the `ssh` command line through the [SSH gateway](../assets/ssh-gateway.md#what-works-through-it), since files can be piped through them. |
 | Download | Fetching files from an SSH or RDP asset, the same ways. Upload or Download is also needed to browse the files at all. |
-| Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs. |
+| Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs along with Upload and Download. |
 
-[Protocols](../assets/protocols.md) lists where Copy and Paste are enforced: by the server for RDP and by the web client for VNC. The SSH and Telnet terminals use the browser's own copy and paste, which these actions do not restrict.
+Copy, Paste, Upload and Download are all enforced on the server, not only in the browser: for RDP and VNC Casvisor drops the clipboard messages the user may not send or receive, and every file channel checks them itself. They are separate from the [command rules](../audit/commands.md), which only see commands. The SSH and Telnet terminals use the browser's own copy and paste, which Copy and Paste do not restrict; see [Protocols](../assets/protocols.md).
 
 ## How permissions combine
 

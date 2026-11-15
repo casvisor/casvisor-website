@@ -65,11 +65,15 @@ If the connection is refused after the key has been accepted, the reason is prin
 
 | Use | Needs |
 | --- | --- |
-| Interactive shell (`ssh`), commands (`ssh web-01 uptime`) with their exit status | Connect |
+| Interactive shell (`ssh`) | Connect |
+| Commands (`ssh web-01 uptime`) with their exit status, and a shell without a terminal (`ssh -T`) | Connect, Upload and Download |
 | `sftp`, and `scp` in OpenSSH 9.0 and later, which uses SFTP | Connect, and Upload to write or Download to read |
 | `scp -O` (the old scp protocol) | Connect, and Upload or Download depending on the direction |
 | `rsync` over SSH | Connect, and Upload or Download depending on the direction |
-| Local port forwarding (`ssh -L`) and Unix socket forwarding, which VS Code Remote uses | Connect and Forward |
+| Local port forwarding (`ssh -L`) and Unix socket forwarding | Connect and Forward |
+| VS Code Remote, which runs its server with a command and talks to it over a forwarded socket | Connect, Upload, Download and Forward |
+
+A command on the `ssh` command line, and a shell without a terminal, pass the client's input and the asset's output through as they are, so a file can be piped in or out (`ssh web-01 'cat backup.tar' > backup.tar`), and no screen shows what a shell without a terminal runs. That is why they need Upload and Download. An interactive shell with a terminal needs only Connect: its commands are checked against the [command rules](../audit/commands.md) and its screen is recorded.
 
 [File transfer](./file-transfer.md) lists which Upload or Download each file operation needs.
 
