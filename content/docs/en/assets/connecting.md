@@ -19,7 +19,7 @@ On **Assets**, the **Connect** button opens the asset at `/access/<organization>
 
 If the asset has no stored username or password, the button asks for what is missing first. See [The account](./assets.md#the-account).
 
-When the SSH gateway is on, SSH assets also have a **Copy SSH command** button, which copies a command such as `ssh -p 2222 web-01@casvisor.example.com` for a terminal on your own machine.
+When the SSH gateway is on, SSH assets also have a **Copy SSH command** button, which copies a command such as `ssh -p 2222 web-01@casvisor.example.com` for a terminal on your own machine. Other assets have a **Copy port forwarding command** button instead, for mstsc, a VNC viewer or a Telnet client on your machine; see [Port forwarding to other assets](./ssh-gateway.md#port-forwarding-to-other-assets).
 
 ## What happens on connect
 

@@ -1,10 +1,10 @@
 ---
 title: "SSH网关"
 seoTitle: "Casvisor SSH网关：用本地ssh、scp和VS Code连接"
-description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产：用登记过的公钥登录，在用户名里写资产名，和网页终端用同一套权限、命令规则和会话列表。"
+description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产，用mstsc等客户端经端口转发连接RDP、VNC和Telnet资产：用登记过的公钥登录，在用户名里写资产名，和网页终端用同一套权限、命令规则和会话列表。"
 ---
 
-除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。
+除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。对RDP、VNC和Telnet资产，网关可以[转发端口](#端口转发到其他资产)，这样mstsc等客户端也能用。
 
 ## 开启
 
@@ -41,12 +41,13 @@ description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经�
 | `ssh -p 2222 alice@web-01@casvisor.example.com` | 同上，前面加上你的Casvisor用户名，必须是公钥的主人 |
 | `ssh -p 2222 other-org/web-01@casvisor.example.com` | 别的组织的资产。只有Casdoor`built-in`组织的用户能连 |
 | `ssh -p 2222 alice@casvisor.example.com` | 用户名写你自己、不写资产：弹出一个菜单，列出你能连的SSH资产 |
+| `ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com` | 不开shell，把`localhost:13389`转发到资产`win-01`，见[端口转发到其他资产](#端口转发到其他资产) |
 
 菜单按编号、名称、地址和显示名称列出资产，输入编号或名称就连上去，输入`q`退出。这是给Xshell这类只保存一个主机和一个用户名的工具用的。
 
 **资产**页面上，SSH资产有一个**复制SSH命令**按钮，复制出来的命令已经填好了端口和主机。
 
-只能连SSH资产，而且资产要保存了**用户名**：网关用资产保存的账号（私钥或密码）登录资产，没法向用户要。没有用户名的资产会被拒绝，并提示找管理员设置账号。资产的主机密钥和网页终端一样会被固定，见[协议](./protocols.md#ssh)。
+只有SSH资产能登录上去，而且资产要保存了**用户名**：网关用资产保存的账号（私钥或密码）登录资产，没法向用户要。没有用户名的资产会被拒绝，并提示找管理员设置账号。资产的主机密钥和网页终端一样会被固定，见[协议](./protocols.md#ssh)。
 
 不想每次都输端口，可以把网关写进`~/.ssh/config`：
 
@@ -81,8 +82,28 @@ Host web-01
 
 一律拒绝：远程端口转发（`ssh -R`）、agent转发（`ssh -A`）和X11转发（`ssh -X`）。
 
+## 端口转发到其他资产
+
+RDP、VNC和Telnet资产也能用平时用的客户端连，例如远程桌面连接（mstsc）、VNC客户端或Telnet客户端：网关把你电脑上的一个端口转发到资产。
+
+```shell
+ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com
+```
+
+保持它运行，客户端连`localhost:13389`即可。Windows 10及以后自带`ssh`。
+
+- 用户名写你自己、不写资产，和打开菜单时一样。
+- `-L`里本该写主机的地方写资产名，端口写资产自己的端口。Casvisor连资产里保存的地址，资产配了[网域网关](./network-gateways.md)就经网关连。别的端口会被拒绝。别的组织的资产写成`other-org/win-01`。
+- 需要对这个资产有Connect和Forward。
+- **资产**页面上，SSH以外的资产有一个**复制端口转发命令**按钮，复制出来的命令已经填好。本地端口取资产端口加10000，3389就是13389，免得和你电脑上的服务冲突；换成别的空闲端口也行。
+- 一条`ssh`命令可以带多个`-L`，同时转发到多个资产。
+
+和从浏览器连不同，数据原样转发。Casvisor不代填资产的账号，你要用自己知道的账号登录资产；连接不录像，不按命令规则检查，复制、粘贴、上传、下载这几个动作也管不到它。所以它要Forward这个动作，管理员只给该有的人。
+
 ## 会话、命令和审计
 
 经由网关的一个SSH连接就是一个[会话](../audit/sessions.md)，不论它里面开了多少个shell、传输和转发。会话的用户代理是客户端的SSH版本，例如`SSH-2.0-OpenSSH_9.6`。管理员可以像停止别的会话一样停止它，允许它的权限被收回时它也会被断开。交互式shell会被[录像](../audit/recordings.md)，也能实时旁观；只执行命令、传文件或做端口转发的连接没有录像。
 
-命令会被记录，并按[命令规则](../audit/commands.md)检查：交互式shell里输入的命令和网页终端一样读取，`ssh`命令行上带的命令按客户端发来的原文记录。连上资产、每个新的转发目标、经SFTP读写的每个文件，以及新建文件夹、重命名、删除和建链接，都会记进[操作日志](../audit/operation-logs.md#ssh和文件事件)。
+[到其他资产的端口转发](#端口转发到其他资产)单独算会话，每个资产一个，模式是`tunnel`，从`ssh`命令开始到它结束，不论客户端经它开了多少个连接。管理员可以像别的会话一样停止它，`ssh`命令随之断开；收回这个资产上的Connect或Forward时它也会马上断开。
+
+命令会被记录，并按[命令规则](../audit/commands.md)检查：交互式shell里输入的命令和网页终端一样读取，`ssh`命令行上带的命令按客户端发来的原文记录。连上资产、每个新的转发目标、第一次转发到其他资产、经SFTP读写的每个文件，以及新建文件夹、重命名、删除和建链接，都会记进[操作日志](../audit/operation-logs.md#ssh和文件事件)。

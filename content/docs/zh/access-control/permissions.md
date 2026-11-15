@@ -33,7 +33,7 @@ description: "一条权限把一组动作授给用户或用户组，作用在资
 | Paste（粘贴） | RDP和VNC：用户剪贴板里的文字能传到远端。 |
 | Upload（上传） | 往SSH或RDP资产传文件，以及在上面新建、重命名、删除文件：通过文件面板、SFTP、`scp`、`rsync`，或RDP会话里重定向的磁盘。见[文件传输](../assets/file-transfer.md)。和Download一起，还允许经[SSH网关](../assets/ssh-gateway.md#能做什么)在`ssh`命令行上执行命令，因为文件可以从命令的输入输出管道进出。 |
 | Download（下载） | 用同样的方式从SSH或RDP资产取文件。要浏览文件，也得有上传或下载其中之一。 |
-| Forward（端口转发） | 经由SSH网关做端口转发（`ssh -L`），VS Code Remote需要它，同时还要Upload和Download。 |
+| Forward（端口转发） | 经由SSH网关做端口转发（`ssh -L`），VS Code Remote需要它，同时还要Upload和Download；也用于给mstsc等客户端[转发端口到RDP、VNC和Telnet资产](../assets/ssh-gateway.md#端口转发到其他资产)，这类连接不录像。 |
 
 复制、粘贴、上传、下载都在服务端执行，不只靠浏览器：RDP和VNC由Casvisor丢掉用户无权收发的剪贴板消息，每条文件通道也各自检查。它们和只看命令的[命令规则](../audit/commands.md)是两回事。SSH和Telnet终端用的是浏览器自己的复制粘贴，复制、粘贴这两个动作限制不了，见[协议](../assets/protocols.md)。
 

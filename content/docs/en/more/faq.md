@@ -40,7 +40,7 @@ Casvisor connects to Telnet itself, so the Casvisor server, or the asset's netwo
 
 ## Can I use my own SSH client, scp or VS Code?
 
-Yes, for SSH assets, through the [SSH gateway](../assets/ssh-gateway.md): register your public key under **SSH keys**, then `ssh -p 2222 <asset>@<casvisor host>`. VS Code Remote also needs the **Forward** action in your permission. RDP, VNC and Telnet are reached from the browser only.
+Yes, for SSH assets, through the [SSH gateway](../assets/ssh-gateway.md): register your public key under **SSH keys**, then `ssh -p 2222 <asset>@<casvisor host>`. VS Code Remote also needs the **Forward** action in your permission. For RDP, VNC and Telnet assets, the gateway [forwards a local port](../assets/ssh-gateway.md#port-forwarding-to-other-assets) to the asset, for example `ssh -p 2222 -N -L 13389:win-01:3389 <you>@<casvisor host>`, then mstsc connects to `localhost:13389`. That needs **Forward** too, and you log in to the asset yourself.
 
 ## The SSH gateway answers "Permission denied (publickey)"
 

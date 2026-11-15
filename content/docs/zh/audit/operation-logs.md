@@ -31,6 +31,7 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 | --- | --- | --- |
 | `ssh-connect` | 经由[SSH网关](../assets/ssh-gateway.md)的连接登录上资产 | |
 | `ssh-forward` | 网关连接第一次转发到某个目标 | `主机:端口`，或socket路径 |
+| `ssh-tunnel` | 网关连接第一次[转发到其他资产](../assets/ssh-gateway.md#端口转发到其他资产) | 资产的`主机:端口` |
 | `sftp-download` | 经SFTP打开文件读取，或在[文件面板](../assets/file-transfer.md)里下载 | 路径 |
 | `sftp-upload` | 经SFTP打开文件写入，或在文件面板里上传 | 路径 |
 | `sftp-mkdir`、`sftp-rmdir`、`sftp-remove` | 经SFTP新建或删除文件夹，或删除文件；或在文件面板里新建文件夹 | 路径 |

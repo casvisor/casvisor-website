@@ -40,7 +40,7 @@ Telnet由Casvisor自己连接，所以Casvisor服务器（或资产的网域网�
 
 ## 能用自己的SSH客户端、scp或VS Code吗？
 
-SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**页面登记你的公钥，然后`ssh -p 2222 <资产>@<Casvisor主机>`。VS Code Remote还需要权限里有**端口转发**（Forward）。RDP、VNC和Telnet只能在浏览器里连。
+SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**页面登记你的公钥，然后`ssh -p 2222 <资产>@<Casvisor主机>`。VS Code Remote还需要权限里有**端口转发**（Forward）。RDP、VNC和Telnet资产可以让网关[转发本地端口](../assets/ssh-gateway.md#端口转发到其他资产)到资产，例如`ssh -p 2222 -N -L 13389:win-01:3389 <你的用户名>@<Casvisor主机>`，然后mstsc连`localhost:13389`。这同样要**端口转发**权限，资产的账号要你自己登录。
 
 ## SSH网关提示“Permission denied (publickey)”
 

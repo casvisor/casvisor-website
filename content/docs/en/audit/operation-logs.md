@@ -31,6 +31,7 @@ Some things happen inside a session rather than through an API call, so Casvisor
 | --- | --- | --- |
 | `ssh-connect` | A connection through the [SSH gateway](../assets/ssh-gateway.md) logs in to the asset | |
 | `ssh-forward` | A gateway connection forwards to a destination for the first time | `host:port`, or the socket path |
+| `ssh-tunnel` | A gateway connection [forwards to another asset](../assets/ssh-gateway.md#port-forwarding-to-other-assets) for the first time | The asset's `host:port` |
 | `sftp-download` | A file is opened for reading over SFTP, or downloaded in the [file panel](../assets/file-transfer.md) | The path |
 | `sftp-upload` | A file is opened for writing over SFTP, or uploaded in the file panel | The path |
 | `sftp-mkdir`, `sftp-rmdir`, `sftp-remove` | A folder is created or removed, or a file removed, over SFTP, or a folder created in the file panel | The path |

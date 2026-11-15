@@ -54,6 +54,6 @@ description: "通过Casvisor的每一次连接都是一个会话：谁打开的�
 
 按用户此刻的地址，已经没有任何权限覆盖的会话会被关闭，代码为802，原因例如*The permission to connect to the asset: web-01 has been revoked*或*The asset: my-org/web-01 has been deleted*。SSH和Telnet终端会把原因显示给用户；其他标签页和SSH客户端直接断开。管理员不受影响，因为他们不需要权限。
 
-对经由SSH网关的连接，这项检查还会更新动作：收回上传、下载或端口转发后，下一次传文件或转发连接就会被拒绝，会话本身不断开。
+对经由SSH网关的连接，这项检查还会更新动作：收回上传、下载或端口转发后，下一次传文件或转发连接就会被拒绝，会话本身不断开。[到其他资产的端口转发](../assets/ssh-gateway.md#端口转发到其他资产)例外：收回端口转发就会把它断开。
 
 用自带账号时，被禁用或删除的用户会被断开，改用户组也立刻生效。在Casdoor里做的改动（例如把人移出用户组）本身不会触发这项检查，见[Casdoor里的改动什么时候生效](../access-control/users-and-admins.md#casdoor里的改动什么时候生效)。

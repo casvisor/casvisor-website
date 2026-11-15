@@ -33,7 +33,7 @@ A permission covers everyone in **Users** and everyone in **Groups**, for every 
 | Paste | Text from the user's clipboard reaching the remote side, for RDP and VNC. |
 | Upload | Sending files to an SSH or RDP asset, and creating, renaming and deleting files there, in the file panel, over SFTP, `scp` and `rsync`, or through the drive of an RDP session. See [File transfer](../assets/file-transfer.md). Together with Download, it also allows commands on the `ssh` command line through the [SSH gateway](../assets/ssh-gateway.md#what-works-through-it), since files can be piped through them. |
 | Download | Fetching files from an SSH or RDP asset, the same ways. Upload or Download is also needed to browse the files at all. |
-| Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs along with Upload and Download. |
+| Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs along with Upload and Download, and [port forwarding to RDP, VNC and Telnet assets](../assets/ssh-gateway.md#port-forwarding-to-other-assets) for mstsc and other clients. Those connections are not recorded. |
 
 Copy, Paste, Upload and Download are all enforced on the server, not only in the browser: for RDP and VNC Casvisor drops the clipboard messages the user may not send or receive, and every file channel checks them itself. They are separate from the [command rules](../audit/commands.md), which only see commands. The SSH and Telnet terminals use the browser's own copy and paste, which Copy and Paste do not restrict; see [Protocols](../assets/protocols.md).
 

@@ -54,6 +54,6 @@ A session is also ended by Casvisor itself as soon as the user may no longer con
 
 A session that no permission covers any more, from the user's address at that moment, is closed with code 802 and a reason such as *The permission to connect to the asset: web-01 has been revoked* or *The asset: my-org/web-01 has been deleted*. The SSH and Telnet terminals show the reason to the user; other tabs and SSH clients are disconnected. Administrators are not affected, since they need no permission.
 
-For a connection through the SSH gateway, the same check also picks up a change of actions: taking away Upload, Download or Forward stops the next file transfer or forwarded connection without closing the session.
+For a connection through the SSH gateway, the same check also picks up a change of actions: taking away Upload, Download or Forward stops the next file transfer or forwarded connection without closing the session. A [port forward to another asset](../assets/ssh-gateway.md#port-forwarding-to-other-assets) is the exception: taking away Forward closes it.
 
 With the built-in accounts, a user who is forbidden or deleted is disconnected, and a change of groups counts at once. Changes made in Casdoor, such as removing someone from a group, do not trigger this check by themselves; see [When changes in Casdoor take effect](../access-control/users-and-admins.md#when-changes-in-casdoor-take-effect).
