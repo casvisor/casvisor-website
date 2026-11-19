@@ -43,9 +43,16 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 | `clipboard-copy`、`clipboard-paste` | 从[RDP会话](../assets/protocols.md#剪贴板)里复制出文字，或往里粘贴文字 | 文字内容，最多1000字节 |
 | `session-monitor` | 管理员打开某个会话的[实时旁观](./sessions.md#实时旁观) | 会话 |
 | `session-replay` | 管理员回放或下载[录像](./recordings.md) | 录像文件 |
+| `sql-export` | 用户把[数据库会话](../assets/databases.md#复制和导出)的结果导出成CSV | 语句 |
+| `rotate-asset-account`、`push-asset-account` | Casvisor在资产上修改[系统账号](../assets/accounts.md#修改密码)的密码，手动或按周期；用户是`casvisor`，方法是`Account` | 账号的用户名和结果 |
+| `export-sessions`、`export-commands`、`export-records` | 管理员把列表下载成CSV；方法是`Export` | 行数、文件名和筛选条件 |
 
 这些记录不受`logPostOnly`影响，总会写入。SSH和Telnet会话里执行的命令不在这里，在[命令记录](./commands.md)页面。
 
 ## 保留期限
 
 记录会一直保留，直到你删除它。目前没有保留期限的设置；`record`表太大时，直接在数据库里清理。
+
+## 导出和转发
+
+列表上的**导出 CSV**下载与当前搜索相符的记录。设置了`syslogAddress`时，每条新记录写入的同时也会发给syslog服务器。见[导出与syslog转发](./export.md)。

@@ -17,13 +17,15 @@ Casvisor is a bastion host, so every connection goes through it and leaves a rec
 
 A command given on the `ssh` command line, `scp`, `rsync`, SFTP and port forwarding have no screen to record. The command itself is kept in the command records, and the files moved in the operation log.
 
+For [MySQL and PostgreSQL](../assets/databases.md), the session holds the account and client, every SQL statement is a command record with its result and is checked against the command rules, and the list of statements takes the place of a recording. [Jobs](../assets/jobs.md) leave a session per asset, a command record, and the output on the job's page.
+
 ## Sessions
 
 Every tab in the workbench, every asset page and every connection through the SSH gateway is one session. It carries the user, asset, protocol, client IP, browser and duration; administrators see the open ones and the finished ones, watch a live session and stop it. See [Sessions](./sessions.md).
 
 ## Commands
 
-Casvisor reads the command line of SSH and Telnet sessions, in the web terminal and through the SSH gateway, and keeps it with the user, asset, client IP and session. A command rule matches a regular expression against the text and either blocks the command before it runs or flags it. See [Commands and command rules](./commands.md).
+Casvisor reads the command line of SSH and Telnet sessions, in the web terminal and through the SSH gateway, and keeps every SQL statement of database sessions, with the user, asset, client IP and session. A command rule matches a regular expression against the text and either blocks the command before it runs or flags it. See [Commands and command rules](./commands.md).
 
 ## Screen and terminal recordings
 
@@ -32,6 +34,10 @@ SSH and Telnet recordings keep the terminal output; VNC and RDP recordings keep 
 ## Operation logs
 
 The operation log holds the calls made to Casvisor's API, with the user, client IP, action, object and result, and the events inside sessions: SFTP and file-panel transfers, the redirected drive of an RDP session, clipboard copy and paste, live monitoring and replays. Passwords and private keys are masked before an entry is stored. See [Operation logs](./operation-logs.md).
+
+## Taking it elsewhere
+
+Sessions, commands and the operation log can be downloaded as CSV files from their lists, and forwarded as they happen to a syslog server, as RFC 5424 with a JSON body or as CEF, from where a SIEM can take them. See [Export and syslog](./export.md).
 
 ## Who can see it
 

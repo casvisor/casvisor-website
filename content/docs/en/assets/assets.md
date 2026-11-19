@@ -14,11 +14,12 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Organization | The organization the asset belongs to. Only users of that organization can be given it. |
 | Name | The ID, unique within the organization. Permissions refer to assets by it. |
 | Display name, Description | What users see in the workbench. |
-| Protocol | `SSH`, `RDP`, `VNC` or `Telnet`. Choosing one fills in its usual port. See [Protocols](./protocols.md). |
+| Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL` or `PostgreSQL`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server, or from the network gateway, not from the user's browser, so it can be a private address the users cannot reach themselves. |
-| Username, Password | The account Casvisor logs in with. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |
+| Username, Password | The account Casvisor logs in with, the asset's default account. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |
 | Private key | For SSH: a private key to log in with, instead of or besides the password. See below. |
 | Fingerprint | The server's SSH host key or RDP certificate, recorded on the first connection. See [Protocols](./protocols.md). |
+| Database | For MySQL and PostgreSQL: the database to open after connecting. See [Databases](./databases.md). |
 | Network gateway | *Direct connection*, or the [network gateway](./network-gateways.md) to reach the asset through. |
 | OS | `Linux` or `Windows`, shown in the list. |
 | Tag | A label such as `prod-linux` or `db`. A [permission](../access-control/permissions.md) can grant every asset with a tag at once, so the tag works as an asset group. |
@@ -39,7 +40,11 @@ For SSH you can store a **Private key** (OpenSSH or PEM format) instead of, or a
 
 Set `credentialKey` in the configuration, to a long random string, and Casvisor stores passwords and private keys encrypted with AES-256-GCM, using a key derived from it. On start it also encrypts any that were stored before the key was set. Keep `credentialKey` out of git, for example in `conf/app.local.conf` (see [Configuration](../operations/configuration.md)), and back it up with the database: without it the stored credentials cannot be read, and connections to those assets fail with *credentialKey may be wrong*.
 
-Without `credentialKey`, credentials are stored as they are, so protect the database and its backups as you would the passwords themselves. Several accounts per asset, with permissions naming which one a user may use, is on the [roadmap](../more/roadmap.md).
+Without `credentialKey`, credentials are stored as they are, so protect the database and its backups as you would the passwords themselves.
+
+### More accounts
+
+Once an asset is saved, its page has a **System accounts** section for more accounts on the same server, such as `root` and `deploy`, with permissions saying who may connect as which, and with their passwords changed by Casvisor on SSH assets. See [System accounts and password rotation](./accounts.md).
 
 ## Network placement
 

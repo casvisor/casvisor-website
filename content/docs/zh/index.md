@@ -1,9 +1,9 @@
 ---
 title: "Casvisor文档"
-description: "Casvisor开源堡垒机的使用手册，支持SSH、RDP、VNC和Telnet：安装、登录、资产、SSH网关、文件传输、补丁管理、权限、会话、录像、命令规则、操作日志和运维。"
+description: "Casvisor开源堡垒机的使用手册，支持SSH、RDP、VNC、Telnet、MySQL和PostgreSQL：安装、登录、资产和系统账号、SSH网关、文件传输、数据库、补丁管理、作业中心、权限、访问申请、会话、录像、命令规则、操作日志、导出和运维。"
 ---
 
-Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账号或通过Casdoor登录，看到自己有权访问的服务器，在浏览器标签页里用SSH、RDP、VNC或Telnet连上去，或者用自己的SSH客户端；Casvisor按你配置的权限检查每一次连接，并录像。
+Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账号或通过Casdoor登录，看到自己有权访问的服务器，在浏览器标签页里用SSH、RDP、VNC或Telnet连上去，也能连MySQL和PostgreSQL数据库，或者用自己的SSH客户端；Casvisor按你配置的权限检查每一次连接，并录像。
 
 ## 入门
 
@@ -15,18 +15,23 @@ Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账�
 ## 使用
 
 - [资产](./assets/assets.md)：用户要连的服务器，以及为它们保存的账号
+- [系统账号与改密](./assets/accounts.md)：一个资产多个账号，看不到密码也能连，以及自动改密
 - [连接](./assets/connecting.md)：工作台、连接标签页、自己输入账号
 - [SSH网关](./assets/ssh-gateway.md)：经由Casvisor用`ssh`、`scp`、`sftp`、`rsync`和VS Code Remote
 - [网域网关](./assets/network-gateways.md)：经SSH跳板机或agent访问其他网络里的资产
 - [文件传输](./assets/file-transfer.md)：网页终端和远程桌面旁的文件面板，以及上传、下载权限各允许什么
-- [协议](./assets/protocols.md)：SSH、RDP、VNC、Telnet各自支持什么
+- [协议](./assets/protocols.md)：SSH、RDP、VNC、Telnet和数据库各自支持什么
+- [数据库](./assets/databases.md)：在SQL控制台里连MySQL和PostgreSQL，每条语句都有记录
 - [补丁管理](./assets/patches.md)：扫描系统更新、安装并重启
-- [用户和管理员](./access-control/users-and-admins.md)：自带账号，谁管理Casvisor，谁只能连接
-- [权限](./access-control/permissions.md)：谁能从哪里、在什么时间、对哪台资产做什么
+- [作业中心](./assets/jobs.md)：在多台服务器上批量执行命令、脚本和分发文件
+- [用户和管理员](./access-control/users-and-admins.md)：自带账号和它的两步验证，谁管理Casvisor，谁只能连接
+- [权限](./access-control/permissions.md)：谁能从哪里、在什么时间、以哪个账号、对哪台资产做什么
+- [访问申请](./access-control/access-requests.md)：申请一段时间的访问，以及审批
 - [会话](./audit/sessions.md)：在线和历史连接，实时旁观和强制断开
 - [录像](./audit/recordings.md)：在浏览器里回放会话，以及录像存在哪里
-- [命令记录和命令规则](./audit/commands.md)：SSH和Telnet里执行过的命令，以及拦截危险命令
+- [命令记录和命令规则](./audit/commands.md)：SSH和Telnet里执行过的命令、数据库里执行过的SQL，以及拦截危险命令
 - [操作日志](./audit/operation-logs.md)：通过接口做的每一次改动，以及传过的每个文件
+- [导出与syslog转发](./audit/export.md)：导出CSV文件，转发到syslog服务器或SIEM
 
 ## 运维
 

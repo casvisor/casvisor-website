@@ -48,11 +48,11 @@ The gateway does not know the key your client offered. Check that the public key
 
 ## Where are the passwords of assets kept?
 
-In Casvisor's database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own.
+In Casvisor's database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own. On SSH assets, Casvisor can change the passwords of [system accounts](../assets/accounts.md) on a schedule.
 
 ## Does Casvisor record sessions?
 
-Yes, all of them: SSH, Telnet, VNC and RDP, replayed in the browser from **Sessions**. The recordings are files under `recordings/`, `/recordings` in Docker; see [Recordings](../audit/recordings.md) for where they go, how long they are kept and how to turn them off. Besides that, the [commands](../audit/commands.md) run in SSH and Telnet sessions are kept, and files moved and every change go into the operation log.
+Yes, all SSH, Telnet, VNC and RDP sessions, replayed in the browser from **Sessions**; for MySQL and PostgreSQL every SQL statement is kept instead. The recordings are files under `recordings/`, `/recordings` in Docker; see [Recordings](../audit/recordings.md) for where they go, how long they are kept and how to turn them off. Besides that, the [commands](../audit/commands.md) run in SSH and Telnet sessions are kept, and files moved and every change go into the operation log, all of which can be [forwarded to syslog](../audit/export.md).
 
 ## Is there a hosted or enterprise version?
 

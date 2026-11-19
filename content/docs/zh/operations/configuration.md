@@ -1,6 +1,6 @@
 ---
 title: "配置"
-description: "Casvisor的conf/app.conf里的每一项：HTTP端口、SQLite或MySQL、自带账号或Casdoor、SSH网关、录像、补丁扫描、Redis会话和操作日志。"
+description: "Casvisor的conf/app.conf里的每一项：HTTP端口、SQLite或MySQL、自带账号或Casdoor、SSH网关、录像、补丁扫描、Redis会话、操作日志和syslog转发。"
 ---
 
 Casvisor启动时从工作目录读取`conf/app.conf`。Docker镜像里是`/conf/app.conf`。改完要重启Casvisor。
@@ -31,6 +31,8 @@ casdoorApplication =
 adminPassword =
 sshGatewayPort =
 sshGatewayHost =
+syslogAddress =
+syslogFormat = rfc5424
 recordingPath =
 recordingRetentionDays =
 disableRecording = false
@@ -100,6 +102,13 @@ Casvisor启动时会建好它的表，以及新版本需要的列。SQLite以WAL
 | `redisEndpoint` | 空 | 为空时，登录会话以文件形式存在`tmp/`下。填Redis地址（例如`127.0.0.1:6379`）就改存Redis，换容器后用户不用重新登录。 |
 | `logPostOnly` | `true` | 只记改动类的调用，见[操作日志](../audit/operation-logs.md)。 |
 | `isDemoMode` | `false` | 公开演示用：会话15分钟后自动结束，每个客户端IP同时只能开少量会话，用户只能停止自己的会话，SSH网关和定时补丁扫描都不开。 |
+
+## 审计转发
+
+| 配置项 | 默认值 | 含义 |
+| --- | --- | --- |
+| `syslogAddress` | 空 | 把会话、命令和操作日志[转发](../audit/export.md#转发到syslog)到哪台syslog服务器，写成`udp://主机:端口`或`tcp://主机:端口`，不写协议就是UDP。为空表示不转发。写错了会在启动时记进日志，什么都不转发。 |
+| `syslogFormat` | `rfc5424` | `rfc5424`表示带JSON正文的RFC 5424消息，`cef`表示通用事件格式（CEF）。 |
 
 ## 安全
 

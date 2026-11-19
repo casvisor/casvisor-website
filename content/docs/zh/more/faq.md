@@ -48,11 +48,11 @@ SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**
 
 ## 资产的密码存在哪里？
 
-存在Casvisor的数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。
+存在Casvisor的数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。SSH资产上[系统账号](../assets/accounts.md)的密码，Casvisor可以按周期修改。
 
 ## Casvisor会录像吗？
 
-会，所有会话都录：SSH、Telnet、VNC和RDP，在**会话**里用浏览器回放。录像是`recordings/`下的文件，Docker里是`/recordings`；存在哪里、保留多久、怎么关掉，见[录像](../audit/recordings.md)。此外，SSH和Telnet会话里执行的[命令](../audit/commands.md)会保留，传过的文件和每一次改动记在操作日志里。
+会，SSH、Telnet、VNC和RDP会话都录，在**会话**里用浏览器回放；MySQL和PostgreSQL则保留每条SQL语句。录像是`recordings/`下的文件，Docker里是`/recordings`；存在哪里、保留多久、怎么关掉，见[录像](../audit/recordings.md)。此外，SSH和Telnet会话里执行的[命令](../audit/commands.md)会保留，传过的文件和每一次改动记在操作日志里，这些都可以[转发到syslog](../audit/export.md)。
 
 ## 有托管版或企业版吗？
 

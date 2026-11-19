@@ -13,12 +13,13 @@ Each connection, that is each tab in the workbench, each asset page, or each con
 | Column | Meaning |
 | --- | --- |
 | Asset | The asset connected to |
-| Protocol | SSH, RDP, VNC or Telnet |
+| Protocol | SSH, RDP, VNC, Telnet, MySQL or PostgreSQL |
 | User | The user who opened it |
+| Account | The [system account](../assets/accounts.md) it connected as, or *Default* for the asset's own account |
 | Client IP | The address they connected from, with its location where it can be looked up |
 | User agent | Their browser and operating system, or for the SSH gateway the client's SSH version, such as `SSH-2.0-OpenSSH_9.6` |
 | Connection start time | When the connection opened |
-| Commands | For SSH, the number of commands run, linking to them on the [Commands](./commands.md) page |
+| Commands | For SSH, Telnet and databases, the number of commands or SQL statements run, linking to them on the [Commands](./commands.md) page |
 | Connection duration | How long it has lasted, or lasted |
 
 A session moves from Online to History when the user closes the tab or the SSH client, the remote side ends the connection, the network drops, an administrator stops it, or the user loses the permission to it.
@@ -32,12 +33,17 @@ Each session has these actions:
 | Stop | Online | Disconnect it, see below |
 | Delete | History | Remove it from the list, with its recordings |
 
+The list can be exported as a CSV file with **Export CSV**; see [Export and syslog](./export.md).
+
+Besides the connections people open, each asset a [job](../assets/jobs.md) runs on is a session, with the mode `job` and the user agent `Casvisor job`. It ends when the job is done on that asset, and stopping it stops the job there.
+
 ## Watching a session live
 
 An online session has a **Monitor** action, which opens the session in a new browser tab, read only: nothing typed or clicked there reaches the session. Several administrators can watch the same session.
 
 - **SSH and Telnet**: the administrator sees the user's terminal as the user does: first the output so far, up to the last 512 KB, which redraws the screen, then everything as it happens, including changes of the terminal size.
 - **VNC and RDP**: the desktop is drawn from the start of the session up to now, then follows live. This reads from the session's recording as it is written, so it needs recording to be on; see [Recordings](./recordings.md#recordings-and-live-monitoring).
+- **MySQL and PostgreSQL**: there is no screen to watch, so **Monitor** opens the list of the statements run so far, with their results, refreshed every 3 seconds. After the session ends, **Replay** shows the same list. See [Databases](../assets/databases.md#what-is-recorded).
 
 Through the SSH gateway, interactive shells can be watched; a connection that only runs a command, transfers files or forwards ports cannot. The user is not told that someone is watching. Each time an administrator opens the view, a `session-monitor` entry goes into the [operation log](./operation-logs.md#ssh-and-file-events).
 
@@ -49,7 +55,7 @@ Through the SSH gateway, interactive shells can be watched; a connection that on
 
 A session is also ended by Casvisor itself as soon as the user may no longer connect to the asset:
 
-- right after an administrator edits or deletes a permission or an asset, or, with the built-in accounts, a user, every online session is checked again;
+- right after an administrator edits or deletes a permission, an asset, a [system account](../assets/accounts.md) or, with the built-in accounts, a user, or revokes an [access request](../access-control/access-requests.md), every online session is checked again;
 - every 30 seconds all online sessions are checked again, which ends the ones whose permission has passed its **End time**.
 
 A session that no permission covers any more, from the user's address at that moment, is closed with code 802 and a reason such as *The permission to connect to the asset: web-01 has been revoked* or *The asset: my-org/web-01 has been deleted*. The SSH and Telnet terminals show the reason to the user; other tabs and SSH clients are disconnected. Administrators are not affected, since they need no permission.

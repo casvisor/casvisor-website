@@ -1,10 +1,10 @@
 ---
 title: "SSH gateway"
 seoTitle: "Casvisor SSH gateway for ssh, scp and VS Code"
-description: "Reach SSH assets through Casvisor with your own ssh, scp, sftp, rsync, Xshell or VS Code Remote, and RDP, VNC and Telnet assets with mstsc or other clients through port forwarding: sign in with a registered public key, name the asset in the username, and keep the same permissions, command rules and session list as the web terminal."
+description: "Reach SSH assets through Casvisor with your own ssh, scp, sftp, rsync, Xshell or VS Code Remote, and RDP, VNC, Telnet and database assets with mstsc or other clients through port forwarding: sign in with a registered public key, name the asset and the account in the username, and keep the same permissions, command rules and session list as the web terminal."
 ---
 
-Besides the web terminal, Casvisor can accept SSH connections itself, so people reach SSH assets with the tools they already use: `ssh`, `scp`, `sftp`, `rsync`, Xshell, or VS Code Remote. They sign in to the gateway with a public key they registered in Casvisor; Casvisor then logs in to the asset with the asset's own account. The same [permissions](../access-control/permissions.md), [command rules](../audit/commands.md) and [session list](../audit/sessions.md) apply as in the browser. For RDP, VNC and Telnet assets it [forwards a port](#port-forwarding-to-other-assets), so mstsc and other clients can be used too.
+Besides the web terminal, Casvisor can accept SSH connections itself, so people reach SSH assets with the tools they already use: `ssh`, `scp`, `sftp`, `rsync`, Xshell, or VS Code Remote. They sign in to the gateway with a public key they registered in Casvisor; Casvisor then logs in to the asset with the asset's own account, or one of its [system accounts](./accounts.md). The same [permissions](../access-control/permissions.md), [command rules](../audit/commands.md) and [session list](../audit/sessions.md) apply as in the browser. For RDP, VNC, Telnet, MySQL and PostgreSQL assets it [forwards a port](#port-forwarding-to-other-assets), so mstsc and other clients can be used too.
 
 ## Turning it on
 
@@ -39,15 +39,28 @@ The username tells the gateway which asset to open:
 | --- | --- |
 | `ssh -p 2222 web-01@casvisor.example.com` | The asset `web-01` in your own organization |
 | `ssh -p 2222 alice@web-01@casvisor.example.com` | The same, with your Casvisor user name in front. It has to be the owner of the key. |
+| `ssh -p 2222 alice@deploy@web-01@casvisor.example.com` | The asset `web-01` as its account `deploy`, see [Choosing the account](#choosing-the-account) |
 | `ssh -p 2222 other-org/web-01@casvisor.example.com` | An asset of another organization. Only users of Casdoor's `built-in` organization can reach those. |
 | `ssh -p 2222 alice@casvisor.example.com` | With your own user name and no asset: a menu of the SSH assets you may connect to |
 | `ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com` | No shell: forwards `localhost:13389` to the asset `win-01`, see [Port forwarding to other assets](#port-forwarding-to-other-assets) |
 
-The menu lists the assets by number, name, address and display name. Type a number or a name to connect, or `q` to quit. It is meant for tools such as Xshell that save one host and one user name.
+The menu lists one line for every asset and account you may connect as, with its number, the asset's name, the account, the address and the display name. Type a number, an asset name, or `<account>@<asset>` to connect, or `q` to quit. It is meant for tools such as Xshell that save one host and one user name.
 
-On **Assets**, SSH assets have a **Copy SSH command** button that copies the right command, with the port and host filled in.
+On **Assets**, SSH assets have a **Copy SSH command** button that copies the right command, with the port and host filled in, and the account when you may not use the asset's own.
 
-Logging in works for SSH assets only, and only ones with a stored **Username**: the gateway logs in to the asset with the stored account, its private key or password, and cannot ask for one. An asset without a username is refused with a message to ask the administrator. The asset's host key is pinned as in the web terminal; see [Protocols](./protocols.md#ssh).
+Logging in works for SSH assets only, and only as an account Casvisor holds the username of: the gateway logs in to the asset with the stored account, its private key or password, and cannot ask for one. An asset without a username is refused with a message to ask the administrator. The asset's host key is pinned as in the web terminal; see [Protocols](./protocols.md#ssh).
+
+### Choosing the account
+
+An asset can have [system accounts](./accounts.md) besides its own, and a [permission](../access-control/permissions.md#accounts) says which of them you may use. Name the account between your user name and the asset: `alice@deploy@web-01`. Your user name is required in this form, since `deploy@web-01` would be read as the user `deploy`.
+
+Without an account in the username, the gateway picks it:
+
+- the asset's own account, if you may use it;
+- otherwise, the one system account you may use;
+- if you may use several system accounts but not the asset's own, it refuses and lists them: *choose the account to connect to the asset: web-01 as with "ssh -p <port> alice@<account>@web-01@<host>": deploy, readonly*.
+
+The actions you hold through the gateway, such as Upload, Download and Forward, are the ones the permissions give for the account you connected as. The session list shows the account.
 
 Instead of typing the port every time, put the gateway in `~/.ssh/config`:
 
@@ -84,7 +97,7 @@ Always refused: remote port forwarding (`ssh -R`), agent forwarding (`ssh -A`) a
 
 ## Port forwarding to other assets
 
-RDP, VNC and Telnet assets can be reached with the client you already use too, such as Remote Desktop Connection (mstsc), a VNC viewer or a Telnet client: the gateway forwards a port on your machine to the asset.
+RDP, VNC, Telnet, MySQL and PostgreSQL assets can be reached with the client you already use too, such as Remote Desktop Connection (mstsc), a VNC viewer, a Telnet client, `mysql`, `psql` or DBeaver: the gateway forwards a port on your machine to the asset.
 
 ```shell
 ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com
@@ -98,7 +111,7 @@ Leave it running and connect your client to `localhost:13389`. Windows 10 and la
 - On **Assets**, assets other than SSH have a **Copy port forwarding command** button with the command filled in. It takes the local port 10000 above the asset's, 13389 for 3389, so that it does not clash with a service on your own machine; any free port works.
 - One `ssh` command can carry several `-L` options, for several assets at once.
 
-Unlike a connection from the browser, the bytes pass through as they are. Casvisor does not fill in the asset's account, so you log in to the asset with an account you know. The connection is not recorded or checked against command rules, and the Copy, Paste, Upload and Download actions do not limit it. That is why it takes the Forward action, which administrators give only to the people who should have it.
+Unlike a connection from the browser, the bytes pass through as they are. Casvisor does not fill in the asset's account, so you log in to the asset with an account you know. The connection is not recorded or checked against command rules, SQL statements included, and the Copy, Paste, Upload and Download actions do not limit it. That is why it takes the Forward action, which administrators give only to the people who should have it.
 
 ## Sessions, commands and the audit log
 

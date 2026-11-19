@@ -1,6 +1,6 @@
 ---
 title: "Roadmap"
-description: "What is done and what is being built next in Casvisor: several system accounts with password rotation, access approval, database and Kubernetes access, and syslog forwarding."
+description: "What is done and what is being built next in Casvisor: done are system accounts with password rotation, access requests, databases, jobs and syslog forwarding; next are Kubernetes access, the rest of RDP, a gateway for AI agents, and compliance in China."
 ---
 
 Casvisor is being rebuilt, in the open, into a complete bastion host. This is the order of work. Progress shows up as commits on [casvisor/casvisor](https://github.com/casvisor/casvisor) and as changes to this manual. Ideas and objections are welcome in [issues](https://github.com/casvisor/casvisor/issues).
@@ -24,13 +24,16 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - RDP: the clipboard, resizing with the window, [file transfer](../assets/file-transfer.md#rdp) through a redirected drive, the graphics pipeline with ClearCodec and RemoteFX Progressive, sharp text on high-DPI screens, the remote cursor, and Windows 11 and FreeRDP-based servers.
 - Telnet handled natively in Go, with command records and rules, so that one binary covers every protocol.
 - [Recording and playback](../audit/recordings.md) of SSH, Telnet, VNC and RDP sessions in the browser, with asciicast download for terminals, and live view of all four protocols.
+- [System accounts](../assets/accounts.md): several accounts per asset, with permissions naming which one a user may connect as, and the passwords changed on SSH assets by hand or on a schedule.
+- [Access requests](../access-control/access-requests.md): users ask for assets for a while, administrators approve, narrow, reject or revoke, and an approved request ends by itself.
+- [Two-factor sign-in](../access-control/users-and-admins.md#two-factor-sign-in) for the built-in accounts, with codes from an authenticator app.
+- [MySQL and PostgreSQL](../assets/databases.md) in a SQL console in the browser, with every statement recorded and checked against command rules.
+- [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
+- [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
 
 ## Next
 
-1. **Several system accounts per asset, and automatic password changes.** Users pick the account they may use without ever seeing its password, and Casvisor changes the passwords on the assets on a schedule.
-2. **Access requests with approval.** Ask for an asset, get it once someone approves, and lose it again automatically when it expires.
-3. **Database and Kubernetes access.** MySQL and PostgreSQL proxies with SQL auditing, and Kubernetes.
-4. **Syslog forwarding.** Sessions, commands and the operation log sent to syslog and from there to a SIEM.
+1. **Kubernetes access.** Kubernetes clusters reached through Casvisor, under the same permissions and audit as the other assets.
 
 ## Later
 

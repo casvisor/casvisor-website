@@ -1,10 +1,10 @@
 ---
 title: "SSH网关"
 seoTitle: "Casvisor SSH网关：用本地ssh、scp和VS Code连接"
-description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产，用mstsc等客户端经端口转发连接RDP、VNC和Telnet资产：用登记过的公钥登录，在用户名里写资产名，和网页终端用同一套权限、命令规则和会话列表。"
+description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产，用mstsc等客户端经端口转发连接RDP、VNC、Telnet和数据库资产：用登记过的公钥登录，在用户名里写资产名和账号，和网页终端用同一套权限、命令规则和会话列表。"
 ---
 
-除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。对RDP、VNC和Telnet资产，网关可以[转发端口](#端口转发到其他资产)，这样mstsc等客户端也能用。
+除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号或它的某个[系统账号](./accounts.md)登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。对RDP、VNC、Telnet、MySQL和PostgreSQL资产，网关可以[转发端口](#端口转发到其他资产)，这样mstsc等客户端也能用。
 
 ## 开启
 
@@ -39,15 +39,28 @@ description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经�
 | --- | --- |
 | `ssh -p 2222 web-01@casvisor.example.com` | 你所在组织的资产`web-01` |
 | `ssh -p 2222 alice@web-01@casvisor.example.com` | 同上，前面加上你的Casvisor用户名，必须是公钥的主人 |
+| `ssh -p 2222 alice@deploy@web-01@casvisor.example.com` | 以账号`deploy`连资产`web-01`，见[选择账号](#选择账号) |
 | `ssh -p 2222 other-org/web-01@casvisor.example.com` | 别的组织的资产。只有Casdoor`built-in`组织的用户能连 |
 | `ssh -p 2222 alice@casvisor.example.com` | 用户名写你自己、不写资产：弹出一个菜单，列出你能连的SSH资产 |
 | `ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com` | 不开shell，把`localhost:13389`转发到资产`win-01`，见[端口转发到其他资产](#端口转发到其他资产) |
 
-菜单按编号、名称、地址和显示名称列出资产，输入编号或名称就连上去，输入`q`退出。这是给Xshell这类只保存一个主机和一个用户名的工具用的。
+菜单里你能连的每个资产、每个账号各占一行，列出编号、资产名称、账号、地址和显示名称。输入编号、资产名称或`<账号>@<资产>`就连上去，输入`q`退出。这是给Xshell这类只保存一个主机和一个用户名的工具用的。
 
-**资产**页面上，SSH资产有一个**复制SSH命令**按钮，复制出来的命令已经填好了端口和主机。
+**资产**页面上，SSH资产有一个**复制SSH命令**按钮，复制出来的命令已经填好了端口和主机；你不能用资产自己的账号时，还会带上账号。
 
-只有SSH资产能登录上去，而且资产要保存了**用户名**：网关用资产保存的账号（私钥或密码）登录资产，没法向用户要。没有用户名的资产会被拒绝，并提示找管理员设置账号。资产的主机密钥和网页终端一样会被固定，见[协议](./protocols.md#ssh)。
+只有SSH资产能登录上去，而且只能用Casvisor保存了用户名的账号：网关用保存的账号（私钥或密码）登录资产，没法向用户要。没有用户名的资产会被拒绝，并提示找管理员设置账号。资产的主机密钥和网页终端一样会被固定，见[协议](./protocols.md#ssh)。
+
+### 选择账号
+
+一个资产除了自己的账号，还可以有[系统账号](./accounts.md)，你能用哪些由[权限](../access-control/permissions.md#账号)决定。账号写在你的用户名和资产之间：`alice@deploy@web-01`。这种写法必须带上你的用户名，因为`deploy@web-01`会被当成用户`deploy`。
+
+用户名里不写账号时，网关这样选：
+
+- 你能用资产自己的账号，就用它；
+- 否则，你只能用一个系统账号时，就用这一个；
+- 你能用多个系统账号、却不能用资产自己的账号时，拒绝连接并列出它们：*choose the account to connect to the asset: web-01 as with "ssh -p <port> alice@<account>@web-01@<host>": deploy, readonly*。
+
+经由网关时你拥有的动作（上传、下载、端口转发等），是权限对你所用账号给出的那些。会话列表里会显示账号。
 
 不想每次都输端口，可以把网关写进`~/.ssh/config`：
 
@@ -84,7 +97,7 @@ Host web-01
 
 ## 端口转发到其他资产
 
-RDP、VNC和Telnet资产也能用平时用的客户端连，例如远程桌面连接（mstsc）、VNC客户端或Telnet客户端：网关把你电脑上的一个端口转发到资产。
+RDP、VNC、Telnet、MySQL和PostgreSQL资产也能用平时用的客户端连，例如远程桌面连接（mstsc）、VNC客户端、Telnet客户端、`mysql`、`psql`或DBeaver：网关把你电脑上的一个端口转发到资产。
 
 ```shell
 ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com
@@ -98,7 +111,7 @@ ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com
 - **资产**页面上，SSH以外的资产有一个**复制端口转发命令**按钮，复制出来的命令已经填好。本地端口取资产端口加10000，3389就是13389，免得和你电脑上的服务冲突；换成别的空闲端口也行。
 - 一条`ssh`命令可以带多个`-L`，同时转发到多个资产。
 
-和从浏览器连不同，数据原样转发。Casvisor不代填资产的账号，你要用自己知道的账号登录资产；连接不录像，不按命令规则检查，复制、粘贴、上传、下载这几个动作也管不到它。所以它要Forward这个动作，管理员只给该有的人。
+和从浏览器连不同，数据原样转发。Casvisor不代填资产的账号，你要用自己知道的账号登录资产；连接不录像，不按命令规则检查（SQL语句也一样），复制、粘贴、上传、下载这几个动作也管不到它。所以它要Forward这个动作，管理员只给该有的人。
 
 ## 会话、命令和审计
 

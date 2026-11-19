@@ -35,7 +35,7 @@ function Protocols({ label, names }: { label: string; names: string[] }) {
   return (
     <div className="flex flex-col gap-2 rounded-lg border border-dashed p-3">
       <span className="text-xs text-fd-muted-foreground">{label}</span>
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         {names.map((name) => (
           <span key={name} className="rounded-md bg-fd-secondary px-2 py-1 font-mono text-xs font-medium">
             {name}
@@ -134,7 +134,7 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
           </div>
           <Arrow />
           <div className="flex flex-col justify-center gap-3">
-            <Protocols label={t.how.native} names={['SSH', 'RDP', 'VNC', 'Telnet']} />
+            <Protocols label={t.how.native} names={['SSH', 'RDP', 'VNC', 'Telnet', 'MySQL', 'PostgreSQL']} />
           </div>
           <Arrow />
           <div className="flex flex-col items-center justify-center gap-2 rounded-xl border bg-fd-card p-5 text-center">

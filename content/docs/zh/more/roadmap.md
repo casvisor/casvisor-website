@@ -1,6 +1,6 @@
 ---
 title: "路线图"
-description: "Casvisor已经做完的和接下来要做的：一个资产多个系统账号与自动改密，访问审批，数据库和Kubernetes访问，syslog转发。"
+description: "Casvisor已经做完的和接下来要做的：已做完系统账号与自动改密、访问申请、数据库、作业中心和syslog转发；接下来是Kubernetes访问、补全RDP、AI智能体网关和国内合规。"
 ---
 
 Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先后顺序。进展会体现在[casvisor/casvisor](https://github.com/casvisor/casvisor)的提交和本手册的更新里。欢迎在[issue](https://github.com/casvisor/casvisor/issues)里提想法和反对意见。
@@ -24,13 +24,16 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - RDP：剪贴板、随窗口调整大小、经重定向磁盘[传文件](../assets/file-transfer.md#rdp)、带ClearCodec和RemoteFX Progressive的图形管道、高分屏上的清晰文字、远程光标，以及Windows 11和基于FreeRDP的服务端。
 - Telnet用Go直接处理，带命令记录和命令规则，一个程序覆盖所有协议。
 - SSH、Telnet、VNC和RDP会话的[录像和回放](../audit/recordings.md)，在浏览器里播放，终端录像可以下载成asciicast；四种协议都能实时旁观。
+- [系统账号](../assets/accounts.md)：一个资产多个账号，权限决定用户能以哪个账号连接；SSH资产上的密码可以手动或按周期修改。
+- [访问申请](../access-control/access-requests.md)：用户申请一段时间内访问某些资产，管理员批准（可缩小范围）、驳回或收回，批准的申请到期自动失效。
+- 自带账号的[两步验证](../access-control/users-and-admins.md#两步验证)，用身份验证器里的动态码。
+- 浏览器里的[MySQL和PostgreSQL](../assets/databases.md) SQL控制台，每条语句都记录并按命令规则检查。
+- [作业中心](../assets/jobs.md)：在多台SSH资产上批量执行命令、脚本和分发文件。
+- 会话、命令记录和操作日志[导出CSV和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。
 
 ## 接下来
 
-1. **一个资产多个系统账号，自动改密。** 用户选择自己能用的账号，全程看不到密码；Casvisor按计划修改资产上的密码。
-2. **访问申请与审批。** 申请某个资产，审批通过后获得，到期自动收回。
-3. **数据库和Kubernetes访问。** MySQL和PostgreSQL代理，带SQL审计；以及Kubernetes。
-4. **syslog转发。** 会话、命令和操作日志发到syslog，再接入SIEM。
+1. **Kubernetes访问。** 经由Casvisor访问Kubernetes集群，和其他资产用同一套权限和审计。
 
 ## 再往后
 

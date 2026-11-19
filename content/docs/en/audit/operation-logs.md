@@ -43,9 +43,16 @@ Some things happen inside a session rather than through an API call, so Casvisor
 | `clipboard-copy`, `clipboard-paste` | Text is copied out of or pasted into an [RDP session](../assets/protocols.md#clipboard) | The text, up to 1000 bytes |
 | `session-monitor` | An administrator opens the [live view](./sessions.md#watching-a-session-live) of a session | The session |
 | `session-replay` | An administrator replays or downloads a [recording](./recordings.md) | The recording file |
+| `sql-export` | A user exports a result of a [database session](../assets/databases.md#copying-and-exporting) as CSV | The statement |
+| `rotate-asset-account`, `push-asset-account` | Casvisor changes the password of a [system account](../assets/accounts.md#changing-passwords) on the asset, by hand or on schedule; the user is `casvisor` and the method `Account` | The account's username and the result |
+| `export-sessions`, `export-commands`, `export-records` | An administrator downloads a list as CSV; the method is `Export` | The number of rows, the file name and the filter |
 
 These entries are written whatever `logPostOnly` says. The commands run in SSH and Telnet sessions are not here but on the [Commands](./commands.md) page.
 
 ## Retention
 
 Entries are kept until you delete them. There is no retention setting yet; trim the `record` table from the database if it grows too large.
+
+## Export and forwarding
+
+**Export CSV** on the list downloads the entries that match the current search. With `syslogAddress` set, every new entry is also sent to a syslog server as it is written. See [Export and syslog](./export.md).

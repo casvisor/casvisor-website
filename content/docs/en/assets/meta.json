@@ -2,11 +2,14 @@
   "title": "Assets",
   "pages": [
     "assets",
+    "accounts",
     "connecting",
     "ssh-gateway",
     "network-gateways",
     "file-transfer",
     "protocols",
-    "patches"
+    "databases",
+    "patches",
+    "jobs"
   ]
 }

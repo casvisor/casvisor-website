@@ -1,23 +1,24 @@
 ---
 title: "Protocols"
-seoTitle: "Casvisor: SSH, RDP, VNC and Telnet in the browser"
-description: "Casvisor connects to SSH, RDP, VNC and Telnet natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
+seoTitle: "Casvisor: SSH, RDP, VNC, Telnet and databases in the browser"
+description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL and PostgreSQL natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
 ---
 
-| | SSH | VNC | RDP | Telnet |
-| --- | --- | --- | --- | --- |
-| Default port | 22 | 5900 | 3389 | 23 |
-| Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) |
-| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal |
-| Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts |
-| Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced |
-| File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No |
-| Command records and rules | Yes | No | No | Yes |
-| Recording | Yes | Yes | Yes | Yes |
-| Live view | Yes | Yes | Yes | Yes |
-| Native clients | Through the SSH gateway | No | No | No |
+| | SSH | VNC | RDP | Telnet | MySQL, PostgreSQL |
+| --- | --- | --- | --- | --- | --- |
+| Default port | 22 | 5900 | 3389 | 23 | 3306, 5432 |
+| Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) | Casvisor (Go) |
+| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | SQL console |
+| Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts | Username and password |
+| Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced | Copy shows the copy button of results |
+| File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No | CSV export of results, with Download |
+| Command records and rules | Yes | No | No | Yes | Yes, per SQL statement |
+| Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead |
+| Live view | Yes | Yes | Yes | Yes | The statements, as they run |
+| [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes |
+| Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | Port forwarding |
 
-Every protocol can go through a [network gateway](./network-gateways.md), and every session is [recorded](../audit/recordings.md) unless recording is turned off.
+Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. Native clients reach assets other than SSH by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.
 
 ## SSH
 
@@ -81,3 +82,9 @@ Telnet has no login of its own in the protocol, so Casvisor types the account fo
 Commands typed in Telnet sessions are recorded and checked against the [command rules](../audit/commands.md) exactly as for SSH, and administrators can watch the session live. As for SSH, the terminal uses the browser's own copy and paste, so **Copy** and **Paste** do not restrict it, and there is no file transfer.
 
 Use Telnet for network gear and old systems that have nothing else; it sends everything in clear text between Casvisor, or its network gateway, and the device.
+
+## MySQL and PostgreSQL
+
+Casvisor connects to MySQL and MariaDB with Go's MySQL driver and to PostgreSQL with pgx, logs in with the asset's account, and shows a SQL console in the browser: the databases, tables and columns on the left, an editor, and the results. The password stays on the server. TLS is used when the server offers it, without checking its certificate.
+
+Every statement is recorded as a command of the session and checked against the [command rules](../audit/commands.md) before it is sent, so a Block rule stops it from reaching the database. Results can be exported as CSV with the **Download** action. See [Databases](./databases.md).

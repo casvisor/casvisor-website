@@ -16,6 +16,8 @@ Casvisor会为经过它的每个会话录像，四种协议都录，管理员在
 | RDP | 发给浏览器的画面和鼠标指针 |
 | SSH网关，交互式shell | 终端输出和终端大小的变化 |
 | SSH网关，`ssh`命令行上带的命令、`scp`、`rsync`、SFTP、端口转发 | 没有录像；命令在[命令记录](./commands.md)里，传过的文件在[操作日志](./operation-logs.md#ssh和文件事件)里 |
+| MySQL和PostgreSQL | 没有录像；每条语句都在[命令记录](./commands.md)里，**回放**列出它们。见[数据库](../assets/databases.md#记录了什么) |
+| [作业](../assets/jobs.md) | 没有录像；每台资产的输出在作业页面上，命令在命令记录里 |
 
 用户敲的键本身不录，只录屏幕上显示的内容，所以不回显的密码不会出现在录像里。SSH和Telnet会话里的命令另外存为[命令记录](./commands.md)。RDP会话的剪贴板不录。
 

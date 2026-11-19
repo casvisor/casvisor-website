@@ -5,6 +5,7 @@
     "sessions",
     "recordings",
     "commands",
-    "operation-logs"
+    "operation-logs",
+    "export"
   ]
 }

@@ -1,6 +1,6 @@
 ---
 title: "Configuration"
-description: "Every key of Casvisor's conf/app.conf: the HTTP port, SQLite or MySQL, built-in accounts or Casdoor, the SSH gateway, recordings, patch scans, sessions in Redis and the operation log."
+description: "Every key of Casvisor's conf/app.conf: the HTTP port, SQLite or MySQL, built-in accounts or Casdoor, the SSH gateway, recordings, patch scans, sessions in Redis, the operation log and syslog forwarding."
 ---
 
 Casvisor reads `conf/app.conf` from its working directory when it starts. In the Docker images that is `/conf/app.conf`. Restart Casvisor after changing it.
@@ -31,6 +31,8 @@ casdoorApplication =
 adminPassword =
 sshGatewayPort =
 sshGatewayHost =
+syslogAddress =
+syslogFormat = rfc5424
 recordingPath =
 recordingRetentionDays =
 disableRecording = false
@@ -100,6 +102,13 @@ See [Connect Casdoor](../getting-started/casdoor.md) and [Users and administrato
 | `redisEndpoint` | empty | Empty keeps sign-in sessions as files under `tmp/`. Set it to a Redis address, such as `127.0.0.1:6379`, to keep them in Redis instead, so people stay signed in when the container is replaced. |
 | `logPostOnly` | `true` | Log only the calls that change something. See [Operation logs](../audit/operation-logs.md). |
 | `isDemoMode` | `false` | For a public demo: sessions end after 15 minutes, each client IP can have only a few open at a time, users can only stop their own sessions, the SSH gateway is off, and so are scheduled patch scans. |
+
+## Audit forwarding
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `syslogAddress` | empty | The syslog server to [forward](../audit/export.md#syslog-forwarding) sessions, commands and operation log entries to, as `udp://host:port` or `tcp://host:port`; without a scheme it is UDP. Empty turns forwarding off. A wrong value is reported in the log at start, and nothing is forwarded. |
+| `syslogFormat` | `rfc5424` | `rfc5424` for RFC 5424 messages with a JSON body, or `cef` for the Common Event Format. |
 
 ## Security
 

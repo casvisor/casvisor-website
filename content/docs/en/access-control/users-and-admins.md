@@ -1,6 +1,6 @@
 ---
 title: "Users and administrators"
-description: "Casvisor signs people in with its own accounts, or through Casdoor. Either way there are administrators, who manage assets, permissions, sessions and patches and can reach every asset, and everyone else, who only gets the workbench and the assets their permissions give them."
+description: "Casvisor signs people in with its own accounts, with an optional code from an authenticator app, or through Casdoor. Either way there are administrators, who manage assets, permissions, sessions, jobs and patches and can reach every asset, and everyone else, who only gets the workbench and the assets their permissions give them."
 ---
 
 Accounts come from one of two places:
@@ -31,13 +31,27 @@ Everyone changes their own password under **My Account**, in the menu at the top
 
 All built-in accounts belong to one organization, named by `casdoorOrganization`, `casvisor` by default. Changes to a user, such as new groups or **Is forbidden**, apply at once, to the web UI and to open sessions alike.
 
+### Two-factor sign-in
+
+Each user of the built-in accounts can turn on two-factor sign-in for themselves under **My Account**, so that signing in takes a code from an authenticator app such as Google Authenticator, Microsoft Authenticator or 1Password after the password:
+
+1. Click **Set up**. Casvisor shows a QR code and the key it holds, for the app to scan or for typing in by hand.
+2. Enter the 6-digit code the app shows, then **Turn on**.
+
+From then on, the sign-in page asks for the code once the user name and password are right. The codes are standard TOTP: SHA-1, 6 digits, a new one every 30 seconds, and a code from the step before or after the current one is accepted to allow for clocks that drift. Each code works only once. A wrong code counts as a failed sign-in, like a wrong password, towards the 15-minute lockout. The key is stored encrypted with `credentialKey` when it is set, and codes and keys are masked in the [operation log](../audit/operation-logs.md).
+
+To turn it off, the user clicks **Turn off** under **My Account** and enters their password. For a user who has lost the app, an administrator opens the user under **Users** and turns off **Two-factor sign-in** there; the user then signs in with the password alone and can set it up again. Administrators cannot turn it on for someone else.
+
+Two-factor sign-in covers the web sign-in. The [SSH gateway](../assets/ssh-gateway.md) only takes public keys and does not ask for a code. With Casdoor, MFA is set up in Casdoor instead; see [Connect Casdoor](../getting-started/casdoor.md).
+
 ## Administrators
 
 A user is an administrator when **Is admin** is on for them: under **Users** for built-in accounts, or in Casdoor, which makes them an administrator of their Casdoor organization. With Casdoor, users of Casdoor's `built-in` organization are administrators too.
 
 Administrators:
 
-- see **Users** (built-in accounts only), **Network gateways**, **Permissions**, **Patches**, **Sessions**, **Commands**, **Command rules** and **Records** (the [operation log](../audit/operation-logs.md)), and manage **Assets**;
+- see **Users** (built-in accounts only), **Network gateways**, **Permissions**, **Patches**, **Jobs**, **Sessions**, **Commands**, **Command rules** and **Records** (the [operation log](../audit/operation-logs.md)), and manage **Assets** and their [system accounts](../assets/accounts.md);
+- approve, reject and revoke the [access requests](./access-requests.md) of their organization;
 - can connect to every asset of their organization, with every action, without a permission;
 - can stop anyone's session, [watch it live](../audit/sessions.md#watching-a-session-live) and [replay its recording](../audit/recordings.md).
 
@@ -48,10 +62,10 @@ An administrator of one organization cannot manage the assets or permissions of 
 Users who are not administrators:
 
 - land on the [workbench](../assets/connecting.md), which lists only the assets a [permission](./permissions.md) gives them **Connect** on;
-- can call only the API needed to list those assets, connect to them, move files in their own sessions, and manage their own [SSH keys](../assets/ssh-gateway.md#registering-a-public-key);
-- cannot see stored passwords, other people's sessions, recordings, the command records, or the operation log.
+- can call only the API needed to list those assets, connect to them, move files in their own sessions, manage their own [SSH keys](../assets/ssh-gateway.md#registering-a-public-key), send and cancel their own [access requests](./access-requests.md), and set up their own two-factor sign-in;
+- cannot see stored passwords, other people's sessions, recordings, the command records, jobs, or the operation log.
 
-A user with no permission at all signs in to an empty workbench.
+A user with no permission at all signs in to an empty workbench, and can ask for access with an [access request](./access-requests.md).
 
 ## Limiting who can sign in
 
