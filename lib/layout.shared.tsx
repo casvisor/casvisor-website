@@ -124,7 +124,6 @@ export function footerLinks(lang: string) {
         { text: 'Casdoor', url: 'https://casdoor.ai' },
         { text: 'CasWAF', url: 'https://caswaf.org' },
         { text: 'Apache Casbin', url: 'https://casbin.apache.org' },
-        { text: 'Apache Guacamole', url: 'https://guacamole.apache.org' },
       ],
     },
   ];
