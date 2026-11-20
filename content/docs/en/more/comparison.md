@@ -1,21 +1,21 @@
 ---
 title: "Comparison and alternatives"
 seoTitle: "Casvisor vs JumpServer, Teleport and Warpgate"
-description: "How Casvisor compares with JumpServer, Teleport, Warpgate, Apache Guacamole and HashiCorp Boundary: features, licenses, paid editions and gaps."
+description: "How Casvisor compares with JumpServer, Teleport, Warpgate and HashiCorp Boundary: features, licenses, paid editions and gaps."
 ---
 
 There are several good open-source projects in this space. This page is meant to help you choose, so it says where Casvisor is behind as well as where it differs. It reflects October 2026; check each project's own site for the current state.
 
-| | Casvisor | JumpServer | Teleport | Warpgate | Apache Guacamole |
-| --- | --- | --- | --- | --- | --- |
-| License | Apache-2.0 | GPL-3.0 | AGPL-3.0 source; community binaries under their own terms | Apache-2.0 | Apache-2.0 |
-| Paid edition | None | Enterprise edition | Enterprise edition | None | None |
-| Written in | Go | Python, Go | Go | Rust | C, Java |
-| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC | SSH, RDP, VNC, Telnet, K8s |
-| Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, audited; other protocols through port forwarding, not recorded | Yes | Yes | Yes | No |
-| Session recording | SSH, Telnet, VNC, RDP, played in the browser; SQL statements listed per session | Yes | Yes | Yes | Yes |
-| Identity | Built in with TOTP, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC | Built in, extensions for LDAP, SSO |
-| Access policy | Casbin: users, groups, assets, tags, accounts, actions, IPs, time windows; access requests with approval | RBAC, asset authorizations | RBAC with labels | Roles on targets | Connection permissions |
+| | Casvisor | JumpServer | Teleport | Warpgate |
+| --- | --- | --- | --- | --- |
+| License | Apache-2.0 | GPL-3.0 | AGPL-3.0 source; community binaries under their own terms | Apache-2.0 |
+| Paid edition | None | Enterprise edition | Enterprise edition | None |
+| Written in | Go | Python, Go | Go | Rust |
+| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
+| Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, audited; other protocols through port forwarding, not recorded | Yes | Yes | Yes |
+| Session recording | SSH, Telnet, VNC, RDP, played in the browser; SQL statements listed per session | Yes | Yes | Yes |
+| Identity | Built in with TOTP, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC |
+| Access policy | Casbin: users, groups, assets, tags, accounts, actions, IPs, time windows; access requests with approval | RBAC, asset authorizations | RBAC with labels | Roles on targets |
 
 ## Open-source bastion host alternatives
 
@@ -32,10 +32,6 @@ Teleport issues short-lived certificates and covers the widest range of infrastr
 ### If you are looking for a Warpgate alternative
 
 Warpgate is a single Rust binary that proxies SSH, HTTPS, Kubernetes, MySQL, PostgreSQL, RDP and VNC transparently, with recording and live view, and no paid edition. Today it does more than Casvisor on the protocol side; Casvisor answers with built-in accounts, Casdoor identity and Casbin policy.
-
-### If you are looking for an Apache Guacamole alternative
-
-Apache Guacamole is a browser remote desktop gateway with its own users and connection permissions. Casvisor adds SSH, Telnet and an SSH gateway, and can take users and groups from Casdoor.
 
 ### If you are looking for a Boundary alternative
 

@@ -42,5 +42,5 @@ Casvisor is an open-source bastion host (jump server). People sign in, with Casv
 ## More
 
 - [Roadmap](./more/roadmap.md): what is being built next
-- [Comparison](./more/comparison.md): Casvisor next to JumpServer, Teleport, Warpgate and Guacamole
+- [Comparison](./more/comparison.md): Casvisor next to JumpServer, Teleport and Warpgate
 - [FAQ](./more/faq.md)

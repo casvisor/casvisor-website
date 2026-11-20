@@ -42,5 +42,5 @@ Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账�
 ## 更多
 
 - [路线图](./more/roadmap.md)：接下来要做什么
-- [对比](./more/comparison.md)：和JumpServer、Teleport、Warpgate、Guacamole的比较
+- [对比](./more/comparison.md)：和JumpServer、Teleport、Warpgate的比较
 - [常见问题](./more/faq.md)

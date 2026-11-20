@@ -6,16 +6,16 @@ description: "Casvisor与JumpServer、Teleport、Warpgate等开源堡垒机的�
 
 这个领域有好几个不错的开源项目。这一页是为了帮你选型，所以既写Casvisor不一样的地方，也写它落后的地方。内容截至2026年10月，各项目的最新情况请看它们自己的网站。
 
-| | Casvisor | JumpServer | Teleport | Warpgate | Apache Guacamole |
-| --- | --- | --- | --- | --- | --- |
-| 许可证 | Apache-2.0 | GPL-3.0 | 源码AGPL-3.0；社区版二进制另有条款 | Apache-2.0 | Apache-2.0 |
-| 收费版 | 没有 | 企业版 | 企业版 | 没有 | 没有 |
-| 开发语言 | Go | Python、Go | Go | Rust | C、Java |
-| 浏览器访问 | SSH、RDP、VNC、Telnet、MySQL、PostgreSQL | SSH、RDP、VNC、数据库、K8s、应用 | SSH、RDP（Windows）、数据库、K8s、应用 | SSH、RDP、VNC | SSH、RDP、VNC、Telnet、K8s |
-| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，受审计；其他协议经端口转发，不录像 | 支持 | 支持 | 支持 | 不支持 |
-| 会话录像 | SSH、Telnet、VNC、RDP，在浏览器里回放；SQL语句按会话列出 | 支持 | 支持 | 支持 | 支持 |
-| 身份 | 自带（可开TOTP），或Casdoor：单点登录、多因素、LDAP、SAML、OAuth、用户组 | 自带、LDAP、单点登录 | 自带、单点登录 | 自带、TOTP、OIDC | 自带，可扩展LDAP、单点登录 |
-| 访问策略 | Casbin：用户、用户组、资产、标签、账号、动作、IP、有效期；访问申请与审批 | RBAC、资产授权 | 基于标签的RBAC | 目标上的角色 | 连接权限 |
+| | Casvisor | JumpServer | Teleport | Warpgate |
+| --- | --- | --- | --- | --- |
+| 许可证 | Apache-2.0 | GPL-3.0 | 源码AGPL-3.0；社区版二进制另有条款 | Apache-2.0 |
+| 收费版 | 没有 | 企业版 | 企业版 | 没有 |
+| 开发语言 | Go | Python、Go | Go | Rust |
+| 浏览器访问 | SSH、RDP、VNC、Telnet、MySQL、PostgreSQL | SSH、RDP、VNC、数据库、K8s、应用 | SSH、RDP（Windows）、数据库、K8s、应用 | SSH、RDP、VNC |
+| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，受审计；其他协议经端口转发，不录像 | 支持 | 支持 | 支持 |
+| 会话录像 | SSH、Telnet、VNC、RDP，在浏览器里回放；SQL语句按会话列出 | 支持 | 支持 | 支持 |
+| 身份 | 自带（可开TOTP），或Casdoor：单点登录、多因素、LDAP、SAML、OAuth、用户组 | 自带、LDAP、单点登录 | 自带、单点登录 | 自带、TOTP、OIDC |
+| 访问策略 | Casbin：用户、用户组、资产、标签、账号、动作、IP、有效期；访问申请与审批 | RBAC、资产授权 | 基于标签的RBAC | 目标上的角色 |
 
 ## 开源堡垒机的其他选择
 
@@ -32,10 +32,6 @@ Teleport用短期证书做身份，覆盖的基础设施最广。从v16起，社
 ### Warpgate的替代品
 
 Warpgate是一个Rust写的单文件程序，透明代理SSH、HTTPS、Kubernetes、MySQL、PostgreSQL、RDP和VNC，带录像和实时查看，没有收费版。目前在协议这一块它比Casvisor做得多；Casvisor带自带账号、Casdoor身份和Casbin策略。
-
-### Apache Guacamole的替代品
-
-Apache Guacamole是浏览器远程桌面网关，有自己的用户和连接权限。Casvisor多了SSH、Telnet和SSH网关，用户和用户组也可以直接用Casdoor的。
 
 ### Boundary的替代品
 
