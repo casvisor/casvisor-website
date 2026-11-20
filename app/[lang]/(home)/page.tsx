@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, ChevronDown, ChevronRight, Globe, Server } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronRight, Globe, MonitorPlay, Server } from 'lucide-react';
 import { InstallCommand } from '@/components/install-command';
 import { SiteFooter } from '@/components/site-footer';
 import { getText } from '@/lib/home';
@@ -21,6 +21,41 @@ export async function generateMetadata({ params }: PageProps<'/[lang]'>): Promis
     twitter: { card: 'summary_large_image', title: t.seoTitle, description, images: image },
   };
 }
+
+const demoUrl = 'https://demo.casvisor.com';
+
+const badges = [
+  {
+    href: `${repoUrl}/releases/latest`,
+    src: 'https://img.shields.io/github/v/release/casvisor/casvisor?style=flat-square&color=blue',
+    alt: 'Release',
+  },
+  {
+    href: 'https://hub.docker.com/r/casbin/casvisor',
+    src: 'https://img.shields.io/docker/pulls/casbin/casvisor?style=flat-square&color=brightgreen',
+    alt: 'Docker Pulls',
+  },
+  {
+    href: `${repoUrl}/actions/workflows/build.yml`,
+    src: 'https://img.shields.io/github/actions/workflow/status/casvisor/casvisor/build.yml?branch=master&style=flat-square&label=build',
+    alt: 'Build Status',
+  },
+  {
+    href: `${repoUrl}/blob/master/go.mod`,
+    src: 'https://img.shields.io/github/go-mod/go-version/casvisor/casvisor?style=flat-square&logo=go&logoColor=white',
+    alt: 'Go version',
+  },
+  {
+    href: 'https://discord.gg/yfKcuHVAHB',
+    src: 'https://img.shields.io/discord/1022748306096537660?style=flat-square&logo=discord&label=Discord&color=5865F2',
+    alt: 'Discord',
+  },
+  {
+    href: `${repoUrl}/blob/master/LICENSE`,
+    src: 'https://img.shields.io/github/license/casvisor/casvisor?style=flat-square&color=orange',
+    alt: 'License',
+  },
+];
 
 function Arrow() {
   return (
@@ -98,12 +133,50 @@ export default async function HomePage({ params }: PageProps<'/[lang]'>) {
               </svg>
               GitHub
             </a>
+            <a
+              href={demoUrl}
+              className="inline-flex items-center gap-2 rounded-lg border bg-fd-card px-5 py-2.5 text-sm font-medium transition-colors hover:bg-fd-accent"
+            >
+              <MonitorPlay className="size-4" />
+              {t.demo}
+            </a>
+          </div>
+
+          <div className="mt-6 flex flex-wrap justify-center gap-1.5">
+            {badges.map(({ href, src, alt }) => (
+              <a key={alt} href={href}>
+                <img src={src} alt={alt} height={20} className="h-5 w-auto" />
+              </a>
+            ))}
           </div>
 
           <div className="mt-10 flex w-full flex-col items-center gap-2">
             <InstallCommand copyLabel={t.copy} />
             <p className="text-sm text-fd-muted-foreground">{t.installNote}</p>
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto w-full max-w-6xl px-4 py-14">
+        <h2 className="mb-8 text-center text-2xl font-semibold tracking-tight">{t.showTitle}</h2>
+        <a href={demoUrl} className="block overflow-hidden rounded-xl border bg-fd-card shadow-lg">
+          <img src="/img/casvisor-demo.gif" alt={t.showAlt} width={1120} height={700} className="h-auto w-full" />
+        </a>
+        <p className="mt-3 text-center text-sm text-fd-muted-foreground">{t.showCaption}</p>
+        <div className="mt-10 grid gap-4 md:grid-cols-3">
+          {t.gallery.map(({ src, alt, title, body, href }) => (
+            <Link
+              key={href}
+              href={`/${lang}/docs/${href}`}
+              className="group flex flex-col overflow-hidden rounded-xl border bg-fd-card transition-colors hover:border-fd-primary/50"
+            >
+              <img src={src} alt={alt} width={1600} height={1000} loading="lazy" className="h-auto w-full border-b" />
+              <div className="p-4">
+                <h3 className="font-semibold">{title}</h3>
+                <p className="mt-1 text-sm text-fd-muted-foreground">{body}</p>
+              </div>
+            </Link>
+          ))}
         </div>
       </section>
 
