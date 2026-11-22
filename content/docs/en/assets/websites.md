@@ -8,20 +8,20 @@ Internal websites can be assets too: a monitoring dashboard, a CI server, the ad
 
 ## Setting up the domain
 
-Each website is served on a subdomain of its own, so that its paths, cookies and scripts work as they do at its own address. Pick a domain whose subdomains all reach Casvisor, such as `web.casvisor.example.com`, and set it in `conf/app.conf`:
+Each website is served on a subdomain of its own, so that its paths, cookies and scripts work as they do at its own address. Pick a domain whose subdomains all reach Casvisor, such as `example-apps.com` next to a web UI at `casvisor.example.com`, and set it in `conf/app.conf`:
 
 ```ini
-webAssetDomain = web.casvisor.example.com
+webAssetDomain = example-apps.com
 ```
 
 Then:
 
-1. Add a wildcard DNS record, `*.web.casvisor.example.com`, pointing at Casvisor or at its reverse proxy.
-2. Give the reverse proxy a wildcard certificate for `*.web.casvisor.example.com`, and send those host names to Casvisor with the `Host` header kept (see [Behind a reverse proxy](../operations/reverse-proxy.md#websites)).
+1. Add a wildcard DNS record, `*.example-apps.com`, pointing at Casvisor or at its reverse proxy.
+2. Give the reverse proxy a wildcard certificate for `*.example-apps.com`, and send those host names to Casvisor with the `Host` header kept (see [Behind a reverse proxy](../operations/reverse-proxy.md#websites)).
 
-Websites are reached over the scheme of the request, as the reverse proxy reports it in `X-Forwarded-Proto`; write the scheme into the setting, as `https://web.casvisor.example.com`, to fix it. Until `webAssetDomain` is set, opening a Web asset fails with a message saying so.
+Websites are reached over the scheme of the request, as the reverse proxy reports it in `X-Forwarded-Proto`; write the scheme into the setting, as `https://example-apps.com`, to fix it. Until `webAssetDomain` is set, opening a Web asset fails with a message saying so.
 
-Use a domain that is not under the web UI's own host name. A website's scripts can set cookies on the parent of their host name, so `*.web.example.com` next to `casvisor.example.com` is right, and `*.casvisor.example.com` for both is not.
+Use a registrable domain of its own, not a subdomain of one the web UI or your other services are under. A website's scripts can set cookies for every parent of its host name up to the registrable domain, so websites under `*.web.example.com` could set cookies for `casvisor.example.com` and sign its users in or out of it. A website can still set cookies for the other websites under the same domain.
 
 For a quick try on one machine, `webAssetDomain = web.localhost:19000` works without DNS in Chrome, Edge and Firefox, which send every `*.localhost` name to the machine itself.
 
@@ -46,7 +46,7 @@ An https website whose certificate the system trusts for its host name is accept
 
 ## Opening a website
 
-**Connect** on a Web asset opens a new window, which starts a session and goes on to the website, on an address like `https://grafana--myorg.web.casvisor.example.com/`. The subdomain is `<asset>--<organization>` when both names can be part of a host name, and a fixed code made from them otherwise. In the [workbench](./connecting.md), a Web asset's tab has an **Open the website** button that does the same in a new window.
+**Connect** on a Web asset opens a new window, which starts a session and goes on to the website, on an address like `https://grafana--myorg.example-apps.com/`. The subdomain is `<asset>--<organization>` when both names can be part of a host name, and a fixed code made from them otherwise. In the [workbench](./connecting.md), a Web asset's tab has an **Open the website** button that does the same in a new window.
 
 The window is signed in to the session by a link that works once, within a minute, and gets a cookie for that subdomain only. The cookie is Casvisor's: it is never passed on to the website, and the website's own cookies stay on its subdomain. Opening the same website again in the same browser ends the earlier session.
 

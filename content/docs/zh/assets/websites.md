@@ -8,20 +8,20 @@ description: "Grafana、Jenkins、路由器管理页这类内网网站可以作�
 
 ## 配置域名
 
-每个网站在自己的子域名上打开，这样它的路径、Cookie和脚本都和在原地址上一样能用。选一个所有子域名都能到达Casvisor的域名，比如`web.casvisor.example.com`，写进`conf/app.conf`：
+每个网站在自己的子域名上打开，这样它的路径、Cookie和脚本都和在原地址上一样能用。选一个所有子域名都能到达Casvisor的域名，比如网页界面在`casvisor.example.com`时用`example-apps.com`，写进`conf/app.conf`：
 
 ```ini
-webAssetDomain = web.casvisor.example.com
+webAssetDomain = example-apps.com
 ```
 
 然后：
 
-1. 加一条泛解析DNS记录`*.web.casvisor.example.com`，指向Casvisor或它前面的反向代理。
-2. 给反向代理配`*.web.casvisor.example.com`的泛域名证书，把这些主机名转给Casvisor，并保留`Host`头（见[放在反向代理后面](../operations/reverse-proxy.md#网站)）。
+1. 加一条泛解析DNS记录`*.example-apps.com`，指向Casvisor或它前面的反向代理。
+2. 给反向代理配`*.example-apps.com`的泛域名证书，把这些主机名转给Casvisor，并保留`Host`头（见[放在反向代理后面](../operations/reverse-proxy.md#网站)）。
 
-打开网站时用请求的协议（http或https），以反向代理在`X-Forwarded-Proto`里给的为准；想固定的话把协议写进配置，如`https://web.casvisor.example.com`。没设`webAssetDomain`时，打开Web资产会报错说明要先设置。
+打开网站时用请求的协议（http或https），以反向代理在`X-Forwarded-Proto`里给的为准；想固定的话把协议写进配置，如`https://example-apps.com`。没设`webAssetDomain`时，打开Web资产会报错说明要先设置。
 
-不要用网页界面自己主机名下的域名。网站的脚本能给自己主机名的上一级设Cookie，所以`casvisor.example.com`配`*.web.example.com`是对的，两者都用`*.casvisor.example.com`不行。
+用一个单独的根域名，不要用网页界面或其他服务所在根域名下的子域名。网站的脚本能给自己主机名一直到根域名的每一级设Cookie，网站放在`*.web.example.com`下，就能给`casvisor.example.com`设Cookie，让它的用户登录或退出。同一个域名下的网站之间仍然能互相设Cookie。
 
 在一台机器上试用时，`webAssetDomain = web.localhost:19000`不用配DNS就能用：Chrome、Edge和Firefox会把所有`*.localhost`解析到本机。
 
@@ -46,7 +46,7 @@ webAssetDomain = web.casvisor.example.com
 
 ## 打开网站
 
-在Web资产上点**连接**会打开一个新窗口，建会话后跳到网站，地址形如`https://grafana--myorg.web.casvisor.example.com/`。子域名是`<资产>--<组织>`，两个名字有不能用在主机名里的字符时，改用由它们算出的固定编码。在[工作台](./connecting.md)里，Web资产的标签页上有**打开网站**按钮，同样在新窗口里打开。
+在Web资产上点**连接**会打开一个新窗口，建会话后跳到网站，地址形如`https://grafana--myorg.example-apps.com/`。子域名是`<资产>--<组织>`，两个名字有不能用在主机名里的字符时，改用由它们算出的固定编码。在[工作台](./connecting.md)里，Web资产的标签页上有**打开网站**按钮，同样在新窗口里打开。
 
 新窗口经一个只能用一次、一分钟内有效的链接登入会话，拿到只属于这个子域名的Cookie。这个Cookie是Casvisor的，不会发给网站；网站自己的Cookie也只在它的子域名上。同一个浏览器再次打开同一个网站，会结束之前的会话。
 

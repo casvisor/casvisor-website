@@ -80,7 +80,7 @@ See [Connect Casdoor](../getting-started/casdoor.md) and [Users and administrato
 | --- | --- | --- |
 | `sshGatewayPort` | empty; `2222` in the Docker images | The port of the [SSH gateway](../assets/ssh-gateway.md), on every interface. Empty turns the gateway off. The Docker images set it with an environment variable, so pass `-e sshGatewayPort=` to turn it off there. It is always off with `isDemoMode = true`. |
 | `sshGatewayHost` | empty | The host name shown in the SSH commands users copy. Empty uses the host name of the web UI. |
-| `webAssetDomain` | empty | The domain whose subdomains serve [websites](../assets/websites.md), such as `web.casvisor.example.com`, optionally with a scheme and a port: `https://web.casvisor.example.com`, `web.localhost:19000`. All its subdomains have to reach Casvisor. Empty means Web assets can't be opened. |
+| `webAssetDomain` | empty | The domain whose subdomains serve [websites](../assets/websites.md), such as `example-apps.com`, optionally with a scheme and a port: `https://example-apps.com`, `web.localhost:19000`. All its subdomains have to reach Casvisor. Empty means Web assets can't be opened. |
 | `webSessionIdleMinutes` | `30` | Minutes after which a web session nobody uses ends. |
 
 ## Recordings

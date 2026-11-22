@@ -80,7 +80,7 @@ Casvisor启动时会建好它的表，以及新版本需要的列。SQLite以WAL
 | --- | --- | --- |
 | `sshGatewayPort` | 空；Docker镜像里是`2222` | [SSH网关](../assets/ssh-gateway.md)的端口，监听所有网卡。为空表示关闭网关。Docker镜像用环境变量设置了它，所以在容器里要关掉就传`-e sshGatewayPort=`。`isDemoMode = true`时网关总是关闭。 |
 | `sshGatewayHost` | 空 | 用户复制的SSH命令里显示的主机名。为空时用网页界面的主机名。 |
-| `webAssetDomain` | 空 | 用来打开[网站](../assets/websites.md)的域名，如`web.casvisor.example.com`，可以带协议和端口：`https://web.casvisor.example.com`、`web.localhost:19000`。它的所有子域名都要能到达Casvisor。为空时Web资产打不开。 |
+| `webAssetDomain` | 空 | 用来打开[网站](../assets/websites.md)的域名，如`example-apps.com`，可以带协议和端口：`https://example-apps.com`、`web.localhost:19000`。它的所有子域名都要能到达Casvisor。为空时Web资产打不开。 |
 | `webSessionIdleMinutes` | `30` | 网站会话没人用多少分钟后结束。 |
 
 ## 录像

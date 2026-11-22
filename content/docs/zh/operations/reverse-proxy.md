@@ -46,10 +46,10 @@ server {
 ```nginx
 server {
     listen 443 ssl;
-    server_name *.web.casvisor.example.com;
+    server_name *.example-apps.com;
 
-    ssl_certificate     /etc/ssl/web.casvisor.example.com.pem;
-    ssl_certificate_key /etc/ssl/web.casvisor.example.com.key;
+    ssl_certificate     /etc/ssl/example-apps.com.pem;
+    ssl_certificate_key /etc/ssl/example-apps.com.key;
 
     client_max_body_size 0;
 
