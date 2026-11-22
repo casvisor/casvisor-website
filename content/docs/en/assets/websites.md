@@ -1,0 +1,96 @@
+---
+title: "Websites"
+seoTitle: "Casvisor: web assets through a reverse proxy, with permissions and audit"
+description: "Internal websites such as Grafana, Jenkins or a router's admin page can be Web assets. Each opens on a subdomain of its own through Casvisor's reverse proxy, under the same permissions, command rules, revocation and session audit as the other assets."
+---
+
+Internal websites can be assets too: a monitoring dashboard, a CI server, the admin page of a router or a storage box. Users open them from Casvisor, and every request goes through Casvisor's reverse proxy, which checks the user's permission, applies the [command rules](../audit/commands.md), records what matters, and ends the session when the permission goes.
+
+## Setting up the domain
+
+Each website is served on a subdomain of its own, so that its paths, cookies and scripts work as they do at its own address. Pick a domain whose subdomains all reach Casvisor, such as `web.casvisor.example.com`, and set it in `conf/app.conf`:
+
+```ini
+webAssetDomain = web.casvisor.example.com
+```
+
+Then:
+
+1. Add a wildcard DNS record, `*.web.casvisor.example.com`, pointing at Casvisor or at its reverse proxy.
+2. Give the reverse proxy a wildcard certificate for `*.web.casvisor.example.com`, and send those host names to Casvisor with the `Host` header kept (see [Behind a reverse proxy](../operations/reverse-proxy.md#websites)).
+
+Websites are reached over the scheme of the request, as the reverse proxy reports it in `X-Forwarded-Proto`; write the scheme into the setting, as `https://web.casvisor.example.com`, to fix it. Until `webAssetDomain` is set, opening a Web asset fails with a message saying so.
+
+Use a domain that is not under the web UI's own host name. A website's scripts can set cookies on the parent of their host name, so `*.web.example.com` next to `casvisor.example.com` is right, and `*.casvisor.example.com` for both is not.
+
+For a quick try on one machine, `webAssetDomain = web.localhost:19000` works without DNS in Chrome, Edge and Firefox, which send every `*.localhost` name to the machine itself.
+
+## Adding a website
+
+Add an asset as usual (see [Assets](./assets.md)), with:
+
+| Field | Value |
+| --- | --- |
+| Protocol | `Web`. |
+| Address | The website as Casvisor reaches it, such as `http://10.0.0.5:3000/` or `https://nas.lan/admin/`. The path and query are the page opened first. A host name alone uses the port below, over https on 443 and over http on any other port. |
+| Port | Filled in from the address. |
+| Username, Password | Sent to the website as HTTP basic authentication on every request, for websites protected that way. Leave them empty for a website with a sign-in page of its own: users then sign in there, as they would anywhere. |
+| Fingerprint | For https websites, see below. |
+| Network gateway | To reach a website in another network, as for other assets (see [Network gateways](./network-gateways.md)). |
+
+**Test connection** opens the first page and shows its status, such as `HTTP 200 OK, nginx`. [System accounts](./accounts.md) of a Web asset are basic authentication accounts, and the permission decides which one a user gets; Casvisor cannot change their passwords.
+
+### Certificates
+
+An https website whose certificate the system trusts for its host name is accepted as is, including after the certificate is renewed. Any other certificate, such as a self-signed one, is recorded by its public key the first time Casvisor connects, and a different key is refused afterwards, with a message giving both. Clear the **Fingerprint** of the asset when the change is expected.
+
+## Opening a website
+
+**Connect** on a Web asset opens a new window, which starts a session and goes on to the website, on an address like `https://grafana--myorg.web.casvisor.example.com/`. The subdomain is `<asset>--<organization>` when both names can be part of a host name, and a fixed code made from them otherwise. In the [workbench](./connecting.md), a Web asset's tab has an **Open the website** button that does the same in a new window.
+
+The window is signed in to the session by a link that works once, within a minute, and gets a cookie for that subdomain only. The cookie is Casvisor's: it is never passed on to the website, and the website's own cookies stay on its subdomain. Opening the same website again in the same browser ends the earlier session.
+
+A session ends when:
+
+- the user signs out at `/__casvisor__/signout` on the website's subdomain,
+- nobody has used it for `webSessionIdleMinutes`, 30 by default (a WebSocket that stays open keeps it in use),
+- an administrator stops it, or the user's permission is revoked, expires or leaves its hours, as for every session,
+- Casvisor restarts.
+
+After that, the website's pages say that the session has ended and why, and the user opens it again from Casvisor. Requests still running and WebSockets still open are cut when the session ends.
+
+## What Casvisor changes on the way
+
+So that the website works on its subdomain, Casvisor:
+
+- sends the website its own host name in `Host`, and `X-Forwarded-For`, `X-Forwarded-Host` and `X-Forwarded-Proto` for the user's address and the subdomain,
+- rewrites `Origin` and `Referer` from the subdomain to the website's own address, so that the website's checks of where a request comes from, including for WebSockets, pass,
+- points redirects to the website's own address back to the subdomain,
+- drops the `Domain` attribute of the website's cookies, and, when users reach Casvisor over plain http, their `Secure` attribute,
+- drops the website's `Strict-Transport-Security` and `Alt-Svc` headers.
+
+Page contents are passed through as they are. A website that writes its own full address into its pages, instead of following `X-Forwarded-Host`, links to that address, which users may not be able to reach; set its public URL to the subdomain where it has such a setting.
+
+The paths under `/__casvisor__/` belong to Casvisor on every website's subdomain and are not passed to the website.
+
+## Permissions and command rules
+
+Connect lets a user open the website. Two other actions are checked on each request:
+
+- **Upload**: without it, requests that send files (`multipart/form-data`) are refused.
+- **Download**: without it, responses that the website sends as attachments (`Content-Disposition: attachment`) are refused.
+
+Both follow the permission while the session is open: granting or removing them applies to the next request. Copy, Paste and Forward do nothing for websites; Forward is still what lets the [SSH gateway forward a port](./ssh-gateway.md#port-forwarding-to-other-assets) to the website, which passes through without any of these checks.
+
+[Command rules](../audit/commands.md) are matched against each request as `METHOD /path?query`, such as `POST /api/users/42/delete`. **Block** refuses the request with the rule's name, and **Alert** lets it through and records it. For example, `^(POST|PUT|PATCH|DELETE) ` with the action Block makes a website read-only, and `^DELETE ` with Alert flags deletions.
+
+## What is recorded
+
+Each of these requests is a [command record](../audit/commands.md) of the session, with the time, the user, the client IP, the HTTP status and how long it took:
+
+- pages the browser opens (navigations and frames),
+- requests that may change something, that is every method other than GET, HEAD and OPTIONS,
+- WebSockets, with status 101 and how long they stayed open,
+- requests matched by a command rule, and requests refused for Upload or Download.
+
+The images, scripts and API reads a page loads by itself are passed through without a record. In the [session list](../audit/sessions.md), **Monitor** on an online web session opens the list of its requests, which refreshes every 3 seconds, and **Replay** on a finished one shows the same list. Web sessions have no screen recording and no watermark.

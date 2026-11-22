@@ -4,19 +4,19 @@ seoTitle: "Casvisor: SSH, RDP, VNC, Telnet and databases in the browser"
 description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL and PostgreSQL natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
 ---
 
-| | SSH | VNC | RDP | Telnet | MySQL, PostgreSQL |
-| --- | --- | --- | --- | --- | --- |
-| Default port | 22 | 5900 | 3389 | 23 | 3306, 5432 |
-| Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) | Casvisor (Go) |
-| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | SQL console |
-| Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts | Username and password |
-| Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced | Copy shows the copy button of results |
-| File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No | CSV export of results, with Download |
-| Command records and rules | Yes | No | No | Yes | Yes, per SQL statement |
-| Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead |
-| Live view | Yes | Yes | Yes | Yes | The statements, as they run |
-| [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes |
-| Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | Port forwarding |
+| | SSH | VNC | RDP | Telnet | MySQL, PostgreSQL | Web |
+| --- | --- | --- | --- | --- | --- | --- |
+| Default port | 22 | 5900 | 3389 | 23 | 3306, 5432 | 80, 443 |
+| Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) | Casvisor (Go) | Casvisor (Go reverse proxy) |
+| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | SQL console | The website, on a subdomain of its own |
+| Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts | Username and password | HTTP basic authentication, or the website's own sign-in page |
+| Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced | Copy shows the copy button of results | No effect |
+| File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No | CSV export of results, with Download | Uploads and attachments, checked per request against Upload and Download |
+| Command records and rules | Yes | No | No | Yes | Yes, per SQL statement | Yes, per page opened and per changing request |
+| Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead | No; the requests are listed instead |
+| Live view | Yes | Yes | Yes | Yes | The statements, as they run | The requests, as they are sent |
+| [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes | Yes, as basic authentication accounts |
+| Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | Port forwarding | Port forwarding |
 
 Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. Native clients reach assets other than SSH by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.
 

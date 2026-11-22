@@ -39,6 +39,37 @@ server {
 
 With [Casdoor](../getting-started/casdoor.md), Casdoor sends people back to the address they opened Casvisor at, so add the public one, `https://casvisor.example.com/callback`, to the application's **Redirect URLs**.
 
+## Websites
+
+[Web assets](../assets/websites.md) are served on the subdomains of `webAssetDomain`. Send them all to Casvisor with the same settings as the web UI, in a server block of their own with a wildcard name and a wildcard certificate:
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name *.web.casvisor.example.com;
+
+    ssl_certificate     /etc/ssl/web.casvisor.example.com.pem;
+    ssl_certificate_key /etc/ssl/web.casvisor.example.com.key;
+
+    client_max_body_size 0;
+
+    location / {
+        proxy_pass http://127.0.0.1:19000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 1d;
+        proxy_send_timeout 1d;
+        proxy_buffering off;
+    }
+}
+```
+
+`Host $host` matters here: Casvisor tells the websites apart by the subdomain. `proxy_buffering off` passes streamed responses on as they come, and `client_max_body_size 0` leaves the size of uploads to the website.
+
 ## The SSH gateway
 
 The [SSH gateway](../assets/ssh-gateway.md) is SSH on its own port, 2222 in the Docker images, not HTTP, so it does not go through nginx. Publish that port directly, or pass it through a TCP proxy such as nginx's `stream` module or a cloud load balancer.

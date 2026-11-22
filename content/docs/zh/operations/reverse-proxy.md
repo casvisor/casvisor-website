@@ -39,6 +39,37 @@ server {
 
 对接了[Casdoor](../getting-started/casdoor.md)时，Casdoor会把用户送回他们打开Casvisor时的地址，所以要把对外的地址`https://casvisor.example.com/callback`加进应用的**Redirect URLs**。
 
+## 网站
+
+[Web资产](../assets/websites.md)在`webAssetDomain`的子域名上打开。用和网页界面相同的设置把它们都转给Casvisor，单独写一个`server`，用泛域名和泛域名证书：
+
+```nginx
+server {
+    listen 443 ssl;
+    server_name *.web.casvisor.example.com;
+
+    ssl_certificate     /etc/ssl/web.casvisor.example.com.pem;
+    ssl_certificate_key /etc/ssl/web.casvisor.example.com.key;
+
+    client_max_body_size 0;
+
+    location / {
+        proxy_pass http://127.0.0.1:19000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 1d;
+        proxy_send_timeout 1d;
+        proxy_buffering off;
+    }
+}
+```
+
+这里`Host $host`很重要：Casvisor按子域名区分是哪个网站。`proxy_buffering off`让流式响应边到边转，`client_max_body_size 0`把上传大小交给网站自己限制。
+
 ## SSH网关
 
 [SSH网关](../assets/ssh-gateway.md)是独立端口（Docker镜像里是2222）上的SSH，不是HTTP，所以不经过nginx。直接对外开放这个端口，或者用TCP代理转发，例如nginx的`stream`模块或云上的负载均衡。

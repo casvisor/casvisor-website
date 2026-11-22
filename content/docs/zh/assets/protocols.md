@@ -4,19 +4,19 @@ seoTitle: "Casvisor：在浏览器里连SSH、RDP、VNC、Telnet和数据库"
 description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL和PostgreSQL。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
 ---
 
-| | SSH | VNC | RDP | Telnet | MySQL、PostgreSQL |
-| --- | --- | --- | --- | --- | --- |
-| 默认端口 | 22 | 5900 | 3389 | 23 | 3306、5432 |
-| 由谁处理 | Casvisor（Go） | Casvisor（Go） | Casvisor（Go，gordp） | Casvisor（Go） | Casvisor（Go） |
-| 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | xterm.js终端 | SQL控制台 |
-| 登录方式 | 私钥、密码、keyboard-interactive | VNC密码 | 用户名和密码，经NLA认证 | 在提示符处输入用户名和密码 | 用户名和密码 |
-| 复制、粘贴动作 | 不限制 | 由服务端限制 | 由服务端限制 | 不限制 | 有复制时显示结果的复制按钮 |
-| 文件传输 | 文件面板、SFTP、scp、rsync | 无 | 文件面板、重定向的磁盘 | 无 | 有下载时可把结果导出成CSV |
-| 命令记录和规则 | 有 | 无 | 无 | 有 | 有，按每条SQL语句 |
-| 录像 | 有 | 有 | 有 | 有 | 无，改为列出语句 |
-| 实时旁观 | 有 | 有 | 有 | 有 | 实时列出执行的语句 |
-| [系统账号](./accounts.md) | 有，支持自动改密 | 有 | 有 | 有 | 有 |
-| 本地客户端 | 经由SSH网关 | 端口转发 | 端口转发 | 端口转发 | 端口转发 |
+| | SSH | VNC | RDP | Telnet | MySQL、PostgreSQL | Web |
+| --- | --- | --- | --- | --- | --- | --- |
+| 默认端口 | 22 | 5900 | 3389 | 23 | 3306、5432 | 80、443 |
+| 由谁处理 | Casvisor（Go） | Casvisor（Go） | Casvisor（Go，gordp） | Casvisor（Go） | Casvisor（Go） | Casvisor（Go反向代理） |
+| 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | xterm.js终端 | SQL控制台 | 网站本身，在自己的子域名上 |
+| 登录方式 | 私钥、密码、keyboard-interactive | VNC密码 | 用户名和密码，经NLA认证 | 在提示符处输入用户名和密码 | 用户名和密码 | HTTP基本认证，或网站自己的登录页 |
+| 复制、粘贴动作 | 不限制 | 由服务端限制 | 由服务端限制 | 不限制 | 有复制时显示结果的复制按钮 | 不起作用 |
+| 文件传输 | 文件面板、SFTP、scp、rsync | 无 | 文件面板、重定向的磁盘 | 无 | 有下载时可把结果导出成CSV | 上传和附件下载，每个请求按上传、下载权限检查 |
+| 命令记录和规则 | 有 | 无 | 无 | 有 | 有，按每条SQL语句 | 有，按打开的页面和改东西的请求 |
+| 录像 | 有 | 有 | 有 | 有 | 无，改为列出语句 | 无，改为列出请求 |
+| 实时旁观 | 有 | 有 | 有 | 有 | 实时列出执行的语句 | 实时列出发出的请求 |
+| [系统账号](./accounts.md) | 有，支持自动改密 | 有 | 有 | 有 | 有 | 有，作为基本认证账号 |
+| 本地客户端 | 经由SSH网关 | 端口转发 | 端口转发 | 端口转发 | 端口转发 | 端口转发 |
 
 每种协议都可以经由[网域网关](./network-gateways.md)连接；只要没关掉录像，前四种协议的每个会话都会[录像](../audit/recordings.md)。SSH以外的资产，本地客户端经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连接，这种连接原样转发、不录像。
 
