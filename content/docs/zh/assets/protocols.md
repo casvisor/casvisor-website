@@ -1,18 +1,18 @@
 ---
 title: "协议"
 seoTitle: "Casvisor：在浏览器里连SSH、RDP、VNC、Telnet和数据库"
-description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL和PostgreSQL。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
+description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
 ---
 
-| | SSH | VNC | RDP | Telnet | MySQL、PostgreSQL | Web |
+| | SSH | VNC | RDP | Telnet | 数据库 | Web |
 | --- | --- | --- | --- | --- | --- | --- |
-| 默认端口 | 22 | 5900 | 3389 | 23 | 3306、5432 | 80、443 |
+| 默认端口 | 22 | 5900 | 3389 | 23 | MySQL 3306、PostgreSQL 5432、SQL Server 1433、Oracle 1521、Redis 6379、MongoDB 27017 | 80、443 |
 | 由谁处理 | Casvisor（Go） | Casvisor（Go） | Casvisor（Go，gordp） | Casvisor（Go） | Casvisor（Go） | Casvisor（Go反向代理） |
-| 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | xterm.js终端 | SQL控制台 | 网站本身，在自己的子域名上 |
+| 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | xterm.js终端 | 数据库控制台 | 网站本身，在自己的子域名上 |
 | 登录方式 | 私钥、密码、keyboard-interactive | VNC密码 | 用户名和密码，经NLA认证 | 在提示符处输入用户名和密码 | 用户名和密码 | HTTP基本认证，或网站自己的登录页 |
 | 复制、粘贴动作 | 不限制 | 由服务端限制 | 由服务端限制 | 不限制 | 有复制时显示结果的复制按钮 | 不起作用 |
 | 文件传输 | 文件面板、SFTP、scp、rsync | 无 | 文件面板、重定向的磁盘 | 无 | 有下载时可把结果导出成CSV | 上传和附件下载，每个请求按上传、下载权限检查 |
-| 命令记录和规则 | 有 | 无 | 无 | 有 | 有，按每条SQL语句 | 有，按打开的页面和改东西的请求 |
+| 命令记录和规则 | 有 | 无 | 无 | 有 | 有，按每条SQL语句、SQL Server批、Redis命令或MongoDB调用 | 有，按打开的页面和改东西的请求 |
 | 录像 | 有 | 有 | 有 | 有 | 无，改为列出语句 | 无，改为列出请求 |
 | 实时旁观 | 有 | 有 | 有 | 有 | 实时列出执行的语句 | 实时列出发出的请求 |
 | [系统账号](./accounts.md) | 有，支持自动改密 | 有 | 有 | 有 | 有 | 有，作为基本认证账号 |
@@ -83,8 +83,8 @@ Telnet会话里输入的命令和SSH一样会被记录、按[命令规则](../au
 
 Telnet适合只有它可用的网络设备和老系统；Casvisor（或它的网域网关）和设备之间的所有内容都是明文传输。
 
-## MySQL和PostgreSQL
+## 数据库
 
-Casvisor用Go的MySQL驱动连MySQL和MariaDB，用pgx连PostgreSQL，以资产的账号登录，在浏览器里显示SQL控制台：左边是数据库、表和列，右边是编辑器和结果。密码留在服务端。服务器支持TLS时就用TLS，但不校验证书。
+Casvisor用Go驱动连接MySQL和MariaDB、PostgreSQL、SQL Server、Oracle、Redis和MongoDB，以资产的账号登录，在浏览器里显示控制台：左边是数据库和其中的内容，右边是编辑器和结果。编辑器里，MySQL、PostgreSQL和Oracle写SQL，SQL Server写用`GO`行分隔的T-SQL批，Redis一行一条命令，MongoDB写shell语句，由Casvisor自己解析，不执行任何JavaScript。密码留在服务端。服务器支持TLS时就用TLS，SQL Server总是用，第一次连接时把服务器公钥固定到**指纹**里；Oracle通过普通TCP连接。
 
-每条语句都作为会话的命令记录下来，并在发出之前按[命令规则](../audit/commands.md)检查，所以拦截规则能挡住语句、不让它到数据库。有**下载**动作时，结果可以导出成CSV。见[数据库](./databases.md)。
+每条语句、批或命令都作为会话的命令记录下来，并在发出之前按[命令规则](../audit/commands.md)检查，所以拦截规则能挡住语句、不让它到数据库。有**下载**动作时，结果可以导出成CSV。见[数据库](./databases.md)。

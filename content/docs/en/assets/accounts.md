@@ -35,7 +35,7 @@ Administrators may connect as every account of the assets of their organization.
 - **Connect** on **Assets** becomes a menu, **Connect as**, when the user may use several accounts. With a single system account it connects as that account straight away.
 - **The SSH gateway** takes the account in the username, `ssh -p 2222 alice@deploy@web-01@casvisor.example.com`; see [Choosing the account](./ssh-gateway.md#choosing-the-account).
 
-System accounts work in the browser for every protocol, SSH, RDP, VNC, Telnet, MySQL and PostgreSQL, and through the SSH gateway for SSH. A port forward to another asset carries no account; the user logs in to the asset with their own.
+System accounts work in the browser for every protocol, SSH, RDP, VNC, Telnet and the databases, and through the SSH gateway for SSH. A port forward to another asset carries no account; the user logs in to the asset with their own.
 
 The password stays on the server. The browser only sends the account's username to start the session, and Casvisor checks the permission for that account when the session starts and again when its WebSocket opens. The actions the user holds, such as Upload or Copy, are those the permissions give for that account.
 

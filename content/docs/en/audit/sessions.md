@@ -13,13 +13,13 @@ Each connection, that is each tab in the workbench, each asset page, or each con
 | Column | Meaning |
 | --- | --- |
 | Asset | The asset connected to |
-| Protocol | SSH, RDP, VNC, Telnet, MySQL or PostgreSQL |
+| Protocol | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQLServer, Oracle, Redis or MongoDB |
 | User | The user who opened it |
 | Account | The [system account](../assets/accounts.md) it connected as, or *Default* for the asset's own account |
 | Client IP | The address they connected from, with its location where it can be looked up |
 | User agent | Their browser and operating system, or for the SSH gateway the client's SSH version, such as `SSH-2.0-OpenSSH_9.6` |
 | Connection start time | When the connection opened |
-| Commands | For SSH, Telnet and databases, the number of commands or SQL statements run, linking to them on the [Commands](./commands.md) page |
+| Commands | For SSH, Telnet and databases, the number of commands or database statements run, linking to them on the [Commands](./commands.md) page |
 | Connection duration | How long it has lasted, or lasted |
 
 A session moves from Online to History when the user closes the tab or the SSH client, the remote side ends the connection, the network drops, an administrator stops it, or the user loses the permission to it.
@@ -43,7 +43,7 @@ An online session has a **Monitor** action, which opens the session in a new bro
 
 - **SSH and Telnet**: the administrator sees the user's terminal as the user does: first the output so far, up to the last 512 KB, which redraws the screen, then everything as it happens, including changes of the terminal size.
 - **VNC and RDP**: the desktop is drawn from the start of the session up to now, then follows live. This reads from the session's recording as it is written, so it needs recording to be on; see [Recordings](./recordings.md#recordings-and-live-monitoring).
-- **MySQL and PostgreSQL**: there is no screen to watch, so **Monitor** opens the list of the statements run so far, with their results, refreshed every 3 seconds. After the session ends, **Replay** shows the same list. See [Databases](../assets/databases.md#what-is-recorded).
+- **Databases**: there is no screen to watch, so **Monitor** opens the list of the statements run so far, with their results, refreshed every 3 seconds. After the session ends, **Replay** shows the same list. See [Databases](../assets/databases.md#what-is-recorded).
 
 Through the SSH gateway, interactive shells can be watched; a connection that only runs a command, transfers files or forwards ports cannot. The user is not told that someone is watching. Each time an administrator opens the view, a `session-monitor` entry goes into the [operation log](./operation-logs.md#ssh-and-file-events).
 

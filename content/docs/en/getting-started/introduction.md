@@ -1,15 +1,15 @@
 ---
 title: "Introduction"
-description: "Casvisor is an open-source bastion host. It gives people browser access to servers over SSH, RDP, VNC and Telnet and to MySQL and PostgreSQL databases, checks each connection against Casbin permissions, and records every session."
+description: "Casvisor is an open-source bastion host. It gives people browser access to servers over SSH, RDP, VNC and Telnet and to MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB databases, checks each connection against Casbin permissions, and records every session."
 ---
 
 Casvisor is an open-source bastion host, also called a jump server. It sits between the people who run your systems and the systems themselves:
 
 - People sign in with accounts Casvisor keeps itself, optionally with a code from an authenticator app, or through [Casdoor](https://casdoor.ai), so that the single sign-on, MFA, LDAP and social logins you already have apply here too.
-- They see only the servers, called **assets**, that a **permission** lets them reach, and connect from a browser tab over SSH, RDP, VNC or Telnet, or to MySQL and PostgreSQL in a SQL console. Nothing is installed on their machine or on the server. What they cannot reach yet, they can ask for with an **access request**.
+- They see only the servers, called **assets**, that a **permission** lets them reach, and connect from a browser tab over SSH, RDP, VNC or Telnet, or to MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB in a database console. Nothing is installed on their machine or on the server. What they cannot reach yet, they can ask for with an **access request**.
 - For SSH they can also use their own `ssh`, `scp`, `sftp` or VS Code Remote through Casvisor's **SSH gateway**, under the same permissions.
 - Casvisor fills in the server's account itself, so the password never reaches the browser or the SSH client. An asset can have several **system accounts**, and Casvisor can change their passwords on the servers on a schedule.
-- Each connection becomes a **session** that administrators see in the list, can watch live and cut off, and is **recorded** for playback in the browser. Commands run in SSH and Telnet sessions and SQL run on databases are kept and can be blocked by **command rules**, files moved go into the **operation log** with every change made through the API, and a session ends by itself when its permission is taken away. All of it can be exported as CSV or forwarded to syslog.
+- Each connection becomes a **session** that administrators see in the list, can watch live and cut off, and is **recorded** for playback in the browser. Commands run in SSH and Telnet sessions and statements run on databases are kept and can be blocked by **command rules**, files moved go into the **operation log** with every change made through the API, and a session ends by itself when its permission is taken away. All of it can be exported as CSV or forwarded to syslog.
 - Administrators can also scan the servers for pending system updates and install them, under **Patches**, and run commands, scripts and file transfers on many servers at once, under **Jobs**.
 
 Casvisor is one Go binary with a React web UI, licensed under Apache-2.0, and has no enterprise edition.
@@ -26,8 +26,8 @@ Casvisor is one Go binary with a React web UI, licensed under Apache-2.0, and ha
                          | patches, jobs            |---------->| databases    |
 +-----------+  SSH 2222  |                          |  Telnet   |              |
 | ssh, scp, |----------->| SSH gateway              |---------->|              |
-| VS Code   |            |                          |  MySQL,   |              |
-+-----------+            |                          |  Postgres |              |
+| VS Code   |            |                          | databases |              |
++-----------+            |                          |           |              |
                          |                          |---------->|              |
                          +--------------------------+           +--------------+
                             |                |

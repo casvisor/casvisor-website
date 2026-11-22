@@ -52,7 +52,7 @@ SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**
 
 ## Casvisor会录像吗？
 
-会，SSH、Telnet、VNC和RDP会话都录，在**会话**里用浏览器回放；MySQL和PostgreSQL则保留每条SQL语句。录像是`recordings/`下的文件，Docker里是`/recordings`；存在哪里、保留多久、怎么关掉，见[录像](../audit/recordings.md)。此外，SSH和Telnet会话里执行的[命令](../audit/commands.md)会保留，传过的文件和每一次改动记在操作日志里，这些都可以[转发到syslog](../audit/export.md)。
+会，SSH、Telnet、VNC和RDP会话都录，在**会话**里用浏览器回放；数据库则保留每条语句或命令。录像是`recordings/`下的文件，Docker里是`/recordings`；存在哪里、保留多久、怎么关掉，见[录像](../audit/recordings.md)。此外，SSH和Telnet会话里执行的[命令](../audit/commands.md)会保留，传过的文件和每一次改动记在操作日志里，这些都可以[转发到syslog](../audit/export.md)。
 
 ## 有托管版或企业版吗？
 

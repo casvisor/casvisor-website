@@ -4,7 +4,7 @@ seoTitle: "Casvisor SSH gateway for ssh, scp and VS Code"
 description: "Reach SSH assets through Casvisor with your own ssh, scp, sftp, rsync, Xshell or VS Code Remote, and RDP, VNC, Telnet and database assets with mstsc or other clients through port forwarding: sign in with a registered public key, name the asset and the account in the username, and keep the same permissions, command rules and session list as the web terminal."
 ---
 
-Besides the web terminal, Casvisor can accept SSH connections itself, so people reach SSH assets with the tools they already use: `ssh`, `scp`, `sftp`, `rsync`, Xshell, or VS Code Remote. They sign in to the gateway with a public key they registered in Casvisor; Casvisor then logs in to the asset with the asset's own account, or one of its [system accounts](./accounts.md). The same [permissions](../access-control/permissions.md), [command rules](../audit/commands.md) and [session list](../audit/sessions.md) apply as in the browser. For RDP, VNC, Telnet, MySQL and PostgreSQL assets it [forwards a port](#port-forwarding-to-other-assets), so mstsc and other clients can be used too.
+Besides the web terminal, Casvisor can accept SSH connections itself, so people reach SSH assets with the tools they already use: `ssh`, `scp`, `sftp`, `rsync`, Xshell, or VS Code Remote. They sign in to the gateway with a public key they registered in Casvisor; Casvisor then logs in to the asset with the asset's own account, or one of its [system accounts](./accounts.md). The same [permissions](../access-control/permissions.md), [command rules](../audit/commands.md) and [session list](../audit/sessions.md) apply as in the browser. For RDP, VNC, Telnet and database assets it [forwards a port](#port-forwarding-to-other-assets), so mstsc and other clients can be used too.
 
 ## Turning it on
 
@@ -97,7 +97,7 @@ Always refused: remote port forwarding (`ssh -R`), agent forwarding (`ssh -A`) a
 
 ## Port forwarding to other assets
 
-RDP, VNC, Telnet, MySQL and PostgreSQL assets can be reached with the client you already use too, such as Remote Desktop Connection (mstsc), a VNC viewer, a Telnet client, `mysql`, `psql` or DBeaver: the gateway forwards a port on your machine to the asset.
+RDP, VNC, Telnet and database assets can be reached with the client you already use too, such as Remote Desktop Connection (mstsc), a VNC viewer, a Telnet client, `mysql`, `psql`, `sqlcmd`, `redis-cli`, `mongosh` or DBeaver: the gateway forwards a port on your machine to the asset.
 
 ```shell
 ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com

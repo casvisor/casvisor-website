@@ -1,18 +1,18 @@
 ---
 title: "Protocols"
 seoTitle: "Casvisor: SSH, RDP, VNC, Telnet and databases in the browser"
-description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL and PostgreSQL natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
+description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
 ---
 
-| | SSH | VNC | RDP | Telnet | MySQL, PostgreSQL | Web |
+| | SSH | VNC | RDP | Telnet | Databases | Web |
 | --- | --- | --- | --- | --- | --- | --- |
-| Default port | 22 | 5900 | 3389 | 23 | 3306, 5432 | 80, 443 |
+| Default port | 22 | 5900 | 3389 | 23 | MySQL 3306, PostgreSQL 5432, SQL Server 1433, Oracle 1521, Redis 6379, MongoDB 27017 | 80, 443 |
 | Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) | Casvisor (Go) | Casvisor (Go reverse proxy) |
-| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | SQL console | The website, on a subdomain of its own |
+| In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | Database console | The website, on a subdomain of its own |
 | Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts | Username and password | HTTP basic authentication, or the website's own sign-in page |
 | Copy and Paste actions | Not enforced | Enforced by the server | Enforced by the server | Not enforced | Copy shows the copy button of results | No effect |
 | File transfer | File panel, SFTP, scp, rsync | No | File panel, redirected drive | No | CSV export of results, with Download | Uploads and attachments, checked per request against Upload and Download |
-| Command records and rules | Yes | No | No | Yes | Yes, per SQL statement | Yes, per page opened and per changing request |
+| Command records and rules | Yes | No | No | Yes | Yes, per SQL statement, SQL Server batch, Redis command or MongoDB call | Yes, per page opened and per changing request |
 | Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead | No; the requests are listed instead |
 | Live view | Yes | Yes | Yes | Yes | The statements, as they run | The requests, as they are sent |
 | [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes | Yes, as basic authentication accounts |
@@ -83,8 +83,8 @@ Commands typed in Telnet sessions are recorded and checked against the [command 
 
 Use Telnet for network gear and old systems that have nothing else; it sends everything in clear text between Casvisor, or its network gateway, and the device.
 
-## MySQL and PostgreSQL
+## Databases
 
-Casvisor connects to MySQL and MariaDB with Go's MySQL driver and to PostgreSQL with pgx, logs in with the asset's account, and shows a SQL console in the browser: the databases, tables and columns on the left, an editor, and the results. The password stays on the server. TLS is used when the server offers it, without checking its certificate.
+Casvisor connects to MySQL and MariaDB, PostgreSQL, SQL Server, Oracle, Redis and MongoDB with Go drivers, logs in with the asset's account, and shows a console in the browser: the databases and what is in them on the left, an editor, and the results. The editor takes SQL for MySQL, PostgreSQL and Oracle, T-SQL batches between `GO` lines for SQL Server, Redis commands one per line, and MongoDB shell statements, which Casvisor parses itself without running any JavaScript. The password stays on the server. TLS is used when the server offers it, and always for SQL Server, with the server's public key pinned in **Fingerprint** on the first connection; Oracle is reached over plain TCP.
 
-Every statement is recorded as a command of the session and checked against the [command rules](../audit/commands.md) before it is sent, so a Block rule stops it from reaching the database. Results can be exported as CSV with the **Download** action. See [Databases](./databases.md).
+Every statement, batch or command is recorded as a command of the session and checked against the [command rules](../audit/commands.md) before it is sent, so a Block rule stops it from reaching the database. Results can be exported as CSV with the **Download** action. See [Databases](./databases.md).

@@ -1,9 +1,9 @@
 ---
 title: "Commands and command rules"
-description: "Casvisor records the commands run in SSH and Telnet sessions, from the web terminal, the SSH gateway and jobs, and the SQL run in MySQL and PostgreSQL sessions; command rules block or flag the ones that match a regular expression, for chosen users, groups, assets and asset tags."
+description: "Casvisor records the commands run in SSH and Telnet sessions, from the web terminal, the SSH gateway and jobs, and the SQL statements, Redis commands and MongoDB calls run in database sessions; command rules block or flag the ones that match a regular expression, for chosen users, groups, assets and asset tags."
 ---
 
-Casvisor keeps the commands people run on SSH and Telnet assets, whether from the web terminal or, for SSH, through the [SSH gateway](../assets/ssh-gateway.md) and [jobs](../assets/jobs.md), and the SQL statements they run on [MySQL and PostgreSQL assets](../assets/databases.md), and can stop the ones you name before they run. RDP and VNC sessions have no command records; their screens are in the [recordings](./recordings.md).
+Casvisor keeps the commands people run on SSH and Telnet assets, whether from the web terminal or, for SSH, through the [SSH gateway](../assets/ssh-gateway.md) and [jobs](../assets/jobs.md), and what they run on [database assets](../assets/databases.md), the SQL statements of MySQL, PostgreSQL, SQL Server and Oracle, Redis commands and MongoDB shell calls, and can stop the ones you name before they run. RDP and VNC sessions have no command records; their screens are in the [recordings](./recordings.md).
 
 Both pages are for administrators: **Commands** (`/commands`) and **Command rules** (`/command-rules`).
 
@@ -20,11 +20,11 @@ Both pages are for administrators: **Commands** (`/commands`) and **Command rule
 
 **For a job**, the command or the whole script is recorded once for each asset it runs on, and a file transfer as `sftp put <file> <target path>`.
 
-**In a database session**, each SQL statement is recorded as it was sent, one record per statement, even when several were run together. Switching databases is recorded as ``USE `db` `` or `\connect db`.
+**In a database session**, each statement is recorded as it was sent, one record per statement, even when several were run together: a SQL statement, a SQL Server batch between `GO` lines, a line of Redis commands, or a MongoDB shell statement. Switching databases is recorded as the statement it amounts to, such as ``USE `db` ``, `\connect db`, `USE [db]`, `SELECT 2` or `use db`; see [Databases](../assets/databases.md#what-is-recorded).
 
 ## The Commands page
 
-Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. For a SQL statement, a **Result** column shows the number of rows it returned or changed, or its error. The list can be searched by command, user, asset, client IP and session, and exported as CSV; see [Export and syslog](./export.md). In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH, Telnet and database session and links to them. The player of a [recording](./recordings.md) lists the commands of SSH and Telnet sessions beside the screen; clicking one jumps to it. A database session has no recording, and its **Replay** is the list of its statements.
+Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. For a database statement, a **Result** column shows the number of rows it returned or changed, or its error. The list can be searched by command, user, asset, client IP and session, and exported as CSV; see [Export and syslog](./export.md). In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH, Telnet and database session and links to them. The player of a [recording](./recordings.md) lists the commands of SSH and Telnet sessions beside the screen; clicking one jumps to it. A database session has no recording, and its **Replay** is the list of its statements.
 
 ## Command rules
 
@@ -33,7 +33,7 @@ A command rule names a pattern and what to do when a command matches it.
 | Field | Meaning |
 | --- | --- |
 | Organization, Name | The rule belongs to one organization and applies to its assets. |
-| Pattern | A regular expression in Go's syntax (RE2). It matches when it is found anywhere in the command, so anchor it with `^` and `$` to match the whole command. It is case-sensitive; start it with `(?i)` to ignore case. In database sessions it is matched against each SQL statement. |
+| Pattern | A regular expression in Go's syntax (RE2). It matches when it is found anywhere in the command, so anchor it with `^` and `$` to match the whole command. It is case-sensitive; start it with `(?i)` to ignore case. In database sessions it is matched against each SQL statement, SQL Server batch, Redis command or MongoDB call. |
 | Action | `Block` or `Alert`. |
 | Users, Groups | Who it applies to. Leave both empty, or use `*`, for everyone. |
 | Assets, Asset tags | Which assets it applies to. Leave both empty, or use `*`, for every asset of the organization. |
@@ -49,12 +49,14 @@ Some patterns:
 | `\b(shutdown\|reboot\|halt\|poweroff)\b` | Any command that mentions these |
 | `^\s*(mkfs\|fdisk\|parted)\b` | Commands that start with these |
 | `(?i)^\s*(drop\|truncate\|delete)\b` | SQL statements that drop, empty or delete from tables, in any letter case |
+| `(?i)^(flushall\|flushdb)\b` | Redis commands that empty a database or all of them |
+| `\.(drop\|dropDatabase)\(` | MongoDB calls that drop a collection or a database |
 
 ### Block
 
 In an interactive shell, Casvisor does not pass on the Enter key. It sends Ctrl+C instead, so the line is cleared without running, and shows a red line in the user's terminal: *[Casvisor] The command is blocked by the rule: ...*. For a command on the `ssh` command line, the gateway refuses it with *casvisor: the command is blocked by the rule: ...* and exit status 1.
 
-In a database session, the statement is not sent to the database, the console shows that the command rule blocked it, and the statements after it in the same run are not run either. A rule is checked against the statement as typed and again with its comments taken out, so a comment in front does not hide it; see [Databases](../assets/databases.md#what-is-recorded). In a [job](../assets/jobs.md), each line of the command or script is checked, and a match stops the job on that asset before anything runs, with the status *Blocked*.
+In a database session, the statement is not sent to the database, the console shows that the command rule blocked it, and the statements after it in the same run are not run either. A rule is checked against the statement as typed and again with its comments taken out, and for a SQL Server batch line by line, for Redis with the quotes read and for MongoDB without spaces, so a comment in front or quotes do not hide it; see [Databases](../assets/databases.md#what-is-recorded). In a [job](../assets/jobs.md), each line of the command or script is checked, and a match stops the job on that asset before anything runs, with the status *Blocked*.
 
 The command is recorded with the action `Block`.
 

@@ -10,7 +10,7 @@ const oldDocs = {
   'asset/overview': 'assets/assets',
   'asset/rdp': 'assets/protocols',
   'asset/vnc': 'assets/protocols',
-  'asset/database': 'more/roadmap',
+  'asset/database': 'assets/databases',
   'asset/intranet': 'assets/assets',
   command: 'audit/commands',
   'command/command': 'audit/commands',

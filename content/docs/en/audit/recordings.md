@@ -16,7 +16,7 @@ Casvisor records every session it carries, of all four protocols, and administra
 | RDP | The screen, as it was sent to the browser, and the mouse pointer |
 | SSH gateway, interactive shell | The terminal output and its size changes |
 | SSH gateway, a command on the `ssh` command line, `scp`, `rsync`, SFTP, port forwarding | No recording; the command is kept in the [command records](./commands.md), and files moved in the [operation log](./operation-logs.md#ssh-and-file-events) |
-| MySQL and PostgreSQL | No recording; every statement is kept in the [command records](./commands.md), and **Replay** lists them. See [Databases](../assets/databases.md#what-is-recorded) |
+| Databases | No recording; every statement is kept in the [command records](./commands.md), and **Replay** lists them. See [Databases](../assets/databases.md#what-is-recorded) |
 | [Jobs](../assets/jobs.md) | No recording; the output of each asset is on the job's page, and the command in the command records |
 
 What the user types is not recorded as such, only what appears on the screen, so a password that is not echoed stays out of the recording. The commands of SSH and Telnet sessions are kept separately as [command records](./commands.md). The clipboard of RDP sessions is not recorded.

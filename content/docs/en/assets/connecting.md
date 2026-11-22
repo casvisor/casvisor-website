@@ -34,7 +34,7 @@ If the check fails, the tab shows why, for example *you have no permission to co
 ## Keyboard and clipboard
 
 - **SSH and Telnet** run in an xterm.js terminal: colours, resizing with the window, and the usual copy and paste of the browser. For SSH, with Upload or Download in the permission, the **Files** button in the top right corner opens a [file panel](./file-transfer.md#the-file-panel) beside the terminal.
-- **MySQL and PostgreSQL** open a SQL console with the databases and tables on the left and an editor; see [Databases](./databases.md).
+- **MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB** open a console with the databases and tables (Redis keys, MongoDB collections) on the left and an editor; see [Databases](./databases.md).
 - **RDP and VNC** run in a canvas, with a toolbar for full screen, the clipboard and key combinations such as Ctrl+Alt+Del. Keys go to the remote side as typed. Clipboard sharing follows the **Copy** and **Paste** actions of the user's permission. RDP follows the size of the browser window and, with Upload or Download, has a **Files** button for [moving files](./file-transfer.md#rdp).
 
 See [Protocols](./protocols.md) for the details of each.

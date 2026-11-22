@@ -11,9 +11,9 @@ There are several good open-source projects in this space. This page is meant to
 | License | Apache-2.0 | GPL-3.0 | AGPL-3.0 source; community binaries under their own terms | Apache-2.0 |
 | Paid edition | None | Enterprise edition | Enterprise edition | None |
 | Written in | Go | Python, Go | Go | Rust |
-| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
+| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
 | Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, audited; other protocols through port forwarding, not recorded | Yes | Yes | Yes |
-| Session recording | SSH, Telnet, VNC, RDP, played in the browser; SQL statements listed per session | Yes | Yes | Yes |
+| Session recording | SSH, Telnet, VNC, RDP, played in the browser; database statements listed per session | Yes | Yes | Yes |
 | Identity | Built in with TOTP, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC |
 | Access policy | Casbin: users, groups, assets, tags, accounts, actions, IPs, time windows; access requests with approval | RBAC, asset authorizations | RBAC with labels | Roles on targets |
 
@@ -39,12 +39,12 @@ HashiCorp Boundary archived its open-source repository in October 2026; it conti
 
 ## Where Casvisor differs
 
-- **One binary.** SSH, RDP, VNC, Telnet, MySQL and PostgreSQL, the SSH gateway, recording and the network gateway agent are all in one Go program, on SQLite by default, with nothing installed on the servers.
+- **One binary.** SSH, RDP, VNC, Telnet, the six databases, the SSH gateway, recording and the network gateway agent are all in one Go program, on SQLite by default, with nothing installed on the servers.
 - **Identity can be Casdoor's.** Casvisor has its own accounts, but if you already run Casdoor, or want its single sign-on, MFA, LDAP and SAML, Casvisor uses those directly, including Casdoor's groups in permissions, rather than keeping a second user directory.
 - **Policy is Casbin's.** Permissions combine users and groups, assets and tags, actions, client IP ranges and time windows, and are evaluated by a model you can read on the [permissions page](../access-control/permissions.md#the-casbin-model).
 - **Command rules follow the same scopes as permissions.** A rule applies to users, groups, assets and asset tags, and covers the web terminal and native SSH clients alike, since both go through the same check. See [Commands and command rules](../audit/commands.md).
-- **No enterprise edition.** [System accounts](../assets/accounts.md) with password rotation, [access requests](../access-control/access-requests.md), the [SQL console](../assets/databases.md), [jobs](../assets/jobs.md) and [syslog forwarding](../audit/export.md) are all in the open-source project, and so is what is on the [roadmap](./roadmap.md).
+- **No enterprise edition.** [System accounts](../assets/accounts.md) with password rotation, [access requests](../access-control/access-requests.md), the [database console](../assets/databases.md), [jobs](../assets/jobs.md) and [syslog forwarding](../audit/export.md) are all in the open-source project, and so is what is on the [roadmap](./roadmap.md).
 
 ## Where Casvisor is behind
 
-Kubernetes access, which is next on the [roadmap](./roadmap.md). Databases are MySQL and PostgreSQL only, and only the SQL console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on SSH assets only, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.
+Kubernetes access, which is next on the [roadmap](./roadmap.md). For databases, only the console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on SSH assets only, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.

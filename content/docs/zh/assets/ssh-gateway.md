@@ -4,7 +4,7 @@ seoTitle: "Casvisor SSH网关：用本地ssh、scp和VS Code连接"
 description: "用本地的ssh、scp、sftp、rsync、Xshell或VS Code Remote经由Casvisor连接SSH资产，用mstsc等客户端经端口转发连接RDP、VNC、Telnet和数据库资产：用登记过的公钥登录，在用户名里写资产名和账号，和网页终端用同一套权限、命令规则和会话列表。"
 ---
 
-除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号或它的某个[系统账号](./accounts.md)登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。对RDP、VNC、Telnet、MySQL和PostgreSQL资产，网关可以[转发端口](#端口转发到其他资产)，这样mstsc等客户端也能用。
+除了网页终端，Casvisor自己也能接受SSH连接，用户可以用平时就在用的工具连SSH资产：`ssh`、`scp`、`sftp`、`rsync`、Xshell或VS Code Remote。用户用在Casvisor里登记过的公钥登录网关，Casvisor再用资产自己的账号或它的某个[系统账号](./accounts.md)登录资产。和在浏览器里一样，[权限](../access-control/permissions.md)、[命令规则](../audit/commands.md)和[会话列表](../audit/sessions.md)都照常生效。对RDP、VNC、Telnet和数据库资产，网关可以[转发端口](#端口转发到其他资产)，这样mstsc等客户端也能用。
 
 ## 开启
 
@@ -97,7 +97,7 @@ Host web-01
 
 ## 端口转发到其他资产
 
-RDP、VNC、Telnet、MySQL和PostgreSQL资产也能用平时用的客户端连，例如远程桌面连接（mstsc）、VNC客户端、Telnet客户端、`mysql`、`psql`或DBeaver：网关把你电脑上的一个端口转发到资产。
+RDP、VNC、Telnet和数据库资产也能用平时用的客户端连，例如远程桌面连接（mstsc）、VNC客户端、Telnet客户端、`mysql`、`psql`、`sqlcmd`、`redis-cli`、`mongosh`或DBeaver：网关把你电脑上的一个端口转发到资产。
 
 ```shell
 ssh -p 2222 -N -L 13389:win-01:3389 alice@casvisor.example.com

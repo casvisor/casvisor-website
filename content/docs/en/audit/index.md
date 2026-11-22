@@ -17,7 +17,7 @@ Casvisor is a bastion host, so every connection goes through it and leaves a rec
 
 A command given on the `ssh` command line, `scp`, `rsync`, SFTP and port forwarding have no screen to record. The command itself is kept in the command records, and the files moved in the operation log.
 
-For [MySQL and PostgreSQL](../assets/databases.md), the session holds the account and client, every SQL statement is a command record with its result and is checked against the command rules, and the list of statements takes the place of a recording. [Jobs](../assets/jobs.md) leave a session per asset, a command record, and the output on the job's page.
+For [databases](../assets/databases.md), MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB, the session holds the account and client, every statement is a command record with its result and is checked against the command rules, and the list of statements takes the place of a recording. [Jobs](../assets/jobs.md) leave a session per asset, a command record, and the output on the job's page.
 
 ## Sessions
 
@@ -25,7 +25,7 @@ Every tab in the workbench, every asset page and every connection through the SS
 
 ## Commands
 
-Casvisor reads the command line of SSH and Telnet sessions, in the web terminal and through the SSH gateway, and keeps every SQL statement of database sessions, with the user, asset, client IP and session. A command rule matches a regular expression against the text and either blocks the command before it runs or flags it. See [Commands and command rules](./commands.md).
+Casvisor reads the command line of SSH and Telnet sessions, in the web terminal and through the SSH gateway, and keeps every statement of database sessions, with the user, asset, client IP and session. A command rule matches a regular expression against the text and either blocks the command before it runs or flags it. See [Commands and command rules](./commands.md).
 
 ## Screen and terminal recordings
 

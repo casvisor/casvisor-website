@@ -52,7 +52,7 @@ In Casvisor's database, encrypted when `credentialKey` is set and as they are wh
 
 ## Does Casvisor record sessions?
 
-Yes, all SSH, Telnet, VNC and RDP sessions, replayed in the browser from **Sessions**; for MySQL and PostgreSQL every SQL statement is kept instead. The recordings are files under `recordings/`, `/recordings` in Docker; see [Recordings](../audit/recordings.md) for where they go, how long they are kept and how to turn them off. Besides that, the [commands](../audit/commands.md) run in SSH and Telnet sessions are kept, and files moved and every change go into the operation log, all of which can be [forwarded to syslog](../audit/export.md).
+Yes, all SSH, Telnet, VNC and RDP sessions, replayed in the browser from **Sessions**; for databases every statement or command is kept instead. The recordings are files under `recordings/`, `/recordings` in Docker; see [Recordings](../audit/recordings.md) for where they go, how long they are kept and how to turn them off. Besides that, the [commands](../audit/commands.md) run in SSH and Telnet sessions are kept, and files moved and every change go into the operation log, all of which can be [forwarded to syslog](../audit/export.md).
 
 ## Is there a hosted or enterprise version?
 

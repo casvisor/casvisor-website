@@ -20,7 +20,7 @@ description: "把会话、命令记录和操作日志按列表当前的筛选下
 
 导出只有管理员能用，范围是本组织。每次导出本身也会记进操作日志，动作是`export-sessions`、`export-commands`或`export-records`，带上行数和所用的筛选条件。
 
-[数据库会话](../assets/databases.md#复制和导出)的查询结果在SQL控制台里导出。
+[数据库会话](../assets/databases.md#复制和导出)的查询结果在数据库控制台里导出。
 
 ## 转发到syslog
 
@@ -29,7 +29,7 @@ description: "把会话、命令记录和操作日志按列表当前的筛选下
 | 事件 | 什么时候发 | 类型 |
 | --- | --- | --- |
 | 操作日志 | 每写一条[操作日志](./operation-logs.md)，包括SFTP传输这类会话内事件 | `record` |
-| 命令 | 每记录一条命令或SQL语句，包括被拦截的，以及[作业](../assets/jobs.md)执行的 | `command` |
+| 命令 | 每记录一条命令或数据库语句，包括被拦截的，以及[作业](../assets/jobs.md)执行的 | `command` |
 | 会话 | 会话连上时，以及结束时 | `session-start`、`session-end` |
 
 ```ini

@@ -14,12 +14,12 @@ description: "资产是用户通过Casvisor连接的服务器：它的协议、�
 | 组织 | 资产所属的组织。只能授权给这个组织的用户。 |
 | 名称 | 组织内唯一的ID，权限通过它引用资产。 |
 | 显示名称、描述 | 用户在工作台里看到的内容。 |
-| 协议 | `SSH`、`RDP`、`VNC`、`Telnet`、`MySQL`或`PostgreSQL`。选好后会自动填上常用端口。见[协议](./protocols.md)和[数据库](./databases.md)。 |
+| 协议 | `SSH`、`RDP`、`VNC`、`Telnet`、`MySQL`、`PostgreSQL`、`SQLServer`、`Oracle`、`Redis`或`MongoDB`。选好后会自动填上常用端口。见[协议](./protocols.md)和[数据库](./databases.md)。 |
 | 主机、端口 | Casvisor要连的地址。这个地址由Casvisor服务器或网域网关解析和访问，不是用户的浏览器，所以可以是用户自己访问不到的内网地址。 |
 | 用户名、密码 | Casvisor登录服务器用的账号，也就是资产的默认账号，见下文。[SSH网关](./ssh-gateway.md)至少需要用户名。 |
 | 私钥 | SSH用：登录用的私钥，可以代替密码，也可以和密码一起用。见下文。 |
-| 指纹 | 服务器的SSH主机密钥或RDP证书，第一次连接时记下。见[协议](./protocols.md)。 |
-| 数据库名 | MySQL和PostgreSQL用：连接后默认打开的数据库。见[数据库](./databases.md)。 |
+| 指纹 | 服务器的SSH主机密钥或RDP证书，或者带TLS的数据库服务器的公钥，第一次连接时记下。见[协议](./protocols.md)。 |
+| 数据库名 | 数据库资产用：连接后默认打开的数据库。Oracle填服务名，Redis填数据库编号。见[数据库](./databases.md)。 |
 | 网域网关 | *直连*，或者经由哪个[网域网关](./network-gateways.md)访问这个资产。 |
 | 操作系统 | `Linux`或`Windows`，在列表里显示。 |
 | 标签 | `prod-linux`、`db`这样的标记。[权限](../access-control/permissions.md)可以一次授权带某个标签的所有资产，所以标签就是资产分组。 |

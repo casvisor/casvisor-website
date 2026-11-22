@@ -20,7 +20,7 @@ The file is UTF-8 with a byte order mark, so Excel shows Chinese and other text 
 
 Exporting is for administrators, and covers their own organization. Each export is itself written to the operation log, as `export-sessions`, `export-commands` or `export-records`, with the number of rows and the filter used.
 
-The results of a [database session](../assets/databases.md#copying-and-exporting) are exported from the SQL console instead.
+The results of a [database session](../assets/databases.md#copying-and-exporting) are exported from the database console instead.
 
 ## Syslog forwarding
 
@@ -29,7 +29,7 @@ Set `syslogAddress` and Casvisor sends three kinds of events to that syslog serv
 | Event | Sent when | Type |
 | --- | --- | --- |
 | Operation log entry | An entry is written to the [operation log](./operation-logs.md), including the session events such as SFTP transfers | `record` |
-| Command | A command or SQL statement is recorded, including blocked ones and those run by [jobs](../assets/jobs.md) | `command` |
+| Command | A command or database statement is recorded, including blocked ones and those run by [jobs](../assets/jobs.md) | `command` |
 | Session | A session connects, and when it ends | `session-start`, `session-end` |
 
 ```ini

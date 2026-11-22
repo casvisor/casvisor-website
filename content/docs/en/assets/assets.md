@@ -14,12 +14,12 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Organization | The organization the asset belongs to. Only users of that organization can be given it. |
 | Name | The ID, unique within the organization. Permissions refer to assets by it. |
 | Display name, Description | What users see in the workbench. |
-| Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL` or `PostgreSQL`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
+| Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL`, `PostgreSQL`, `SQLServer`, `Oracle`, `Redis` or `MongoDB`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server, or from the network gateway, not from the user's browser, so it can be a private address the users cannot reach themselves. |
 | Username, Password | The account Casvisor logs in with, the asset's default account. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |
 | Private key | For SSH: a private key to log in with, instead of or besides the password. See below. |
-| Fingerprint | The server's SSH host key or RDP certificate, recorded on the first connection. See [Protocols](./protocols.md). |
-| Database | For MySQL and PostgreSQL: the database to open after connecting. See [Databases](./databases.md). |
+| Fingerprint | The server's SSH host key or RDP certificate, or the public key of a database server with TLS, recorded on the first connection. See [Protocols](./protocols.md). |
+| Database | For databases: the database to open after connecting. For Oracle it is the service name, and for Redis the database number. See [Databases](./databases.md). |
 | Network gateway | *Direct connection*, or the [network gateway](./network-gateways.md) to reach the asset through. |
 | OS | `Linux` or `Windows`, shown in the list. |
 | Tag | A label such as `prod-linux` or `db`. A [permission](../access-control/permissions.md) can grant every asset with a tag at once, so the tag works as an asset group. |

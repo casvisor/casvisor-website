@@ -1,9 +1,9 @@
 ---
 title: "命令记录和命令规则"
-description: "Casvisor记录SSH和Telnet会话（网页终端、SSH网关和作业）里执行的命令，以及MySQL和PostgreSQL会话里执行的SQL；命令规则按正则表达式拦截或标记命中的命令，可以限定用户、用户组、资产和资产标签。"
+description: "Casvisor记录SSH和Telnet会话（网页终端、SSH网关和作业）里执行的命令，以及数据库会话里执行的SQL语句、Redis命令和MongoDB调用；命令规则按正则表达式拦截或标记命中的命令，可以限定用户、用户组、资产和资产标签。"
 ---
 
-Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网页终端里，还是SSH经由[SSH网关](../assets/ssh-gateway.md)和[作业](../assets/jobs.md)，以及用户在[MySQL和PostgreSQL资产](../assets/databases.md)上执行的SQL语句，并能在你指定的命令执行之前把它拦下。RDP和VNC会话没有命令记录，它们的画面在[录像](./recordings.md)里。
+Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网页终端里，还是SSH经由[SSH网关](../assets/ssh-gateway.md)和[作业](../assets/jobs.md)，以及用户在[数据库资产](../assets/databases.md)上执行的内容（MySQL、PostgreSQL、SQL Server和Oracle的SQL语句、Redis命令和MongoDB shell调用），并能在你指定的命令执行之前把它拦下。RDP和VNC会话没有命令记录，它们的画面在[录像](./recordings.md)里。
 
 两个页面都只对管理员开放：**命令记录**（`/commands`）和**命令规则**（`/command-rules`）。
 
@@ -20,11 +20,11 @@ Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网
 
 **作业**的命令或整个脚本，在每台执行它的资产上各记一条；文件分发记为`sftp put <文件> <目标路径>`。
 
-**数据库会话里**，每条SQL语句按发出时的原文记录，一条语句一条记录，一次执行多条时也一样。切换数据库记为``USE `db` ``或`\connect db`。
+**数据库会话里**，每条语句按发出时的原文记录，一条语句一条记录，一次执行多条时也一样：一条SQL语句、`GO`行之间的一个SQL Server批、一行Redis命令或一条MongoDB shell语句。切换数据库记为对应的语句，例如``USE `db` ``、`\connect db`、`USE [db]`、`SELECT 2`或`use db`，见[数据库](../assets/databases.md#记录了什么)。
 
 ## 命令记录页面
 
-每行是一条命令：时间、命令、用户、资产、客户端IP、会话，命中规则时还有规则和它的动作。SQL语句还有一列**结果**，显示返回或影响的行数，或者错误信息。可以按命令、用户、资产、客户端IP和会话搜索，也可以导出成CSV，见[导出与syslog转发](./export.md)。[会话列表](./sessions.md)里的**命令记录**列是每个SSH、Telnet和数据库会话的命令数，点进去就是这个会话的命令。[录像](./recordings.md)的播放器会在画面旁边列出SSH和Telnet会话的命令，点一条就跳到那里。数据库会话没有录像，它的**回放**就是语句列表。
+每行是一条命令：时间、命令、用户、资产、客户端IP、会话，命中规则时还有规则和它的动作。数据库语句还有一列**结果**，显示返回或影响的行数，或者错误信息。可以按命令、用户、资产、客户端IP和会话搜索，也可以导出成CSV，见[导出与syslog转发](./export.md)。[会话列表](./sessions.md)里的**命令记录**列是每个SSH、Telnet和数据库会话的命令数，点进去就是这个会话的命令。[录像](./recordings.md)的播放器会在画面旁边列出SSH和Telnet会话的命令，点一条就跳到那里。数据库会话没有录像，它的**回放**就是语句列表。
 
 ## 命令规则
 
@@ -33,7 +33,7 @@ Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网
 | 字段 | 含义 |
 | --- | --- |
 | 组织、名称 | 规则属于一个组织，作用于这个组织的资产。 |
-| 匹配规则 | Go语法（RE2）的正则表达式。命令里任何位置匹配上就算命中，要匹配整条命令请用`^`和`$`。区分大小写，以`(?i)`开头就不区分。数据库会话里按每条SQL语句匹配。 |
+| 匹配规则 | Go语法（RE2）的正则表达式。命令里任何位置匹配上就算命中，要匹配整条命令请用`^`和`$`。区分大小写，以`(?i)`开头就不区分。数据库会话里按每条SQL语句、SQL Server批、Redis命令或MongoDB调用匹配。 |
 | 动作 | `Block`（拦截）或`Alert`（告警）。 |
 | 用户、用户组 | 对谁生效。两个都不填，或者填`*`，表示所有人。 |
 | 资产、资产标签 | 对哪些资产生效。两个都不填，或者填`*`，表示组织里的所有资产。 |
@@ -49,12 +49,14 @@ Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网
 | `\b(shutdown\|reboot\|halt\|poweroff)\b` | 任何提到这几个词的命令 |
 | `^\s*(mkfs\|fdisk\|parted)\b` | 以这几个命令开头的命令 |
 | `(?i)^\s*(drop\|truncate\|delete)\b` | 删表、清空表和删除数据的SQL语句，不分大小写 |
+| `(?i)^(flushall\|flushdb)\b` | 清空一个或全部数据库的Redis命令 |
+| `\.(drop\|dropDatabase)\(` | 删除集合或数据库的MongoDB调用 |
 
 ### 拦截
 
 在交互式shell里，Casvisor不把回车传下去，而是发一个Ctrl+C，让这一行不执行就清掉，并在用户终端里显示一行红字：*[Casvisor] The command is blocked by the rule: ...*。对`ssh`命令行上带的命令，网关直接拒绝，提示*casvisor: the command is blocked by the rule: ...*，退出码为1。
 
-在数据库会话里，语句不会发给数据库，控制台显示它被命令规则拦截，同一次执行里排在它后面的语句也不再执行。规则先匹配原样输入的语句，再匹配去掉注释后的语句，所以在前面加注释躲不过去，见[数据库](../assets/databases.md#记录了什么)。在[作业](../assets/jobs.md)里，命令或脚本的每一行都要检查，命中后这台资产上什么都不执行，状态为*已拦截*。
+在数据库会话里，语句不会发给数据库，控制台显示它被命令规则拦截，同一次执行里排在它后面的语句也不再执行。规则先匹配原样输入的语句，再匹配去掉注释后的语句，SQL Server的批还逐行匹配，Redis去掉引号、MongoDB去掉空格后再匹配，所以在前面加注释或加引号都躲不过去，见[数据库](../assets/databases.md#记录了什么)。在[作业](../assets/jobs.md)里，命令或脚本的每一行都要检查，命中后这台资产上什么都不执行，状态为*已拦截*。
 
 这条命令以动作`Block`记下。
 

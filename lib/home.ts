@@ -5,7 +5,7 @@ const text = {
   en: {
     seoTitle: 'Casvisor: Open-Source Bastion Host for SSH, RDP, VNC and Telnet',
     seoDescription:
-      'Open-source bastion host for SSH, RDP, VNC, Telnet, MySQL and PostgreSQL, with per-user permissions and every session checked and recorded.',
+      'Open-source bastion host for SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB, with per-user permissions and every session checked and recorded.',
     badge: 'Apache-2.0, no enterprise edition',
     title: 'The open-source bastion host',
     subtitle: 'SSH, RDP, VNC, Telnet and databases in the browser, every session checked and recorded.',
@@ -55,7 +55,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: 'Every protocol in a browser tab',
-        body: 'SSH, RDP, VNC and Telnet all connect natively in Go, RDP with the clipboard, file transfer and the graphics pipeline, and MySQL and PostgreSQL open in a SQL console. Users keep several machines open side by side in the workbench, or reach SSH assets with their own ssh, scp and VS Code through the SSH gateway.',
+        body: 'SSH, RDP, VNC and Telnet all connect natively in Go, RDP with the clipboard, file transfer and the graphics pipeline, and MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB open in a database console. Users keep several machines open side by side in the workbench, or reach SSH assets with their own ssh, scp and VS Code through the SSH gateway.',
         href: 'assets/protocols',
       },
       {
@@ -94,7 +94,7 @@ const text = {
     open: [
       {
         title: 'Nothing held back',
-        body: 'No paid build with the RDP connector, the SQL console, password rotation or access requests locked away. What is in the repository is the product.',
+        body: 'No paid build with the RDP connector, the database console, password rotation or access requests locked away. What is in the repository is the product.',
       },
       {
         title: 'Uses what you already run',
@@ -109,7 +109,7 @@ const text = {
   },
   zh: {
     seoTitle: 'Casvisor：开源堡垒机，支持SSH、RDP、VNC和Telnet',
-    seoDescription: '开源堡垒机：在浏览器里连SSH、RDP、VNC、Telnet、MySQL和PostgreSQL，按Casbin授权，每个会话都检查、都录像。',
+    seoDescription: '开源堡垒机：在浏览器里连SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB，按Casbin授权，每个会话都检查、都录像。',
     badge: 'Apache-2.0许可证，没有企业版',
     title: '开源堡垒机',
     subtitle: '在浏览器里连SSH、RDP、VNC、Telnet和数据库，每个会话都检查、都录像。',
@@ -158,7 +158,7 @@ const text = {
       {
         icon: MonitorPlay,
         title: '所有协议都在浏览器标签页里',
-        body: 'SSH、RDP、VNC和Telnet都用Go原生连接，RDP支持剪贴板、文件传输和图形管道，MySQL和PostgreSQL在SQL控制台里打开。在工作台里可以同时打开多台机器并排切换，SSH资产也能通过SSH网关用本地的ssh、scp和VS Code连接。',
+        body: 'SSH、RDP、VNC和Telnet都用Go原生连接，RDP支持剪贴板、文件传输和图形管道，MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB在数据库控制台里打开。在工作台里可以同时打开多台机器并排切换，SSH资产也能通过SSH网关用本地的ssh、scp和VS Code连接。',
         href: 'assets/protocols',
       },
       {
@@ -197,7 +197,7 @@ const text = {
     open: [
       {
         title: '没有阉割',
-        body: '不会把RDP连接、SQL控制台、自动改密或访问申请放进收费版。仓库里有什么，产品就是什么。',
+        body: '不会把RDP连接、数据库控制台、自动改密或访问申请放进收费版。仓库里有什么，产品就是什么。',
       },
       {
         title: '用你已经在用的系统',
