@@ -42,7 +42,7 @@ description: "Casvisor用自己的账号登录（可以再加身份验证器的�
 
 要关掉，用户在**我的账户**里点**关闭**并输入自己的密码。用户丢了身份验证器时，管理员在**用户**里打开这个用户，关掉**两步验证**；之后用户只用密码登录，可以重新设置。管理员不能替别人开启。
 
-两步验证只管网页登录。[SSH网关](../assets/ssh-gateway.md)只认公钥，不要动态码。用Casdoor时，多因素认证在Casdoor里设置，见[对接Casdoor](../getting-started/casdoor.md)。
+两步验证只管网页登录。[SSH网关](../assets/ssh-gateway.md)只在[登录规则](./login-rules.md)要求两步验证时才要动态码；对所有人设一条这样的登录规则，就能强制开启两步验证。用Casdoor时，多因素认证在Casdoor里设置，见[对接Casdoor](../getting-started/casdoor.md)。
 
 ## 管理员
 

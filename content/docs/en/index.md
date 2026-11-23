@@ -26,6 +26,7 @@ Casvisor is an open-source bastion host (jump server). People sign in, with Casv
 - [Jobs](./assets/jobs.md): run commands, scripts and file transfers on many servers at once
 - [Users and administrators](./access-control/users-and-admins.md): the built-in accounts and their two-factor sign-in, who manages Casvisor and who only connects
 - [Permissions](./access-control/permissions.md): who may reach which asset, as which account, doing what, from where and when
+- [Login rules](./access-control/login-rules.md): allowing, rejecting or reviewing sign-ins by user, IP and time, and requiring two-step verification
 - [Access requests](./access-control/access-requests.md): asking for access for a while, and approving it
 - [Sessions](./audit/sessions.md): live and past connections, watching one, and cutting one off
 - [Recordings](./audit/recordings.md): replaying sessions in the browser, and where recordings are kept

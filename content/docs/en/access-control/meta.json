@@ -3,6 +3,7 @@
   "pages": [
     "users-and-admins",
     "permissions",
+    "login-rules",
     "access-requests"
   ]
 }

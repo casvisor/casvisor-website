@@ -18,7 +18,7 @@ The menu also keeps the commands for a registered public key, which do not expir
 
 ## SSH and SFTP clients
 
-The token is the SSH user name. The client signs in with SSH's `none` method, which every common client tries first, and the gateway takes it to the asset and account the token was issued for, so the client needs no password or key. From there it is the same as signing in with a public key: the permission is checked again, the login rules apply, shells are recorded and checked against [command rules](../audit/commands.md), and file transfers follow the Upload and Download actions.
+The token is the SSH user name. The client signs in with SSH's `none` method, which every common client tries first, and the gateway takes it to the asset and account the token was issued for, so the client needs no password or key. From there it is the same as signing in with a public key: the permission is checked again, the [login rules](../access-control/login-rules.md) apply, shells are recorded and checked against [command rules](../audit/commands.md), and file transfers follow the Upload and Download actions.
 
 A token used once, or older than two minutes, is refused with `Permission denied`; open the menu again for a new one. A port forwarding token only forwards ports, and only to its own asset: opening a shell with it is refused.
 

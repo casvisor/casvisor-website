@@ -26,6 +26,7 @@ Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账�
 - [作业中心](./assets/jobs.md)：在多台服务器上批量执行命令、脚本和分发文件
 - [用户和管理员](./access-control/users-and-admins.md)：自带账号和它的两步验证，谁管理Casvisor，谁只能连接
 - [权限](./access-control/permissions.md)：谁能从哪里、在什么时间、以哪个账号、对哪台资产做什么
+- [登录规则](./access-control/login-rules.md)：按用户、IP和时间放行、拒绝或复核登录，以及要求两步验证
 - [访问申请](./access-control/access-requests.md)：申请一段时间的访问，以及审批
 - [会话](./audit/sessions.md)：在线和历史连接，实时旁观和强制断开
 - [录像](./audit/recordings.md)：在浏览器里回放会话，以及录像存在哪里

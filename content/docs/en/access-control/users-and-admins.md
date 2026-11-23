@@ -42,7 +42,7 @@ From then on, the sign-in page asks for the code once the user name and password
 
 To turn it off, the user clicks **Turn off** under **My Account** and enters their password. For a user who has lost the app, an administrator opens the user under **Users** and turns off **Two-factor sign-in** there; the user then signs in with the password alone and can set it up again. Administrators cannot turn it on for someone else.
 
-Two-factor sign-in covers the web sign-in. The [SSH gateway](../assets/ssh-gateway.md) only takes public keys and does not ask for a code. With Casdoor, MFA is set up in Casdoor instead; see [Connect Casdoor](../getting-started/casdoor.md).
+Two-factor sign-in covers the web sign-in. The [SSH gateway](../assets/ssh-gateway.md) asks for a code only when a [login rule](./login-rules.md) requires two-step verification, and a login rule for everyone can make it compulsory. With Casdoor, MFA is set up in Casdoor instead; see [Connect Casdoor](../getting-started/casdoor.md).
 
 ## Administrators
 
