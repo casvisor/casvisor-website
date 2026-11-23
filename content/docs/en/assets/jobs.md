@@ -61,6 +61,22 @@ On a job's page:
 
 A job can be deleted once it is not running, with its results and its uploaded file. A file uploaded for a job that was never started is removed when Casvisor starts, once it is a day old.
 
+## Job schedules
+
+A job can also run on a schedule, such as a backup every night or a check every hour. **Job schedules** (`/job-schedules`) lists them; create one with **New schedule** there, or with **Run on a schedule** on the new job page, which takes what is in the form.
+
+A schedule has everything a job has, plus:
+
+| Field | Meaning |
+| --- | --- |
+| Schedule | A cron expression of five fields: minute, hour, day of month, month and day of week. `0 3 * * *` is 03:00 every day, `*/15 9-18 * * 1-5` every 15 minutes in working hours, `0 2 * * SUN` 02:00 on Sundays; `@hourly`, `@daily`, `@weekly` and `@monthly` work too. The form shows the next five runs. When both the day of month and the day of week are given, either one matching is enough, as in cron. |
+| Time zone | The time zone the schedule is read in, such as `Asia/Shanghai`; the server's when empty. |
+| Enabled | Off keeps the schedule without running it. |
+
+At each matching minute, Casvisor starts an ordinary job, named after the schedule, which shows on the Jobs page with a link back to its schedule; **Runs** on a schedule lists its jobs. **Run now** starts one at once. A run is skipped, and the schedule says so, while the last job of the schedule is still running. Runs missed while Casvisor was down are not made up.
+
+The jobs run as the administrator who last saved the schedule: the command rules for that administrator apply, and the jobs are recorded under that name. A file schedule keeps its file, and each job gets a copy of it, so deleting old jobs does not take the file away from the schedule.
+
 ## Rules, sessions and logs
 
 - Before a command or script runs on an asset, each of its lines is checked against the [command rules](../audit/commands.md) that apply to the administrator who started the job and to that asset. A Block rule marks the asset *Blocked* and nothing is run there; an Alert rule lets it run and flags it.
