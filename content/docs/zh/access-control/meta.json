@@ -4,6 +4,7 @@
     "users-and-admins",
     "permissions",
     "login-rules",
+    "connect-rules",
     "access-requests"
   ]
 }

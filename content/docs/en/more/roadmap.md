@@ -33,6 +33,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
 - [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
+- [Connect rules](../access-control/connect-rules.md): the browser, SSH and SFTP clients, port forwarding and Remote Desktop Connection allowed or rejected by user, asset and account.
 - [Job schedules](../assets/jobs.md#job-schedules): jobs run on cron schedules in any time zone.
 - [Session sharing](../audit/sessions.md#sharing-a-session): a user shares a session with colleagues through a link and a code, to watch it or type in it too.
 - [Cloud accounts](../assets/cloud-accounts.md): the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure and Google Cloud accounts synced as assets, with a preview and scheduled syncs.
