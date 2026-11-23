@@ -1,10 +1,10 @@
 ---
 title: "Databases"
-seoTitle: "Casvisor: MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB access with audit"
-description: "MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB assets open in a console in the browser, with the database password kept on the server. Every statement, batch or command is recorded, checked against command rules, and listed for the session; results can be exported as CSV with the Download action."
+seoTitle: "Casvisor: MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng access with audit"
+description: "MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng (DM8) assets open in a console in the browser, and MySQL and PostgreSQL also in DBeaver, Navicat, mysql and psql through the database proxy, with the database password kept on the server. Every statement, batch or command is recorded, checked against command rules, and listed for the session; results can be exported as CSV with the Download action."
 ---
 
-Database servers can be assets too: MySQL (and MariaDB), PostgreSQL, SQL Server, Oracle, Redis and MongoDB. Users open them in a console in a browser tab, with the database account filled in on the server, and everything they run goes through Casvisor: each SQL statement, SQL Server batch, Redis command or MongoDB call is checked against the [command rules](../audit/commands.md), recorded with its result, and listed for the session.
+Database servers can be assets too: MySQL (and MariaDB), PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng (DM8). Users open them in a console in a browser tab, or MySQL and PostgreSQL in a database client on their own machine through the [database proxy](./local-clients.md#database-clients), with the database account filled in on the server, and everything they run goes through Casvisor: each SQL statement, SQL Server batch, Redis command or MongoDB call is checked against the [command rules](../audit/commands.md), recorded with its result, and listed for the session.
 
 ## Adding a database
 
@@ -12,11 +12,11 @@ Add an asset as usual (see [Assets](./assets.md)), with:
 
 | Field | Value |
 | --- | --- |
-| Protocol | `MySQL` (MariaDB too), `PostgreSQL`, `SQLServer`, `Oracle`, `Redis` or `MongoDB`. Choosing one fills in its usual port, shown below. |
+| Protocol | `MySQL` (MariaDB too), `PostgreSQL`, `SQLServer`, `Oracle`, `Redis`, `MongoDB`, `ClickHouse` or `Dameng`. Choosing one fills in its usual port, shown below. |
 | Host, Port | The database server, as reached from Casvisor or from the asset's [network gateway](./network-gateways.md). |
 | Username, Password | The database account. Leave them empty to let each user type their own when connecting, as for other assets. A Redis server without ACL users needs only the password; a MongoDB server without authentication needs neither. |
-| Database | What it means depends on the protocol, below. The field is called **Service name** for Oracle and **Database number** for Redis. |
-| Fingerprint | The SHA-256 of the server's public key, filled in on the first TLS connection. See [Connections and TLS](#connections-and-tls). There is no fingerprint for Oracle. |
+| Database | What it means depends on the protocol, below. The field is called **Service name** for Oracle, **Schema** for Dameng and **Database number** for Redis. |
+| Fingerprint | The SHA-256 of the server's public key, filled in on the first TLS connection. See [Connections and TLS](#connections-and-tls). There is no fingerprint for Oracle and Dameng. |
 
 | Protocol | Port | Database |
 | --- | --- | --- |
@@ -26,6 +26,8 @@ Add an asset as usual (see [Assets](./assets.md)), with:
 | `Oracle` | 1521 | The service name of the database, such as `ORCLPDB1` or `FREEPDB1`. It is required. |
 | `Redis` | 6379 | The number of the database to open. Empty means 0. |
 | `MongoDB` | 27017 | The database to open. Empty means `test`. The user is checked in `admin` first, and when that fails, in this database, for users created there. |
+| `ClickHouse` | 9000 | The database to open. Empty means `default`. Casvisor speaks ClickHouse's native protocol: use the native port, 9000, or 9440 for TLS, not the HTTP port 8123. |
+| `Dameng` | 5236 | The schema to start in. Empty is the schema named after the user. |
 
 **Test connection** on the asset's page logs in with what is in the form, without saving it, and shows the server's version; for a server with TLS it also fills in **Fingerprint**.
 
@@ -33,7 +35,7 @@ Add an asset as usual (see [Assets](./assets.md)), with:
 
 ## Connections and TLS
 
-Casvisor connects with Go's MySQL driver, pgx for PostgreSQL, Microsoft's go-mssqldb for SQL Server, go-ora for Oracle, go-redis for Redis and the official MongoDB Go driver. Every connection goes through the asset's network gateway when it has one.
+Casvisor connects with Go's MySQL driver, pgx for PostgreSQL, Microsoft's go-mssqldb for SQL Server, go-ora for Oracle, go-redis for Redis, the official MongoDB Go driver, clickhouse-go for ClickHouse and Dameng's official Go driver, all written in Go. Every connection goes through the asset's network gateway when it has one.
 
 | Protocol | TLS |
 | --- | --- |
@@ -41,7 +43,8 @@ Casvisor connects with Go's MySQL driver, pgx for PostgreSQL, Microsoft's go-mss
 | SQL Server | Always used. A connection without encryption is made only to a server that supports none at all, and only while no public key is pinned. |
 | Redis | Used when the server has it. Casvisor first sends a plain `PING`, with no credentials; a server that answers it speaks plain text, and any other is reached with TLS. |
 | MongoDB | Used when the server has it, plain otherwise. |
-| Oracle | Not used: Casvisor connects over plain TCP. Keep the path between Casvisor, or the network gateway, and the server on a network you trust. |
+| ClickHouse | Tried first. A port without TLS, such as 9000, does not answer the TLS handshake and is then reached in plain text, while no public key is pinned; the TLS port is 9440. |
+| Oracle, Dameng | Not used: Casvisor connects over plain TCP. Keep the path between Casvisor, or the network gateway, and the server on a network you trust. |
 
 Database servers mostly have self-signed certificates, so Casvisor does not check the certificate chain. It pins the server's public key instead: once a TLS connection has logged in, the SHA-256 of the key goes into the asset's **Fingerprint**. From then on the connection must use TLS, so it cannot be downgraded to plain text, and a server presenting another key is refused, with both fingerprints in the error. If the change is expected, because the server got a new key for example, clear **Fingerprint** and connect again.
 
@@ -77,6 +80,18 @@ The editor works as SQL Server Management Studio does: the text between `GO` lin
 The left side is headed **Schemas**: it lists the schemas that own tables or views the user can see, the tables and views of each, and their columns, with the primary key marked. Switching to a schema sets `CURRENT_SCHEMA`, so unqualified names refer to its objects. **Query this table** runs `SELECT * FROM "SCHEMA"."TABLE" WHERE ROWNUM <= 100`.
 
 Statements are separated by `;`, which Casvisor leaves out when sending, as Oracle wants. A PL/SQL block, one starting with `BEGIN` or `DECLARE`, or `CREATE` (or `CREATE OR REPLACE`) of a procedure, function, package, trigger, type or library, runs up to a line holding only `/`, as in SQL\*Plus, with the semicolons inside it kept. A `/` line also ends an ordinary statement. Strings, quoted names, `q'[...]'` quoting and comments are understood. `SELECT` and `WITH` return rows; other statements report how many rows they changed.
+
+### ClickHouse
+
+The left side lists the databases, the tables and views of each with their engines, and the columns of a table, with the columns of the primary key marked. **Query this table** runs ``SELECT * FROM `table` LIMIT 100;``, with the database in front when it is not the current one.
+
+Statements are separated by `;`, which Casvisor leaves out when sending, as the native protocol takes one statement at a time. Strings and quoted names with backslash escapes, `#` and `--` comments and nested block comments are understood. `SELECT`, `SHOW`, `DESCRIBE`, `EXPLAIN`, `WITH`, `EXISTS` and `CHECK` return rows; arrays, maps and tuples are shown as JSON. ClickHouse does not report how many rows an `INSERT` wrote, so it shows 0. `USE db` switches the current database.
+
+### Dameng
+
+Dameng (DM8) works like Oracle. The left side is headed **Schemas**: it lists the schemas that own tables or views the user can see, the tables and views of each, and their columns, with the primary key marked. Switching to a schema runs `SET SCHEMA`, so unqualified names refer to its objects. **Query this table** runs `SELECT * FROM "SCHEMA"."TABLE" LIMIT 100`.
+
+Statements are separated by `;`, which Casvisor leaves out when sending, and a PL/SQL block runs up to a line holding only `/`, as for Oracle. `SELECT` and `WITH` return rows, `CLOB` and `BLOB` values included; other statements report how many rows they changed.
 
 ### Redis
 
@@ -120,6 +135,8 @@ Every statement is a [command record](../audit/commands.md) of the session, with
 | PostgreSQL | `\connect db` |
 | SQL Server | `USE [db]` |
 | Oracle | `ALTER SESSION SET CURRENT_SCHEMA = "SCHEMA"` |
+| ClickHouse | ``USE `db` `` |
+| Dameng | `SET SCHEMA "SCHEMA"` |
 | Redis | `SELECT 2` |
 | MongoDB | `use db` |
 
@@ -141,6 +158,8 @@ Patterns are case-sensitive, so start them with `(?i)`: for example, with the ac
 
 Database sessions have no screen to [record](../audit/recordings.md). In the [session list](../audit/sessions.md), **Monitor** on an online database session opens the list of its statements, which refreshes every 3 seconds, and **Replay** on a finished one shows the same list, the first 1,000 statements, with each one's time, result and rule. The list is headed *SQL statements*, or *Commands* for Redis and MongoDB.
 
-## Native clients
+## Database clients on your own machine
 
-The console is the audited way in. A database client on the user's own machine, such as `mysql`, `psql`, `sqlcmd`, SQL\*Plus, `redis-cli`, `mongosh` or DBeaver, can reach a database asset through the [SSH gateway's port forwarding](./ssh-gateway.md#port-forwarding-to-other-assets), for example `ssh -p 2222 -N -L 13306:db-01:3306 alice@casvisor.example.com`. Casvisor passes those bytes through without reading them: the user logs in with an account they know, and the statements are neither recorded nor checked against rules. That needs the **Forward** action, so give it only to the people who should have it.
+MySQL and PostgreSQL assets can also be opened in DBeaver, Navicat, DataGrip, `mysql`, `psql` or any JDBC tool, through Casvisor's [database proxy](./local-clients.md#database-clients). The client signs in to Casvisor with a database token, and Casvisor signs in to the database with the asset's account. Every statement the client sends goes through the same command rules, records and session list as the console, so the proxy is audited the same way, and needs only the **Connect** action.
+
+The other kinds of database, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng, are not proxied yet. A client on the user's own machine, such as `sqlcmd`, SQL\*Plus, `redis-cli` or `mongosh`, can reach them through the [SSH gateway's port forwarding](./ssh-gateway.md#port-forwarding-to-other-assets), for example `ssh -p 2222 -N -L 16379:redis-01:6379 alice@casvisor.example.com`. Casvisor passes those bytes through without reading them: the user logs in with an account they know, and the commands are neither recorded nor checked against rules. That needs the **Forward** action, so give it only to the people who should have it.

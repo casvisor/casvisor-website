@@ -31,6 +31,8 @@ casdoorApplication =
 adminPassword =
 sshGatewayPort =
 sshGatewayHost =
+dbProxyMysqlPort =
+dbProxyPostgresqlPort =
 syslogAddress =
 syslogFormat = rfc5424
 recordingPath =
@@ -83,6 +85,12 @@ Casvisor启动时会建好它的表，以及新版本需要的列。SQLite以WAL
 | `webAssetDomain` | 空 | 用来打开[网站](../assets/websites.md)的域名，如`example-apps.com`，可以带协议和端口：`https://example-apps.com`、`web.localhost:19000`。它的所有子域名都要能到达Casvisor。为空时Web资产打不开。 |
 | `webSessionIdleMinutes` | `30` | 网站会话没人用多少分钟后结束。 |
 | `remoteBrowserPath` | 空 | 运行[Casvisor浏览器](../assets/websites.md#casvisor浏览器)的Chrome、Chromium或Edge，如`/usr/bin/chromium`。为空时用服务器上找到的第一个；一个都没有时，Web资产只能经反向代理打开。 |
+| `dbProxyMysqlPort` | 空 | [数据库代理](../assets/local-clients.md#数据库客户端)监听MySQL客户端的端口，如`3307`。为空时关闭。 |
+| `dbProxyPostgresqlPort` | 空 | 数据库代理监听PostgreSQL客户端的端口，如`5433`。为空时关闭。 |
+| `dbProxyHost` | 空 | 用户复制的数据库命令和链接里显示的主机名。为空时用`sshGatewayHost`，再为空用网页界面的主机名。 |
+| `dbProxyCertFile`、`dbProxyKeyFile` | 空 | 数据库代理给客户端做TLS用的PEM证书和私钥。为空时，如果Casvisor自己提供HTTPS就用`HTTPSCertFile`、`HTTPSKeyFile`的证书，否则启动时生成一个自签名证书。 |
+| `dbProxyTokenHours` | `8` | 数据库令牌的有效小时数。 |
+| `dbProxyMysqlVersion` | `8.0.40-casvisor` | 代理在知道客户端要连哪个资产之前，向MySQL客户端报的服务器版本。驱动按版本决定行为时，设成你的服务器的版本，如`5.5.5-10.11.6-MariaDB`。 |
 | `disableRdGateway` | `false` | 设为`true`关闭远程桌面网关，[远程桌面连接（mstsc）](../assets/local-clients.md#远程桌面连接)就不能再打开RDP资产。`isDemoMode = true`时总是关闭。 |
 
 ## 录像

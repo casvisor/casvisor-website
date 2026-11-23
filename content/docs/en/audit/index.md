@@ -17,7 +17,7 @@ Casvisor is a bastion host, so every connection goes through it and leaves a rec
 
 A command given on the `ssh` command line, `scp`, `rsync`, SFTP and port forwarding have no screen to record. The command itself is kept in the command records, and the files moved in the operation log.
 
-For [databases](../assets/databases.md), MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB, the session holds the account and client, every statement is a command record with its result and is checked against the command rules, and the list of statements takes the place of a recording. [Jobs](../assets/jobs.md) leave a session per asset, a command record, and the output on the job's page.
+For [databases](../assets/databases.md), MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng, the session holds the account and client, every statement is a command record with its result and is checked against the command rules, and the list of statements takes the place of a recording. [Jobs](../assets/jobs.md) leave a session per asset, a command record, and the output on the job's page.
 
 ## Sessions
 

@@ -20,7 +20,7 @@ Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网
 
 **作业**的命令或整个脚本，在每台执行它的资产上各记一条；文件分发记为`sftp put <文件> <目标路径>`。
 
-**数据库会话里**，每条语句按发出时的原文记录，一条语句一条记录，一次执行多条时也一样：一条SQL语句、`GO`行之间的一个SQL Server批、一行Redis命令或一条MongoDB shell语句。切换数据库记为对应的语句，例如``USE `db` ``、`\connect db`、`USE [db]`、`SELECT 2`或`use db`，见[数据库](../assets/databases.md#记录了什么)。
+**数据库会话里**（控制台，或经[数据库代理](../assets/local-clients.md#数据库客户端)的客户端），每条语句按发出时的原文记录，一条语句一条记录，一次执行多条时也一样：一条SQL语句、`GO`行之间的一个SQL Server批、一行Redis命令或一条MongoDB shell语句。切换数据库记为对应的语句，例如``USE `db` ``、`\connect db`、`USE [db]`、`SELECT 2`或`use db`，见[数据库](../assets/databases.md#记录了什么)。
 
 ## 命令记录页面
 

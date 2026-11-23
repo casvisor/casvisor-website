@@ -20,7 +20,7 @@ These pages are for administrators: **Commands** (`/commands`), **Command rules*
 
 **For a job**, the command or the whole script is recorded once for each asset it runs on, and a file transfer as `sftp put <file> <target path>`.
 
-**In a database session**, each statement is recorded as it was sent, one record per statement, even when several were run together: a SQL statement, a SQL Server batch between `GO` lines, a line of Redis commands, or a MongoDB shell statement. Switching databases is recorded as the statement it amounts to, such as ``USE `db` ``, `\connect db`, `USE [db]`, `SELECT 2` or `use db`; see [Databases](../assets/databases.md#what-is-recorded).
+**In a database session**, from the console or from a client through the [database proxy](../assets/local-clients.md#database-clients), each statement is recorded as it was sent, one record per statement, even when several were run together: a SQL statement, a SQL Server batch between `GO` lines, a line of Redis commands, or a MongoDB shell statement. Switching databases is recorded as the statement it amounts to, such as ``USE `db` ``, `\connect db`, `USE [db]`, `SELECT 2` or `use db`; see [Databases](../assets/databases.md#what-is-recorded).
 
 ## The Commands page
 

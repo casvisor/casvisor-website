@@ -1,12 +1,12 @@
 ---
 title: "介绍"
-description: "Casvisor是一个开源堡垒机。它让用户在浏览器里通过SSH、RDP、VNC和Telnet访问服务器，也能访问MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB数据库，按Casbin权限检查每一次连接，并为每个会话录像。"
+description: "Casvisor是一个开源堡垒机。它让用户在浏览器里通过SSH、RDP、VNC和Telnet访问服务器，也能访问MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦数据库，按Casbin权限检查每一次连接，并为每个会话录像。"
 ---
 
 Casvisor是一个开源堡垒机，也叫跳板机。它放在运维人员和他们要管的系统之间：
 
 - 用户用Casvisor自带的账号登录（可以再加一步身份验证器的动态码），或者通过[Casdoor](https://casdoor.ai)登录，这样你已经配好的单点登录、多因素认证、LDAP和第三方登录在这里同样生效。
-- 用户只能看到**权限**允许他们访问的服务器（称为**资产**），并在浏览器标签页里通过SSH、RDP、VNC或Telnet连接，或者在数据库控制台里连MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB。用户电脑上和服务器上都不用装任何东西。还没有权限的，可以提**访问申请**。
+- 用户只能看到**权限**允许他们访问的服务器（称为**资产**），并在浏览器标签页里通过SSH、RDP、VNC或Telnet连接，或者在数据库控制台里连MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦。用户电脑上和服务器上都不用装任何东西。还没有权限的，可以提**访问申请**。
 - SSH也可以经由Casvisor的**SSH网关**，用自己的`ssh`、`scp`、`sftp`或VS Code Remote连接，权限照样生效。
 - 服务器的账号由Casvisor自己填入，密码不会到浏览器或SSH客户端里。一个资产可以有多个**系统账号**，Casvisor还能按周期到服务器上改它们的密码。
 - 每次连接都是一个**会话**，管理员能在列表里看到、实时旁观和强制断开，并且会被**录像**，可以在浏览器里回放。SSH和Telnet会话里执行的命令、数据库里执行的语句会被记录，并能按**命令规则**拦截；传过的文件和通过接口做的每一次改动都记进**操作日志**；权限被收回时，会话会自己结束。这些都可以导出成CSV或Excel，汇总成可打印、可发邮件的[报表](../audit/reports.md)，或转发到syslog。

@@ -11,8 +11,8 @@ description: "Casvisor与JumpServer、Teleport、Warpgate等开源堡垒机的�
 | 许可证 | Apache-2.0 | GPL-3.0 | 源码AGPL-3.0；社区版二进制另有条款 | Apache-2.0 |
 | 收费版 | 没有 | 企业版 | 企业版 | 没有 |
 | 开发语言 | Go | Python、Go | Go | Rust |
-| 浏览器访问 | SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、网站（经反向代理，或在替用户登录的远程浏览器里） | SSH、RDP、VNC、数据库、K8s、应用 | SSH、RDP（Windows）、数据库、K8s、应用 | SSH、RDP、VNC |
-| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，可从资产列表直接打开Xshell、WinSCP，受审计；mstsc经内置远程桌面网关，其他协议经端口转发，不录像 | 支持 | 支持 | 支持 |
+| 浏览器访问 | SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse、达梦、网站（经反向代理，或在替用户登录的远程浏览器里） | SSH、RDP、VNC、数据库、K8s、应用 | SSH、RDP（Windows）、数据库、K8s、应用 | SSH、RDP、VNC |
+| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，可从资产列表直接打开Xshell、WinSCP，受审计；MySQL和PostgreSQL客户端（DBeaver、Navicat、`mysql`、`psql`）经内置数据库代理，受审计；mstsc经内置远程桌面网关，其他协议经端口转发，不录像 | 支持 | 支持 | 支持 |
 | 会话录像 | SSH、Telnet、VNC、RDP和远程浏览器，在浏览器里回放；数据库语句和网站请求按会话列出 | 支持 | 支持 | 支持 |
 | 身份 | 自带（可开TOTP），或Casdoor：单点登录、多因素、LDAP、SAML、OAuth、用户组 | 自带、LDAP、单点登录 | 自带、单点登录 | 自带、TOTP、OIDC |
 | 访问策略 | Casbin：用户、用户组、资产、标签、账号、动作、IP、有效期；访问申请与审批 | RBAC、资产授权 | 基于标签的RBAC | 目标上的角色 |
@@ -47,4 +47,4 @@ HashiCorp Boundary在2026年10月归档了开源仓库，之后只有HCP Boundar
 
 ## Casvisor落后的地方
 
-数据库只有浏览器里的控制台受审计：SSH以外的本地客户端走的是普通端口转发，不录像。自动改密支持经SSH的服务器、网络设备和数据库，不支持经RDP改密；复制和粘贴动作也限制不了SSH和Telnet终端。如果你现在就需要这些，上面这些项目大多都有。
+数据库的控制台和MySQL、PostgreSQL客户端经的数据库代理受审计；其他数据库（SQL Server、Oracle、Redis、MongoDB、ClickHouse、达梦）的本地客户端走普通端口转发，不录像。自动改密支持经SSH的服务器、网络设备和数据库，不支持经RDP改密；复制和粘贴动作也限制不了SSH和Telnet终端。如果你现在就需要这些，上面这些项目大多都有。

@@ -17,7 +17,7 @@ Casvisor是堡垒机，所有连接都经过它，所以都会留下记录。SSH
 
 `ssh`命令行、`scp`、`rsync`、SFTP和端口转发没有屏幕可录，命令记在命令记录里，传过的文件记在操作日志里。
 
-[数据库](../assets/databases.md)（MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB）的会话记着账号和客户端，每条语句都是一条带结果的命令记录，并按命令规则检查，语句列表代替了录像。[作业](../assets/jobs.md)在每台资产上留下一个会话、一条命令记录，输出在作业页面上。
+[数据库](../assets/databases.md)（MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦）的会话记着账号和客户端，每条语句都是一条带结果的命令记录，并按命令规则检查，语句列表代替了录像。[作业](../assets/jobs.md)在每台资产上留下一个会话、一条命令记录，输出在作业页面上。
 
 ## 会话
 

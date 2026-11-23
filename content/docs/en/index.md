@@ -1,9 +1,9 @@
 ---
 title: "Casvisor documentation"
-description: "The manual of Casvisor, the open-source bastion host for SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB: installation, sign-in, assets and system accounts, the SSH gateway, file transfer, databases, patch management, jobs, permissions, access requests, sessions, recordings, command rules, operation logs, export and operations."
+description: "The manual of Casvisor, the open-source bastion host for SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng: installation, sign-in, assets and system accounts, the SSH gateway, file transfer, databases, patch management, jobs, permissions, access requests, sessions, recordings, command rules, operation logs, export and operations."
 ---
 
-Casvisor is an open-source bastion host (jump server). People sign in, with Casvisor's own accounts or through Casdoor, see the servers they are allowed to reach, and connect to them over SSH, RDP, VNC or Telnet, or to MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB databases, from a browser tab, or with their own SSH client, while Casvisor checks every connection against your permissions and records it.
+Casvisor is an open-source bastion host (jump server). People sign in, with Casvisor's own accounts or through Casdoor, see the servers they are allowed to reach, and connect to them over SSH, RDP, VNC or Telnet, or to MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng databases, from a browser tab, or with their own SSH client, while Casvisor checks every connection against your permissions and records it.
 
 ## Getting started
 
@@ -21,7 +21,7 @@ Casvisor is an open-source bastion host (jump server). People sign in, with Casv
 - [Network gateways](./assets/network-gateways.md): assets in other networks, through an SSH jump host or an agent
 - [File transfer](./assets/file-transfer.md): the file panel of the web terminal and the remote desktop, and what Upload and Download allow
 - [Protocols](./assets/protocols.md): what SSH, RDP, VNC, Telnet and the databases each support
-- [Databases](./assets/databases.md): MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB in a console in the browser, with every statement recorded
+- [Databases](./assets/databases.md): MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng in a console in the browser, and MySQL and PostgreSQL in DBeaver, Navicat, `mysql` and `psql` through the database proxy, with every statement recorded
 - [Patch management](./assets/patches.md): scan for system updates, install them and restart
 - [Jobs](./assets/jobs.md): run commands, scripts and file transfers on many servers at once
 - [Users and administrators](./access-control/users-and-admins.md): the built-in accounts and their two-factor sign-in, who manages Casvisor and who only connects

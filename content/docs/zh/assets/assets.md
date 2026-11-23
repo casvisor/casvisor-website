@@ -14,7 +14,7 @@ description: "资产是用户通过Casvisor连接的服务器：它的协议、�
 | 组织 | 资产所属的组织。只能授权给这个组织的用户。 |
 | 名称 | 组织内唯一的ID，权限通过它引用资产。 |
 | 显示名称、描述 | 用户在工作台里看到的内容。 |
-| 协议 | `SSH`、`RDP`、`VNC`、`Telnet`、`MySQL`、`PostgreSQL`、`SQLServer`、`Oracle`、`Redis`或`MongoDB`。选好后会自动填上常用端口。见[协议](./protocols.md)和[数据库](./databases.md)。 |
+| 协议 | `SSH`、`RDP`、`VNC`、`Telnet`、`MySQL`、`PostgreSQL`、`SQLServer`、`Oracle`、`Redis`、`MongoDB`、`ClickHouse`或`Dameng`（达梦）。选好后会自动填上常用端口。见[协议](./protocols.md)和[数据库](./databases.md)。 |
 | 平台 | 系统的种类，例如Linux、Cisco IOS或MySQL：决定默认端口、终端字符集、提权方式和改密方法。只列出含有资产协议的平台。见[平台](./platforms.md)。 |
 | 主机、端口 | Casvisor要连的地址。这个地址由Casvisor服务器或网域网关解析和访问，不是用户的浏览器，所以可以是用户自己访问不到的内网地址。 |
 | 用户名、密码 | Casvisor登录服务器用的账号，也就是资产的默认账号，见下文。[SSH网关](./ssh-gateway.md)至少需要用户名。 |

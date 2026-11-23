@@ -34,7 +34,7 @@ description: "用户从工作台连接，工作台列出他们能访问的资产
 ## 键盘和剪贴板
 
 - **SSH和Telnet**运行在xterm.js终端里：支持颜色，随窗口调整大小，复制粘贴用浏览器自己的。SSH的权限里有上传或下载时，右上角的**文件**按钮会在终端旁边打开[文件面板](./file-transfer.md#文件面板)。
-- **MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB**打开控制台，左边是数据库和表（Redis是键，MongoDB是集合），右边是编辑器，见[数据库](./databases.md)。
+- **MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦**打开控制台，左边是数据库和表（Redis是键，MongoDB是集合），右边是编辑器，见[数据库](./databases.md)。
 - **RDP和VNC**运行在画布里，工具栏有全屏、剪贴板和Ctrl+Alt+Del等组合键。按键原样发给远端。剪贴板能否共享取决于用户权限里的**复制**和**粘贴**动作。RDP跟随浏览器窗口调整大小，有上传或下载权限时还有**文件**按钮，用来[传文件](./file-transfer.md#rdp)。
 
 各协议的细节见[协议](./protocols.md)。

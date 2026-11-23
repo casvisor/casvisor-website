@@ -1,10 +1,10 @@
 ---
 title: "数据库"
-seoTitle: "Casvisor：MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB访问与审计"
-description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB资产在浏览器里的控制台中打开，数据库密码留在服务端。每条语句、批或命令都被记录、按命令规则检查，并按会话列出；有下载权限时可以把结果导出成CSV。"
+seoTitle: "Casvisor：MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦访问与审计"
+description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦（DM8）资产在浏览器里的控制台中打开，MySQL和PostgreSQL还可以经数据库代理用DBeaver、Navicat、mysql、psql打开，数据库密码留在服务端。每条语句、批或命令都被记录、按命令规则检查，并按会话列出；有下载权限时可以把结果导出成CSV。"
 ---
 
-数据库服务器也可以作为资产：MySQL（以及MariaDB）、PostgreSQL、SQL Server、Oracle、Redis和MongoDB。用户在浏览器标签页的控制台里打开它们，数据库账号由服务端填入；用户执行的一切都经过Casvisor：每条SQL语句、每个SQL Server批、每条Redis命令或MongoDB调用都先按[命令规则](../audit/commands.md)检查，再连同结果一起记录，并按会话列出。
+数据库服务器也可以作为资产：MySQL（以及MariaDB）、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦（DM8）。用户在浏览器标签页的控制台里打开它们，MySQL和PostgreSQL也可以经[数据库代理](./local-clients.md#数据库客户端)用自己电脑上的数据库客户端打开，数据库账号由服务端填入；用户执行的一切都经过Casvisor：每条SQL语句、每个SQL Server批、每条Redis命令或MongoDB调用都先按[命令规则](../audit/commands.md)检查，再连同结果一起记录，并按会话列出。
 
 ## 添加数据库
 
@@ -12,11 +12,11 @@ description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB资产�
 
 | 字段 | 取值 |
 | --- | --- |
-| 协议 | `MySQL`（也适用于MariaDB）、`PostgreSQL`、`SQLServer`、`Oracle`、`Redis`或`MongoDB`。选好后会自动填上常用端口，见下表。 |
+| 协议 | `MySQL`（也适用于MariaDB）、`PostgreSQL`、`SQLServer`、`Oracle`、`Redis`、`MongoDB`、`ClickHouse`或`Dameng`（达梦）。选好后会自动填上常用端口，见下表。 |
 | 主机、端口 | 数据库服务器，从Casvisor或资产的[网域网关](./network-gateways.md)能连到的地址。 |
 | 用户名、密码 | 数据库账号。和其他资产一样，可以不填，让每个用户连接时自己输入。没有ACL用户的Redis只需要密码；没开认证的MongoDB两个都不用填。 |
-| 数据库名 | 含义随协议不同，见下表。Oracle资产上这一项叫**服务名**，Redis资产上叫**数据库编号**。 |
-| 指纹 | 服务器公钥的SHA-256，第一次用TLS连接时自动填上，见[连接和TLS](#连接和tls)。Oracle没有指纹。 |
+| 数据库名 | 含义随协议不同，见下表。Oracle资产上这一项叫**服务名**，达梦资产上叫**模式**，Redis资产上叫**数据库编号**。 |
+| 指纹 | 服务器公钥的SHA-256，第一次用TLS连接时自动填上，见[连接和TLS](#连接和tls)。Oracle和达梦没有指纹。 |
 
 | 协议 | 端口 | 数据库名 |
 | --- | --- | --- |
@@ -26,6 +26,8 @@ description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB资产�
 | `Oracle` | 1521 | 数据库的服务名，例如`ORCLPDB1`、`FREEPDB1`。必须填。 |
 | `Redis` | 6379 | 连接后默认打开的数据库编号。不填就是0。 |
 | `MongoDB` | 27017 | 连接后默认打开的数据库。不填就是`test`。用户先在`admin`库验证，不通过再在这个库验证，用于在这个库里建的用户。 |
+| `ClickHouse` | 9000 | 连接后默认打开的数据库。不填就是`default`。Casvisor用ClickHouse的原生协议连接：填原生端口9000（TLS用9440），不要填HTTP端口8123。 |
+| `Dameng` | 5236 | 连接后默认的模式。不填时是和用户同名的模式。 |
 
 资产页面上的**测试连接**用表单里的内容登录一次（不保存），显示服务器版本；服务器有TLS时还会填上**指纹**。
 
@@ -33,7 +35,7 @@ description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB资产�
 
 ## 连接和TLS
 
-Casvisor用Go的MySQL驱动、PostgreSQL的pgx、微软的go-mssqldb（SQL Server）、go-ora（Oracle）、go-redis（Redis）和MongoDB官方Go驱动连接。资产配置了网域网关时，每个连接都经由网域网关。
+Casvisor用Go的MySQL驱动、PostgreSQL的pgx、微软的go-mssqldb（SQL Server）、go-ora（Oracle）、go-redis（Redis）、MongoDB官方Go驱动、clickhouse-go（ClickHouse）和达梦官方的Go驱动连接，都是纯Go实现。资产配置了网域网关时，每个连接都经由网域网关。
 
 | 协议 | TLS |
 | --- | --- |
@@ -41,7 +43,8 @@ Casvisor用Go的MySQL驱动、PostgreSQL的pgx、微软的go-mssqldb（SQL Serve
 | SQL Server | 总是用。只有服务器完全不支持加密，并且还没有固定公钥时，才用不加密的连接。 |
 | Redis | 服务器有TLS就用。Casvisor先发一个不带凭据的明文`PING`；服务器应答了就说明它用明文，否则用TLS连接。 |
 | MongoDB | 服务器支持就用，否则用明文。 |
-| Oracle | 不用：Casvisor通过普通TCP连接。Casvisor（或网域网关）到服务器之间要走可信的网络。 |
+| ClickHouse | 先试TLS。9000这类不带TLS的端口不会应答TLS握手，这时在还没有固定公钥的情况下改用明文；TLS端口是9440。 |
+| Oracle、达梦 | 不用：Casvisor通过普通TCP连接。Casvisor（或网域网关）到服务器之间要走可信的网络。 |
 
 数据库服务器多半用自签名证书，所以Casvisor不校验证书链，而是固定服务器的公钥：TLS连接登录成功后，把公钥的SHA-256记到资产的**指纹**里。此后连接必须用TLS，不能被降级成明文；服务器换了公钥就拒绝连接，错误信息里有新旧两个指纹。如果更换是预期的（例如服务器换了密钥），清空**指纹**再连一次即可。
 
@@ -77,6 +80,18 @@ PostgreSQL的一个连接只属于一个数据库，所以只显示当前数据�
 左侧的标题是**模式**：列出拥有当前用户能看到的表或视图的那些模式、每个模式的表和视图，以及它们的列，并标出主键。切换到某个模式会设置`CURRENT_SCHEMA`，不带模式名的名称就指向它的对象。**查询这张表**执行`SELECT * FROM "模式"."表" WHERE ROWNUM <= 100`。
 
 语句用`;`隔开，按Oracle的要求，发送时去掉这个分号。PL/SQL块，即以`BEGIN`、`DECLARE`开头，或者`CREATE`（或`CREATE OR REPLACE`）存储过程、函数、包、触发器、类型或库的语句，和SQL\*Plus里一样一直执行到只有`/`的一行为止，块里的分号保留。`/`行也能结束普通语句。字符串、带引号的名称、`q'[...]'`引用和注释都能识别。`SELECT`和`WITH`返回行，其他语句显示影响了多少行。
+
+### ClickHouse
+
+左侧列出数据库、每个库的表和视图（带表引擎），以及一张表的列，主键里的列有标记。**查询这张表**执行``SELECT * FROM `table` LIMIT 100;``，不是当前数据库时在表名前加上库名。
+
+语句以`;`分隔，发送时Casvisor去掉结尾的`;`，因为原生协议一次只收一条语句。能识别带反斜杠转义的字符串和带引号的名字、`#`和`--`注释，以及嵌套的块注释。`SELECT`、`SHOW`、`DESCRIBE`、`EXPLAIN`、`WITH`、`EXISTS`和`CHECK`返回行；数组、Map和元组以JSON显示。ClickHouse不报告`INSERT`写了多少行，所以显示0。`USE db`切换当前数据库。
+
+### 达梦
+
+达梦（DM8）和Oracle的用法一样。左侧标题是**模式**：列出拥有用户能看到的表或视图的模式、每个模式的表和视图，以及它们的列，主键有标记。切换到某个模式时执行`SET SCHEMA`，之后不带模式名的名字都指这个模式里的对象。**查询这张表**执行`SELECT * FROM "SCHEMA"."TABLE" LIMIT 100`。
+
+语句以`;`分隔，发送时Casvisor去掉结尾的`;`；和Oracle一样，PL/SQL块一直到只有`/`的一行为止。`SELECT`和`WITH`返回行，包括`CLOB`、`BLOB`的值；其他语句报告影响了多少行。
 
 ### Redis
 
@@ -120,6 +135,8 @@ PostgreSQL的一个连接只属于一个数据库，所以只显示当前数据�
 | PostgreSQL | `\connect db` |
 | SQL Server | `USE [db]` |
 | Oracle | `ALTER SESSION SET CURRENT_SCHEMA = "SCHEMA"` |
+| ClickHouse | ``USE `db` `` |
+| 达梦 | `SET SCHEMA "SCHEMA"` |
 | Redis | `SELECT 2` |
 | MongoDB | `use db` |
 
@@ -141,6 +158,8 @@ PostgreSQL的一个连接只属于一个数据库，所以只显示当前数据�
 
 数据库会话没有画面可[录像](../audit/recordings.md)。在[会话列表](../audit/sessions.md)里，在线数据库会话的**旁观**打开它的语句列表，每3秒刷新一次；已结束的会话，**回放**显示同样的列表（前1000条），每条有时间、结果和命中的规则。列表的标题是*SQL 语句*，Redis和MongoDB会话是*命令*。
 
-## 本地客户端
+## 本地数据库客户端
 
-控制台是受审计的入口。用户自己电脑上的数据库客户端，例如`mysql`、`psql`、`sqlcmd`、SQL\*Plus、`redis-cli`、`mongosh`或DBeaver，可以经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连数据库资产，例如`ssh -p 2222 -N -L 13306:db-01:3306 alice@casvisor.example.com`。这种连接Casvisor原样转发、不解析：用户用自己知道的账号登录，语句既不记录也不按规则检查。它需要**端口转发**动作，所以只给该有的人。
+MySQL和PostgreSQL资产也可以经Casvisor的[数据库代理](./local-clients.md#数据库客户端)用DBeaver、Navicat、DataGrip、`mysql`、`psql`或任何JDBC工具打开。客户端用数据库令牌登录Casvisor，Casvisor再用资产的账号登录数据库。客户端发来的每条语句都和控制台一样经过命令规则、命令记录和会话列表，所以代理受同样的审计，只需要**连接**权限。
+
+其他几种数据库（SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦）还没有代理。用户电脑上的客户端，例如`sqlcmd`、SQL\*Plus、`redis-cli`或`mongosh`，可以经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连这些资产，例如`ssh -p 2222 -N -L 16379:redis-01:6379 alice@casvisor.example.com`。这种连接Casvisor原样转发、不解析：用户用自己知道的账号登录，命令既不记录也不按规则检查。它需要**端口转发**动作，所以只给该有的人。

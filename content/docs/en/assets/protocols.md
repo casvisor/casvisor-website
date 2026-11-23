@@ -1,12 +1,12 @@
 ---
 title: "Protocols"
 seoTitle: "Casvisor: SSH, RDP, VNC, Telnet and databases in the browser"
-description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis and MongoDB natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
+description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng natively in Go. What each protocol supports, how it logs in, where the Copy and Paste actions are enforced, and what RDP does not do yet."
 ---
 
 | | SSH | VNC | RDP | Telnet | Databases | Web |
 | --- | --- | --- | --- | --- | --- | --- |
-| Default port | 22 | 5900 | 3389 | 23 | MySQL 3306, PostgreSQL 5432, SQL Server 1433, Oracle 1521, Redis 6379, MongoDB 27017 | 80, 443 |
+| Default port | 22 | 5900 | 3389 | 23 | MySQL 3306, PostgreSQL 5432, SQL Server 1433, Oracle 1521, Redis 6379, MongoDB 27017, ClickHouse 9000, Dameng 5236 | 80, 443 |
 | Handled by | Casvisor (Go) | Casvisor (Go) | Casvisor (Go, gordp) | Casvisor (Go) | Casvisor (Go) | Casvisor (Go reverse proxy) |
 | In the browser | xterm.js terminal | noVNC canvas | Canvas | xterm.js terminal | Database console | The website, on a subdomain of its own |
 | Logs in with | Private key, password, keyboard-interactive | VNC password | Username and password over NLA | Username and password typed at the prompts | Username and password | HTTP basic authentication, or the website's own sign-in page |
@@ -16,9 +16,9 @@ description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL
 | Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead | No; the requests are listed instead |
 | Live view | Yes | Yes | Yes | Yes | The statements, as they run | The requests, as they are sent |
 | [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes, with password rotation | Yes, as basic authentication accounts |
-| Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | Port forwarding | Port forwarding |
+| Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | MySQL and PostgreSQL through the database proxy, audited; the others by port forwarding | Port forwarding |
 
-Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. Native clients reach assets other than SSH by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.
+Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. MySQL and PostgreSQL clients reach their assets through the [database proxy](./local-clients.md#database-clients), which checks and records their statements. Native clients reach the other assets by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.
 
 Kubernetes clusters, with shells, logs and files of containers in the browser and kubectl through Casvisor, have a page of their own: [Kubernetes](./kubernetes.md).
 
@@ -87,6 +87,6 @@ Use Telnet for network gear and old systems that have nothing else; it sends eve
 
 ## Databases
 
-Casvisor connects to MySQL and MariaDB, PostgreSQL, SQL Server, Oracle, Redis and MongoDB with Go drivers, logs in with the asset's account, and shows a console in the browser: the databases and what is in them on the left, an editor, and the results. The editor takes SQL for MySQL, PostgreSQL and Oracle, T-SQL batches between `GO` lines for SQL Server, Redis commands one per line, and MongoDB shell statements, which Casvisor parses itself without running any JavaScript. The password stays on the server. TLS is used when the server offers it, and always for SQL Server, with the server's public key pinned in **Fingerprint** on the first connection; Oracle is reached over plain TCP.
+Casvisor connects to MySQL and MariaDB, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, ClickHouse and Dameng with Go drivers, logs in with the asset's account, and shows a console in the browser: the databases and what is in them on the left, an editor, and the results. The editor takes SQL for MySQL, PostgreSQL and Oracle, T-SQL batches between `GO` lines for SQL Server, Redis commands one per line, and MongoDB shell statements, which Casvisor parses itself without running any JavaScript. The password stays on the server. TLS is used when the server offers it, and always for SQL Server, with the server's public key pinned in **Fingerprint** on the first connection; Oracle and Dameng are reached over plain TCP. MySQL and PostgreSQL can also be opened in a client on the user's machine through the [database proxy](./local-clients.md#database-clients).
 
 Every statement, batch or command is recorded as a command of the session and checked against the [command rules](../audit/commands.md) before it is sent, so a Block rule stops it from reaching the database. Results can be exported as CSV with the **Download** action. See [Databases](./databases.md).

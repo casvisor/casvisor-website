@@ -1,12 +1,12 @@
 ---
 title: "协议"
 seoTitle: "Casvisor：在浏览器里连SSH、RDP、VNC、Telnet和数据库"
-description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
+description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦。各协议支持什么、怎么登录、复制和粘贴动作在哪里限制，以及RDP还不支持什么。"
 ---
 
 | | SSH | VNC | RDP | Telnet | 数据库 | Web |
 | --- | --- | --- | --- | --- | --- | --- |
-| 默认端口 | 22 | 5900 | 3389 | 23 | MySQL 3306、PostgreSQL 5432、SQL Server 1433、Oracle 1521、Redis 6379、MongoDB 27017 | 80、443 |
+| 默认端口 | 22 | 5900 | 3389 | 23 | MySQL 3306、PostgreSQL 5432、SQL Server 1433、Oracle 1521、Redis 6379、MongoDB 27017、ClickHouse 9000、达梦 5236 | 80、443 |
 | 由谁处理 | Casvisor（Go） | Casvisor（Go） | Casvisor（Go，gordp） | Casvisor（Go） | Casvisor（Go） | Casvisor（Go反向代理） |
 | 浏览器里 | xterm.js终端 | noVNC画布 | 画布 | xterm.js终端 | 数据库控制台 | 网站本身，在自己的子域名上 |
 | 登录方式 | 私钥、密码、keyboard-interactive | VNC密码 | 用户名和密码，经NLA认证 | 在提示符处输入用户名和密码 | 用户名和密码 | HTTP基本认证，或网站自己的登录页 |
@@ -16,9 +16,9 @@ description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL、Postgr
 | 录像 | 有 | 有 | 有 | 有 | 无，改为列出语句 | 无，改为列出请求 |
 | 实时旁观 | 有 | 有 | 有 | 有 | 实时列出执行的语句 | 实时列出发出的请求 |
 | [系统账号](./accounts.md) | 有，支持自动改密 | 有 | 有 | 有 | 有，支持自动改密 | 有，作为基本认证账号 |
-| 本地客户端 | 经由SSH网关 | 端口转发 | 端口转发 | 端口转发 | 端口转发 | 端口转发 |
+| 本地客户端 | 经由SSH网关 | 端口转发 | 端口转发 | 端口转发 | MySQL和PostgreSQL经数据库代理，受审计；其他经端口转发 | 端口转发 |
 
-每种协议都可以经由[网域网关](./network-gateways.md)连接；只要没关掉录像，前四种协议的每个会话都会[录像](../audit/recordings.md)。SSH以外的资产，本地客户端经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连接，这种连接原样转发、不录像。
+每种协议都可以经由[网域网关](./network-gateways.md)连接；只要没关掉录像，前四种协议的每个会话都会[录像](../audit/recordings.md)。MySQL和PostgreSQL客户端经[数据库代理](./local-clients.md#数据库客户端)连接，语句会被检查和记录。其他资产的本地客户端经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连接，这种连接原样转发、不录像。
 
 Kubernetes集群（在浏览器里进容器、看日志、传文件，以及经Casvisor使用kubectl）有单独的一页：[Kubernetes](./kubernetes.md)。
 
@@ -87,6 +87,6 @@ Telnet适合只有它可用的网络设备和老系统；Casvisor（或它的网
 
 ## 数据库
 
-Casvisor用Go驱动连接MySQL和MariaDB、PostgreSQL、SQL Server、Oracle、Redis和MongoDB，以资产的账号登录，在浏览器里显示控制台：左边是数据库和其中的内容，右边是编辑器和结果。编辑器里，MySQL、PostgreSQL和Oracle写SQL，SQL Server写用`GO`行分隔的T-SQL批，Redis一行一条命令，MongoDB写shell语句，由Casvisor自己解析，不执行任何JavaScript。密码留在服务端。服务器支持TLS时就用TLS，SQL Server总是用，第一次连接时把服务器公钥固定到**指纹**里；Oracle通过普通TCP连接。
+Casvisor用Go驱动连接MySQL和MariaDB、PostgreSQL、SQL Server、Oracle、Redis、MongoDB、ClickHouse和达梦，以资产的账号登录，在浏览器里显示控制台：左边是数据库和其中的内容，右边是编辑器和结果。编辑器里，MySQL、PostgreSQL和Oracle写SQL，SQL Server写用`GO`行分隔的T-SQL批，Redis一行一条命令，MongoDB写shell语句，由Casvisor自己解析，不执行任何JavaScript。密码留在服务端。服务器支持TLS时就用TLS，SQL Server总是用，第一次连接时把服务器公钥固定到**指纹**里；Oracle和达梦通过普通TCP连接。MySQL和PostgreSQL还可以经[数据库代理](./local-clients.md#数据库客户端)用用户电脑上的客户端打开。
 
 每条语句、批或命令都作为会话的命令记录下来，并在发出之前按[命令规则](../audit/commands.md)检查，所以拦截规则能挡住语句、不让它到数据库。有**下载**动作时，结果可以导出成CSV。见[数据库](./databases.md)。

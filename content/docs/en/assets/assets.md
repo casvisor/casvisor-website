@@ -14,7 +14,7 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Organization | The organization the asset belongs to. Only users of that organization can be given it. |
 | Name | The ID, unique within the organization. Permissions refer to assets by it. |
 | Display name, Description | What users see in the workbench. |
-| Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL`, `PostgreSQL`, `SQLServer`, `Oracle`, `Redis` or `MongoDB`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
+| Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL`, `PostgreSQL`, `SQLServer`, `Oracle`, `Redis`, `MongoDB`, `ClickHouse` or `Dameng`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
 | Platform | The kind of system, such as Linux, Cisco IOS or MySQL: its default ports, terminal charset, elevation and how its passwords are changed. Only the platforms with the asset's protocol are listed. See [Platforms](./platforms.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server, or from the network gateway, not from the user's browser, so it can be a private address the users cannot reach themselves. |
 | Username, Password | The account Casvisor logs in with, the asset's default account. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |

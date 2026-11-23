@@ -1,7 +1,7 @@
 ---
 title: "连接方式规则"
 seoTitle: "Casvisor：按用户、资产和账号限制浏览器、SSH、SFTP、端口转发和mstsc"
-description: "连接方式规则按用户、用户组、资产、资产标签和系统账号，放行或拒绝连接资产的方式：浏览器、经SSH网关的SSH客户端、SFTP/scp/rsync、端口转发、远程桌面连接和kubectl。"
+description: "连接方式规则按用户、用户组、资产、资产标签和系统账号，放行或拒绝连接资产的方式：浏览器、经SSH网关的SSH客户端、SFTP/scp/rsync、端口转发、远程桌面连接、kubectl和经数据库代理的数据库客户端。"
 ---
 
 [权限](./permissions.md)决定用户能连哪些资产、能做什么；连接方式规则决定用户**怎么**连。比如：外包人员只能用浏览器，会话有录像、剪贴板受权限控制；生产环境不许端口转发，因为转发的流量原样透传；数据库服务器不许SFTP。这个页面只对管理员开放：**连接方式规则**（`/connect-rules`）。
@@ -16,6 +16,7 @@ description: "连接方式规则按用户、用户组、资产、资产标签和
 | 端口转发 | 经SSH网关的`ssh -L`，以及[本地客户端](../assets/local-clients.md)菜单里的一次性端口转发命令 |
 | 远程桌面连接 | 经远程桌面网关的mstsc |
 | kubectl | 用Casvisor签发的kubeconfig、经[Kubernetes代理](../assets/kubernetes.md#kubectl)的kubectl、Lens等Kubernetes客户端 |
+| 数据库客户端 | 经[数据库代理](../assets/local-clients.md#数据库客户端)的DBeaver、Navicat、DataGrip、`mysql`、`psql`等；被拒绝的用户取不到数据库令牌，之前签发的令牌连接时也会被拒绝 |
 
 ## 字段
 

@@ -44,6 +44,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [计划作业](../assets/jobs.md#计划作业)：按cron时间表、在任意时区自动运行作业。
 - [分享会话](../audit/sessions.md#分享会话)：用户用链接和验证码把会话分享给同事，旁观或一起操作。
 - [云账号](../assets/cloud-accounts.md)：把阿里云、AWS、腾讯云、Azure、Google Cloud和华为云账号里的服务器同步成资产，可预览、可定时。
+- [数据库客户端](../assets/local-clients.md#数据库客户端)：DBeaver、Navicat、DataGrip、`mysql`和`psql`经Casvisor内置的数据库代理连MySQL和PostgreSQL资产，用数据库令牌登录，每条语句按命令规则检查并记录；控制台加了[ClickHouse和达梦（DM8）](../assets/databases.md#clickhouse)。
 - [命令复核](../audit/commands.md#复核)：命中复核规则的命令要等另一位管理员批准才执行，终端、SSH网关、数据库控制台、作业和网站都生效。
 - [审计报表](../audit/reports.md)：一段时间的登录、会话、命令、文件传输、审批、账号变更以及资产和授权变更，可打印成PDF、导出Excel或按计划发邮件；资产和审计列表也能[导入导出Excel](../assets/assets.md#导入和导出)。
 - [Casvisor浏览器](../assets/websites.md#casvisor浏览器)：网站在服务器上的Chrome里打开，用用户看不到的口令登录，只能访问这个网站，剪贴板、上传和下载跟着权限走，全程录屏。
