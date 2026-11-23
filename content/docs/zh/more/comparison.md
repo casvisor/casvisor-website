@@ -39,11 +39,11 @@ HashiCorp Boundary在2026年10月归档了开源仓库，之后只有HCP Boundar
 
 ## Casvisor不一样的地方
 
-- **一个程序。** SSH、RDP、VNC、Telnet、六种数据库、SSH网关、录像和网域网关的agent都在一个Go程序里，默认用SQLite，服务器上什么都不用装。
+- **一个程序。** SSH、RDP、VNC、Telnet、六种数据库、SSH网关、录像、网域网关的agent和playbook执行器都在一个Go程序里，默认用SQLite，服务器上什么都不用装。执行Ansible playbook不用装Ansible，Casvisor跑在Windows上也行，每个任务都过命令规则并有录像。
 - **身份可以交给Casdoor。** Casvisor有自己的账号；如果你已经在用Casdoor，或者想要它的单点登录、多因素认证、LDAP和SAML，Casvisor直接用它们，权限里也能直接写Casdoor用户组，不用再维护第二套用户目录。
 - **策略交给Casbin。** 权限组合了用户和用户组、资产和标签、动作、来源IP段和有效期，判断用的模型就写在[权限页面](../access-control/permissions.md#casbin模型)上。
 - **命令规则和权限用同一套范围。** 规则可以写用户、用户组、资产和资产标签，网页终端和本地SSH客户端走的是同一个检查，一条规则两边都管。见[命令记录和命令规则](../audit/commands.md)。
-- **没有企业版。** 带自动改密的[系统账号](../assets/accounts.md)、[访问申请](../access-control/access-requests.md)、[数据库控制台](../assets/databases.md)、[作业中心](../assets/jobs.md)、[审计报表](../audit/reports.md)和[syslog转发](../audit/export.md)都在开源项目里，[路线图](./roadmap.md)上的东西也一样。
+- **没有企业版。** 带自动改密的[系统账号](../assets/accounts.md)、[访问申请](../access-control/access-requests.md)、[数据库控制台](../assets/databases.md)、能执行Ansible playbook的[作业中心](../assets/jobs.md)、在[网域](../assets/network-gateways.md#网域)内故障切换的网域网关、[审计报表](../audit/reports.md)和[syslog转发](../audit/export.md)都在开源项目里，[路线图](./roadmap.md)上的东西也一样。
 
 ## Casvisor落后的地方
 

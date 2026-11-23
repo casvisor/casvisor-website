@@ -1,6 +1,6 @@
 ---
 title: "Network gateways"
-description: "Reach assets in networks Casvisor cannot connect to directly, through an SSH jump host in that network or through an agent that connects out to Casvisor from inside it."
+description: "Reach assets in networks Casvisor cannot connect to directly, through an SSH jump host in that network or through an agent that connects out to Casvisor from inside it. Several gateways of a network domain share the connections and fail over to each other, with health checks."
 ---
 
 Casvisor opens every connection to an asset itself, so normally it has to reach the asset's host and port. For servers in another data center, a branch office or a cloud VPC, a network gateway does that part: Casvisor connects through the gateway, and the gateway connects to the asset from inside its network.
@@ -13,7 +13,7 @@ Every connection to the asset goes through the gateway: the web terminal for SSH
 
 A gateway belongs to an organization and can only be used by that organization's assets. Renaming a gateway updates the assets that use it, and a gateway that assets still use cannot be deleted. Turning **Is enabled** off makes connections through it fail with an error saying so.
 
-There are two types.
+There are two types, described below. Several gateways can also serve one network together, see [Network domains](#network-domains).
 
 ## SSH jump host
 
@@ -70,3 +70,21 @@ Only one agent can use a token. If a second one connects with the same token, it
 The agent listens on no port and accepts nothing from the network. It only opens connections that Casvisor asks for over its own connection, and only to addresses in the gateway's **Allowed networks**: one CIDR such as `10.0.0.0/8`, or one IP address, per line. A host name is resolved by the agent and checked by its addresses. Leave the list empty to allow every address. Changes reach a connected agent right away.
 
 The agent can be restricted further on its own machine with `--allow 10.1.0.0/16,10.2.0.5`; it then connects only to addresses that both lists allow, whatever is set in Casvisor.
+
+## Network domains
+
+Gateways that reach the same network can share its assets and stand in for each other. Give them the same **Network domain**, such as `dc-beijing`: an asset that uses any gateway of the domain then goes through the domain. SSH jump hosts and agents can be in the same domain; Casvisor Desktop devices can't be in one.
+
+| Field | Meaning |
+| --- | --- |
+| Network domain | The domain of the gateway. Empty, the default, uses the gateway on its own, as before. |
+| Priority | The gateways of a smaller number are used first; those of a larger number only when none of the smaller ones can be reached. |
+| Weight | How the connections are shared among the gateways of the same priority: a gateway of weight 2 gets about twice as many as one of weight 1. |
+
+For each connection, Casvisor tries the enabled gateways of the domain in that order, with the ones last found unhealthy at the end, and moves on to the next one when a gateway can't be reached: a jump host that doesn't answer or refuses the login, an agent that is offline, or an asset outside an agent's allowed networks. When a gateway is reached but the asset isn't, the error is returned right away, since the next gateway would most likely fail the same way. When no gateway of the domain can be reached, the error names each one with its reason. A disabled gateway is skipped, also when it is the one the asset names.
+
+### Health checks
+
+Casvisor checks every enabled gateway once a minute: it logs in to a jump host, and checks that an agent is online. Connections count too: a gateway that couldn't be reached is unhealthy until it is reached again. The list of gateways shows each one's status (**Healthy** with the time the login took, **Unhealthy**, or **Not checked** yet; online or offline for agents), its domain, priority and weight, and its last error with the time; the gateway's page also shows when it was last checked. The status is kept in memory and checked again after a restart.
+
+`networkGatewayCheckInterval` in `conf/app.conf` sets the interval in seconds, 60 by default; `0` turns the checks off. Every check of a jump host is a login on it, which shows in its auth log.

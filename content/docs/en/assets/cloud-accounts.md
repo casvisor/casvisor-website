@@ -1,7 +1,7 @@
 ---
 title: "Cloud accounts"
-seoTitle: "Casvisor: sync the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure and Google Cloud as assets"
-description: "Add an account of Alibaba Cloud, AWS, Tencent Cloud, Azure or Google Cloud, and Casvisor turns its servers into assets: Linux servers as SSH assets, Windows servers as RDP assets, in a node per region of the asset tree. A preview shows what a sync changes, and syncs can run on a schedule."
+seoTitle: "Casvisor: sync the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure, Google Cloud and Huawei Cloud as assets"
+description: "Add an account of Alibaba Cloud, AWS, Tencent Cloud, Azure, Google Cloud or Huawei Cloud, and Casvisor turns its servers into assets: Linux servers as SSH assets, Windows servers as RDP assets, in a node per region of the asset tree. A preview shows what a sync changes, and syncs can run on a schedule."
 ---
 
 Instead of adding cloud servers one by one, add the cloud account they are in. Casvisor lists the servers of the account through the provider's API and keeps an asset for each: new servers become new assets, and the address, display name and OS of the assets follow their servers. The page is for administrators: **Cloud accounts** (`/cloud-accounts`).
@@ -15,14 +15,17 @@ Casvisor only reads the list of servers, so a read-only key is enough:
 | Tencent Cloud | SecretId and SecretKey of a CAM user | `QcloudCVMReadOnlyAccess` |
 | Azure | Tenant ID, subscription ID, and the client ID and client secret of a service principal | The Reader role on the subscription |
 | Google Cloud | The JSON key of a service account; the project is the key's unless another is given | The Compute Viewer role on the project |
+| Huawei Cloud | The AK and SK (access key ID and secret access key) of an IAM user | `ECS ReadOnlyAccess`; listing the regions also reads the projects through IAM |
 
 The secret is stored encrypted, like the passwords of assets, and the page shows it as `***`.
+
+Casvisor signs the requests itself, without the providers' SDKs. On Huawei Cloud, the regions are the projects of the account (such as `cn-north-4`; subprojects are left out), and the servers are read from the ECS of each region, a page at a time.
 
 ## Fields
 
 | Field | Meaning |
 | --- | --- |
-| Provider | Alibaba Cloud, AWS, Tencent Cloud, Azure or Google Cloud. |
+| Provider | Alibaba Cloud, AWS, Tencent Cloud, Azure, Google Cloud or Huawei Cloud. |
 | Credentials | As in the table above. |
 | Regions | Only the servers in these regions are synced; all regions when empty. **Load regions** lists the regions of the account, which also tells whether the credentials work. |
 | Address | The public IP of the servers, or their private IP when they have none; or the private IP first. Use the private IP when Casvisor, or the network gateway below, is in the same network as the servers. |

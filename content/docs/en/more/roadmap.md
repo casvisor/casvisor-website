@@ -18,6 +18,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [File transfer](../assets/file-transfer.md) for SSH assets, in a file panel beside the web terminal and over SFTP, allowed by the Upload and Download actions and written to the operation log.
 - [Command records and command rules](../audit/commands.md): the commands of SSH sessions read off a virtual screen, and rules that block or flag them.
 - [Network gateways](../assets/network-gateways.md) for assets Casvisor cannot reach directly: through an SSH jump host, or through an agent that connects out to Casvisor from inside a private network.
+- [Network domains](../assets/network-gateways.md#network-domains): several gateways for one network, sharing the connections by priority and weight, failing over to each other, and checked every minute.
 - [Watching sessions live](../audit/sessions.md#watching-a-session-live), and [disconnecting sessions](../audit/sessions.md#disconnected-when-the-permission-goes) as soon as their permission is revoked or expires.
 - [Patch management](../assets/patches.md) for SSH assets: scanning for system updates, installing them and restarting, on Windows and Linux.
 - Out of the box: SQLite by default instead of MySQL, and [built-in accounts](../access-control/users-and-admins.md#built-in-accounts) when no Casdoor is configured, so that one `docker run` gives a Casvisor you can sign in to.
@@ -32,6 +33,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Login rules](../access-control/login-rules.md): allowing, rejecting or holding sign-ins for review by user, group, client IP, weekday and time of day, on the web and through the SSH gateway, and requiring two-step verification.
 - [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
+- [Ansible playbooks](../assets/jobs.md#ansible-playbooks) as jobs, run by Casvisor itself over SSH without installing Ansible, with command rules, review and recording on every task.
 - [CSV and Excel export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
 - [Account templates and account risks](../assets/accounts.md#account-templates): one account for many assets, a daily scan for weak, old and reused passwords and unmanaged accounts, and fixing them by changing the password, managing or locking the account.
 - Webhooks for finished jobs and missed schedule runs.
@@ -40,7 +42,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Connect rules](../access-control/connect-rules.md): the browser, SSH and SFTP clients, port forwarding and Remote Desktop Connection allowed or rejected by user, asset and account.
 - [Job schedules](../assets/jobs.md#job-schedules): jobs run on cron schedules in any time zone.
 - [Session sharing](../audit/sessions.md#sharing-a-session): a user shares a session with colleagues through a link and a code, to watch it or type in it too.
-- [Cloud accounts](../assets/cloud-accounts.md): the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure and Google Cloud accounts synced as assets, with a preview and scheduled syncs.
+- [Cloud accounts](../assets/cloud-accounts.md): the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure, Google Cloud and Huawei Cloud accounts synced as assets, with a preview and scheduled syncs.
 - [Command review](../audit/commands.md#review): commands that match a Review rule wait for another administrator to approve them, in the terminal, the SSH gateway, the database console, jobs and websites.
 - [Audit reports](../audit/reports.md): sign-ins, sessions, commands, file transfers, approvals, account changes and asset and permission changes of a period, printed to PDF, exported to Excel or emailed on a schedule; and [Excel import and export](../assets/assets.md#import-and-export) of assets and the audit lists.
 - [Casvisor's browser](../assets/websites.md#casvisors-browser): websites opened in a Chrome on the server that signs in with a password the user never sees, reaches only that website, keeps the clipboard, uploads and downloads to the permission, and records the screen.

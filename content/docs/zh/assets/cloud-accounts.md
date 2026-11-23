@@ -1,7 +1,7 @@
 ---
 title: "云账号"
-seoTitle: "Casvisor：把阿里云、AWS、腾讯云、Azure、Google Cloud的服务器同步成资产"
-description: "添加阿里云、AWS、腾讯云、Azure或Google Cloud的账号，Casvisor把其中的服务器同步成资产：Linux服务器建成SSH资产，Windows服务器建成RDP资产，在资产树里按地域分节点。同步前可以预览改动，也可以定时同步。"
+seoTitle: "Casvisor：把阿里云、AWS、腾讯云、Azure、Google Cloud、华为云的服务器同步成资产"
+description: "添加阿里云、AWS、腾讯云、Azure、Google Cloud或华为云的账号，Casvisor把其中的服务器同步成资产：Linux服务器建成SSH资产，Windows服务器建成RDP资产，在资产树里按地域分节点。同步前可以预览改动，也可以定时同步。"
 ---
 
 不用一台台添加云服务器，添加它们所在的云账号就行。Casvisor通过云厂商的API列出账号里的服务器，给每台服务器保留一个资产：新服务器建成新资产，资产的地址、显示名和系统跟着服务器走。这个页面只对管理员开放：**云账号**（`/cloud-accounts`）。
@@ -15,14 +15,17 @@ Casvisor只读取服务器列表，所以只读的密钥就够了：
 | 腾讯云 | CAM用户的SecretId和SecretKey | `QcloudCVMReadOnlyAccess` |
 | Azure | 租户ID、订阅ID，以及服务主体的客户端ID和客户端密码 | 订阅上的“读者”角色 |
 | Google Cloud | 服务账号的JSON密钥；项目默认是密钥所在的项目 | 项目上的Compute Viewer角色 |
+| 华为云 | IAM用户的AK和SK（访问密钥ID和秘密访问密钥） | `ECS ReadOnlyAccess`；读取地域还会经IAM读取项目列表 |
 
 密钥和资产的口令一样加密保存，页面上显示为`***`。
+
+Casvisor自己给请求签名，不用各家的SDK。华为云的地域就是账号下的项目（例如`cn-north-4`，子项目不算），服务器从每个地域的ECS分页读取。
 
 ## 字段
 
 | 字段 | 含义 |
 | --- | --- |
-| 云厂商 | 阿里云、AWS、腾讯云、Azure或Google Cloud。 |
+| 云厂商 | 阿里云、AWS、腾讯云、Azure、Google Cloud或华为云。 |
 | 凭据 | 见上表。 |
 | 地域 | 只同步这些地域的服务器，留空表示所有地域。**读取地域**会列出账号可用的地域，也能检查凭据是否可用。 |
 | 连接地址 | 用服务器的公网IP连接、没有时用内网IP，或者反过来先用内网IP。Casvisor或下面的网域网关和服务器在同一个网络里时选内网IP。 |

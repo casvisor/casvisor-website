@@ -18,6 +18,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - SSH资产的[文件传输](../assets/file-transfer.md)：网页终端旁的文件面板和SFTP，由上传、下载动作放行，并记进操作日志。
 - [命令记录和命令规则](../audit/commands.md)：在虚拟屏幕上读出SSH会话里的命令，按规则拦截或告警。
 - [网域网关](../assets/network-gateways.md)：经对方网络里的SSH跳板机，或经在内网主动连回Casvisor的agent，访问Casvisor直接连不到的资产。
+- [网域](../assets/network-gateways.md#网域)：一个网络挂多个网关，按优先级和权重分担连接、互为故障切换，每分钟做一次健康检查。
 - [实时旁观会话](../audit/sessions.md#实时旁观)，以及权限收回或到期时[立即断开会话](../audit/sessions.md#权限收回即断开)。
 - SSH资产的[补丁管理](../assets/patches.md)：扫描系统更新、安装并重启，支持Windows和Linux。
 - 开箱即用：默认用SQLite代替MySQL，没有配置Casdoor时用[自带账号](../access-control/users-and-admins.md#自带账号)，一条`docker run`就能跑起一个可以登录的Casvisor。
@@ -32,6 +33,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [登录规则](../access-control/login-rules.md)：按用户、用户组、来源IP、星期和时间段放行、拒绝或暂停复核网页和SSH网关的登录，以及要求两步验证。
 - [本地客户端](../assets/local-clients.md)：在资产列表里用一次性链接打开Xshell、WinSCP和终端，RDP资产经Casvisor内置的远程桌面网关用远程桌面连接（mstsc）打开。
 - [作业中心](../assets/jobs.md)：在多台SSH资产上批量执行命令、脚本和分发文件。
+- 作业中心执行[Ansible playbook](../assets/jobs.md#ansible-playbook)：由Casvisor自己经SSH执行，不用装Ansible，每个任务都过命令规则、复核和录像。
 - 会话、命令记录和操作日志[导出CSV、Excel和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。
 - [账号模板和风险账号](../assets/accounts.md#账号模板)：一个账号批量给多台资产，每天检查弱口令、长期未改和重复使用的口令以及未纳管的账号，可以一键改密、纳管或锁定。
 - 作业结束和计划作业没有启动时发Webhook。
@@ -40,7 +42,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [连接方式规则](../access-control/connect-rules.md)：按用户、资产和账号放行或拒绝浏览器、SSH和SFTP客户端、端口转发和远程桌面连接。
 - [计划作业](../assets/jobs.md#计划作业)：按cron时间表、在任意时区自动运行作业。
 - [分享会话](../audit/sessions.md#分享会话)：用户用链接和验证码把会话分享给同事，旁观或一起操作。
-- [云账号](../assets/cloud-accounts.md)：把阿里云、AWS、腾讯云、Azure和Google Cloud账号里的服务器同步成资产，可预览、可定时。
+- [云账号](../assets/cloud-accounts.md)：把阿里云、AWS、腾讯云、Azure、Google Cloud和华为云账号里的服务器同步成资产，可预览、可定时。
 - [命令复核](../audit/commands.md#复核)：命中复核规则的命令要等另一位管理员批准才执行，终端、SSH网关、数据库控制台、作业和网站都生效。
 - [审计报表](../audit/reports.md)：一段时间的登录、会话、命令、文件传输、审批、账号变更以及资产和授权变更，可打印成PDF、导出Excel或按计划发邮件；资产和审计列表也能[导入导出Excel](../assets/assets.md#导入和导出)。
 - [Casvisor浏览器](../assets/websites.md#casvisor浏览器)：网站在服务器上的Chrome里打开，用用户看不到的口令登录，只能访问这个网站，剪贴板、上传和下载跟着权限走，全程录屏。
