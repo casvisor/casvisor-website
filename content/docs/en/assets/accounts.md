@@ -93,3 +93,11 @@ To give many assets the same account, such as an `ops` account on every Linux se
 The last three come from reading the accounts on each SSH asset with its own account: `/etc/passwd` and `/etc/group` on Linux, and `/etc/shadow` when that account is root or can use sudo without a password; the enabled local users and the Administrators group on Windows. An asset that can't be read is listed with the scan, and its risks are left as they were.
 
 A risk found again stays open; one no longer found is resolved; one that comes back opens again. **Ignore** a risk that is fine, with a comment for the next one to read: later scans leave it ignored, and **Reopen** brings it back.
+
+Open risks can be fixed from the page, one by one or for the selected ones at once, after a confirmation that lists the accounts:
+
+- **Change password** (weak, old, reused or no password, on an account Casvisor manages): a new random password, set on the asset and checked by signing in with it, as **Change password now** does. For an asset's own account, the asset's saved password changes with it; an account that signs in with a private key is left alone.
+- **Manage** (an account found on the asset): the account becomes a system account of its asset, with a random password set on the asset and rotated every 30 days. Who may connect as it is then up to the permissions.
+- **Lock** (an account found on the asset): the account is locked and expired on its asset with `usermod -L -e 1`, so that it can sign in neither with a password nor with a key, or disabled on Windows. Undo it with `usermod -U -e -1` or `Enable-LocalUser`. `root`, `Administrator` and the asset's own account are never locked.
+
+These need SSH assets whose own account is root, can use sudo without a password, or is a Windows administrator. A fixed risk is resolved with a comment saying what was done and by whom, and the action is in the operation log; the next scan opens it again if it is still there.

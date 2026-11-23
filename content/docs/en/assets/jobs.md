@@ -75,6 +75,8 @@ A schedule has everything a job has, plus:
 
 At each matching minute, Casvisor starts an ordinary job, named after the schedule, which shows on the Jobs page with a link back to its schedule; **Runs** on a schedule lists its jobs. **Run now** starts one at once. A run is skipped, and the schedule says so, while the last job of the schedule is still running. Runs missed while Casvisor was down are not made up.
 
+Webhooks (the **Webhooks** page) can tell a chat group or your own system how jobs end: `job.succeeded`, `job.failed` with the assets that failed and why, and `job_schedule.missed` when a schedule's time came and no job started. Pick them in the webhook's events.
+
 The jobs run as the administrator who last saved the schedule: the command rules for that administrator apply, and the jobs are recorded under that name. A file schedule keeps its file, and each job gets a copy of it, so deleting old jobs does not take the file away from the schedule.
 
 ## Rules, sessions and logs
