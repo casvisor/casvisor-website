@@ -32,6 +32,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [SQL Server, Oracle, Redis and MongoDB](../assets/databases.md) in the same console: SQL Server batches between `GO` lines, Oracle PL/SQL blocks, Redis commands and MongoDB shell statements, recorded and checked against command rules, with the public key of a database server pinned on first use.
 - [Login rules](../access-control/login-rules.md): allowing, rejecting or holding sign-ins for review by user, group, client IP, weekday and time of day, on the web and through the SSH gateway, and requiring two-step verification.
 - [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
+- mstsc signed in to Windows with the stored password, which users never see, and [Casvisor Launcher](../assets/local-clients.md#casvisor-launcher) for Windows, Linux and macOS, which opens `casvisor://` links in Xshell, SecureCRT, PuTTY, WinSCP, FileZilla, mstsc, mysql, psql or DBeaver.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
 - [Ansible playbooks](../assets/jobs.md#ansible-playbooks) as jobs, run by Casvisor itself over SSH without installing Ansible, with command rules, review and recording on every task.
 - [CSV and Excel export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.

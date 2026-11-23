@@ -1,7 +1,7 @@
 ---
 title: "本地客户端"
 seoTitle: "Casvisor：在Xshell、WinSCP、mstsc、DBeaver、psql里打开资产"
-description: "在资产列表里直接用你电脑上的客户端打开资产：SSH客户端（如Xshell）和SFTP客户端（如WinSCP）经SSH网关连接，远程桌面连接（mstsc）经Casvisor内置的远程桌面网关连接，DBeaver、Navicat、mysql、psql经数据库代理连接，用令牌代替登记公钥。"
+description: "在资产列表里直接用你电脑上的客户端打开资产：SSH客户端（如Xshell）和SFTP客户端（如WinSCP）经SSH网关连接，远程桌面连接（mstsc）经Casvisor内置的远程桌面网关连接并由网关用存好的口令代填Windows登录，DBeaver、Navicat、mysql、psql经数据库代理连接。Casvisor Launcher（助手）会挑你装了的客户端打开。"
 ---
 
 除了浏览器，资产也可以直接从资产列表用你电脑上的客户端打开。在**资产**页面上，每个资产都有一个**用本地客户端打开**按钮，点开是适合这个资产的菜单。菜单里的每个链接和命令都带一个令牌，代表你和你连接时用的账号，所以不用先[登记公钥](./ssh-gateway.md#登记公钥)。SSH和RDP用的是一次性令牌：只能用一次，两分钟内有效。数据库客户端会反复重连，用的是几小时内有效的[数据库令牌](#数据库客户端)。
@@ -12,13 +12,14 @@ description: "在资产列表里直接用你电脑上的客户端打开资产：
 | SSH | **用SFTP客户端打开** | 用WinSCP、FileZilla等能处理`sftp://`链接的客户端打开`sftp://<令牌>@<主机>:<端口>` |
 | SSH | **复制一次性SSH命令** | 复制`ssh -p 2222 <令牌>@casvisor.example.com`，在任意终端里用 |
 | RDP | **用远程桌面连接（mstsc）打开** | 下载一个用mstsc打开的`.rdp`文件，见[远程桌面连接](#远程桌面连接) |
-| MySQL、PostgreSQL | **用助手打开** | 打开`casvisor://launch?type=db&...`链接，由你电脑上的Casvisor助手交给数据库客户端，见[数据库客户端](#数据库客户端) |
+| MySQL、PostgreSQL | **用助手（Casvisor Launcher）打开** | 打开`casvisor://launch?type=db&...`链接，由[助手](#助手casvisor-launcher)交给数据库客户端，见[数据库客户端](#数据库客户端) |
 | MySQL、PostgreSQL | **复制 mysql 命令**、**复制 psql 命令** | 复制`mysql -h casvisor.example.com -P 3307 -u <令牌> -p<令牌> app`或`psql "postgresql://<令牌>:<令牌>@casvisor.example.com:5433/app?sslmode=prefer"` |
 | MySQL、PostgreSQL | **复制 JDBC 连接串** | 复制`jdbc:mysql://...?user=<令牌>&password=<令牌>&sslMode=PREFERRED`或`jdbc:postgresql://...`，用于DataGrip、IntelliJ等JDBC工具 |
 | MySQL、PostgreSQL | **复制 DBeaver 连接命令**、**下载 DBeaver 连接** | 复制`dbeaver -con "driver=mysql|host=...|user=<令牌>|password=<令牌>|..."`，在DBeaver里直接打开这个连接；或下载包含这个连接的`data-sources.json` |
 | 其他 | **复制一次性端口转发命令** | 复制`ssh -p 2222 -N -L 13389:win-01:3389 <令牌>@casvisor.example.com`，见[端口转发到其他资产](./ssh-gateway.md#端口转发到其他资产) |
+| SSH、RDP | **用助手（Casvisor Launcher）打开** | 把`casvisor://`链接交给[助手](#助手casvisor-launcher)，由它用你装了的SSH、SFTP或远程桌面客户端打开 |
 
-菜单里也保留了用已登记公钥的命令，这些命令不会过期。SSH相关的菜单项要开启[SSH网关](./ssh-gateway.md)；远程桌面那一项要用HTTPS打开网页界面才会出现；数据库相关的菜单项要为资产的协议开启[数据库代理](#数据库客户端)。
+菜单里也保留了用已登记公钥的命令，这些命令不会过期。SSH相关的菜单项要开启[SSH网关](./ssh-gateway.md)；远程桌面相关的菜单项要用HTTPS打开网页界面才会出现；数据库相关的菜单项要为资产的协议开启[数据库代理](#数据库客户端)。
 
 ## SSH和SFTP客户端
 
@@ -31,11 +32,22 @@ description: "在资产列表里直接用你电脑上的客户端打开资产：
 Casvisor内置了一个远程桌面网关，在网页界面地址的`/remoteDesktopGateway/`下。**用远程桌面连接（mstsc）打开**会下载`<资产名>.rdp`，请在两分钟内打开。文件里把Casvisor设为网关（`gatewayhostname`），带上令牌作为网关访问令牌，并填好账号的用户名。之后mstsc经Casvisor连到资产，资产有[网域网关](./network-gateways.md)时经由它连接。
 
 - 需要资产的**连接**和**端口转发**（Forward）权限。
-- Windows口令由mstsc自己询问：Casvisor不会代填账号的口令，所以要用你知道的账号登录。
-- RDP会话在mstsc和资产之间端到端加密，Casvisor看不到其中的内容。它在[会话](../audit/sessions.md)列表里以`tunnel`模式列出，管理员可以停止，收回端口转发权限时会断开，并以`rdp-gateway`写入[操作日志](../audit/operation-logs.md)，但不录像，也不按命令规则检查。
 - 网关会告诉mstsc哪些东西不带进会话：没有复制和粘贴两项权限就关剪贴板，没有上传和下载两项权限就关本地磁盘，打印机、串口和即插即用设备一律关闭。
 - 文件没有签名，mstsc连接前会提示发布者未知。
-- mstsc只连证书可信的HTTPS网关，所以只有用HTTPS打开网页界面时才显示这一项。放在反向代理后面时，代理要放行网关的请求，见[放在反向代理后面](../operations/reverse-proxy.md#远程桌面网关)。
+- mstsc只连证书可信的HTTPS网关，所以只有用HTTPS打开网页界面时才显示这些菜单项。放在反向代理后面时，代理要放行网关的请求，见[放在反向代理后面](../operations/reverse-proxy.md#远程桌面网关)。
+- 会话在[会话](../audit/sessions.md)列表里以`tunnel`模式列出，管理员可以停止，收回端口转发权限时会断开，并以`rdp-gateway`写入[操作日志](../audit/operation-logs.md)。不录像，也不按命令规则检查。
+
+### 账号存了口令时
+
+你连接时用的账号在Casvisor里存了口令时，由Casvisor用这个口令登录Windows，用户既看不到也不用输入口令。这样普通用户也能连只有管理员知道口令的服务器。
+
+- `.rdp`文件里关掉了mstsc的CredSSP（`enablecredsspsupport:i:0`），mstsc不再询问口令，在网关的HTTPS通道里和Casvisor走TLS。
+- Casvisor连资产时，资产要求网络级别身份验证（NLA，即CredSSP）就用存好的口令做NLA，否则走TLS，并在登录时把账号和口令交给Windows。资产的证书在第一次连接时固定，和浏览器里一样；证书变了会被拒绝，清掉资产的指纹后才能再连。
+- mstsc看到的是Casvisor自己的证书（自签名，存在数据库里），所以第一次会提示无法验证远程计算机的身份。勾选**不再询问我是否连接到此计算机**再点**是**即可；用[助手](#助手casvisor-launcher)打开时，助手会让mstsc信任这个证书，不会再问。
+- Casvisor登录不了时（例如存的口令不对），会在日志里记下原因，然后像下面那样把mstsc直接转给资产。要求NLA的资产这时会拒绝mstsc，mstsc会提示。
+- 这种方式下Casvisor能看到RDP的明文，但目前还不录像。
+
+账号没有存口令时，RDP数据原样转发，在mstsc和资产之间端到端加密，Windows口令由mstsc自己询问，要用你知道的账号登录。
 
 在`conf/app.conf`里设置`disableRdGateway = true`可以关闭这个网关。`isDemoMode = true`时它总是关闭的。
 
@@ -84,11 +96,11 @@ Casvisor按客户端默认用的口令方式校验令牌，客户端不用做任
 
 不转发的：MySQL连接中途换用户（`COM_CHANGE_USER`）、binlog和从库相关的命令、`LOAD DATA LOCAL INFILE`（代理不提供这个能力）、PostgreSQL的复制连接和按OID的函数调用（FunctionCall）。`COPY ... FROM STDIN`发送的数据照常转发，`COPY`语句本身会被检查。
 
-### 菜单和助手
+### 菜单
 
 MySQL、PostgreSQL资产的**用本地客户端打开**菜单里有：
 
-- **用助手打开**：打开一个链接，由你电脑上的Casvisor助手交给本机的数据库客户端：
+- **用助手（Casvisor Launcher）打开**：打开一个链接，由你电脑上的[助手](#助手casvisor-launcher)交给本机的数据库客户端：
 
   ```
   casvisor://launch?type=db&dbtype=mysql|postgresql&host=<代理主机>&port=<代理端口>&user=<令牌>&password=<令牌>&database=<库>&name=<资产名>
@@ -105,6 +117,58 @@ MySQL的握手包在Casvisor知道要连哪个资产之前就发出了，所以M
 
 代理只支持MySQL和PostgreSQL。其他数据库用[控制台](./databases.md)打开，或者用[端口转发](./ssh-gateway.md#端口转发到其他资产)（不记录）。演示模式下代理不开。
 
+## 助手（Casvisor Launcher）
+
+助手是一个Windows、Linux和macOS都能用的小程序，把**用助手（Casvisor Launcher）打开**这几个菜单项的`casvisor://`链接交给你装了的客户端，不用依赖系统把`ssh://`链接交给哪个程序。从[最新发布](https://github.com/casvisor/casvisor/releases/latest)下载`casvisor-launcher_<系统>_<架构>`，菜单最下面的**没装助手？下载**也指向这里。浏览器没法判断装没装助手，点了菜单项没有反应，就先装上助手。
+
+不带参数运行一次即可：它把自己登记为`casvisor://`链接的处理程序，按找到的客户端写好配置文件，并提示两者的位置。程序不要挪地方，挪了就再运行一次；`casvisor-launcher uninstall`取消登记。
+
+- **Windows**：登记在当前用户的`HKEY_CURRENT_USER\Software\Classes\casvisor`下，不需要管理员权限。
+- **Linux**：在`~/.local/share/applications`里放一个`casvisor-launcher.desktop`，用`xdg-mime`设为`x-scheme-handler/casvisor`的处理程序。
+- **macOS**：在`~/Applications`里放一个接收链接的小程序`Casvisor Launcher.app`，再交给助手处理。
+
+它按链接的类型挑客户端，配置文件没有指定时按下面的顺序用第一个找到的：
+
+| 类型 | Windows | Linux | macOS |
+| --- | --- | --- | --- |
+| `ssh` | Xshell、SecureCRT、PuTTY、在Windows终端或控制台窗口里运行的OpenSSH | 在终端里运行的OpenSSH、PuTTY | 在“终端”里运行的OpenSSH |
+| `sftp` | WinSCP、FileZilla | FileZilla | FileZilla |
+| `rdp` | 远程桌面连接（mstsc） | 在终端里运行的FreeRDP | 打开`.rdp`文件的应用，例如Windows App |
+| `db` | 在终端里运行的`mysql`或`psql`、DBeaver | 在终端里运行的`mysql`或`psql`、DBeaver | 在“终端”里运行的`mysql`或`psql`、DBeaver |
+
+`rdp`类型由助手把`.rdp`文件写到临时目录，一分钟后删掉。远程计算机名写成`<资产名>.casvisor`；在Windows上，Casvisor代填口令时，助手只为这个名字让mstsc信任Casvisor的证书，所以mstsc只会问一次发布者未知。
+
+配置文件在Windows上是`%APPDATA%\casvisor-launcher\config.json`，Linux上是`~/.config/casvisor-launcher/config.json`，macOS上是`~/Library/Application Support/casvisor-launcher/config.json`：
+
+```json
+{
+  "ssh": "putty",
+  "sftp": "",
+  "rdp": "",
+  "mysql": "dbeaver",
+  "postgresql": "",
+  "paths": {
+    "putty": "D:\\Tools\\putty.exe",
+    "winscp": "C:\\Program Files (x86)\\WinSCP\\WinSCP.exe"
+  }
+}
+```
+
+`ssh`、`sftp`、`rdp`、`mysql`、`postgresql`按名字选各类型用的客户端：`xshell`、`securecrt`、`putty`、`openssh`、`winscp`、`filezilla`、`mstsc`、`freerdp`、`mysql`、`psql`、`dbeaver`，留空就用第一个找到的。`paths`指定客户端的位置，还可以指定`terminal`（Windows终端或Linux上的终端程序）；没写在这里的客户端到常见的安装目录和`PATH`里找。
+
+链接是这样的，令牌放在用户名或口令的位置：
+
+```
+casvisor://launch?type=ssh&host=casvisor.example.com&port=2222&user=<令牌>&name=web-01
+casvisor://launch?type=sftp&host=casvisor.example.com&port=2222&user=<令牌>&name=web-01
+casvisor://launch?type=rdp&host=casvisor.example.com&port=443&token=<令牌>&name=win-01&username=Administrator&autologon=1&certhash=<sha256>
+casvisor://launch?type=db&dbtype=mysql&host=<代理主机>&port=<代理端口>&user=<令牌>&password=<令牌>&database=<库名>&name=db-01
+```
+
+任何网页都能打开`casvisor://`链接，所以助手只接受由Casvisor会放进去的字符组成的主机名、端口、令牌和库名，不经过shell启动客户端，其他情况一律拒绝并提示原因。
+
 ## 令牌
 
-令牌由`POST /api/add-client-token?assetId=<组织>/<名称>&kind=<ssh|tunnel|rdp|db>&account=<账号>`为当前登录的用户签发。用户必须有以这个账号连接该资产的**连接**权限，`tunnel`和`rdp`还要有**端口转发**权限。令牌存在内存里，重启后失效。一次性令牌用过一次就删除；数据库令牌在`dbProxyTokenHours`（默认8小时）内有效，由`GET /api/get-database-tokens`列出，`POST /api/revoke-database-token?tokenId=<id>`撤销。
+令牌由`POST /api/add-client-token?assetId=<组织>/<名称>&kind=<ssh|tunnel|rdp|db>&account=<账号>`为当前登录的用户签发。用户必须有以这个账号连接该资产的**连接**权限，`tunnel`和`rdp`还要有**端口转发**权限。`rdp`类型的返回值里还有是否由Casvisor代填口令（`autoLogon`），以及mstsc这时看到的证书的SHA-256指纹（`certHash`）。令牌存在内存里，重启后失效。一次性令牌用过一次就删除；数据库令牌在`dbProxyTokenHours`（默认8小时）内有效，由`GET /api/get-database-tokens`列出，`POST /api/revoke-database-token?tokenId=<id>`撤销。
+
+mstsc检查远程计算机的证书时会先断开第一个连接，再用同一个令牌重新连接。所以`rdp`令牌的连接如果在30秒内、远程桌面还没开始时就断了，令牌在过期前还能再用。

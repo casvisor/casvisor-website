@@ -32,6 +32,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - 同一个控制台连[SQL Server、Oracle、Redis和MongoDB](../assets/databases.md)：SQL Server按`GO`行分批、Oracle的PL/SQL块、Redis命令和MongoDB shell语句都记录并按命令规则检查，数据库服务器的公钥在第一次连接时固定。
 - [登录规则](../access-control/login-rules.md)：按用户、用户组、来源IP、星期和时间段放行、拒绝或暂停复核网页和SSH网关的登录，以及要求两步验证。
 - [本地客户端](../assets/local-clients.md)：在资产列表里用一次性链接打开Xshell、WinSCP和终端，RDP资产经Casvisor内置的远程桌面网关用远程桌面连接（mstsc）打开。
+- mstsc由网关用存好的口令登录Windows，用户看不到口令；Windows、Linux和macOS都能用的[助手（Casvisor Launcher）](../assets/local-clients.md#助手casvisor-launcher)，把`casvisor://`链接交给Xshell、SecureCRT、PuTTY、WinSCP、FileZilla、mstsc、mysql、psql或DBeaver打开。
 - [作业中心](../assets/jobs.md)：在多台SSH资产上批量执行命令、脚本和分发文件。
 - 作业中心执行[Ansible playbook](../assets/jobs.md#ansible-playbook)：由Casvisor自己经SSH执行，不用装Ansible，每个任务都过命令规则、复核和录像。
 - 会话、命令记录和操作日志[导出CSV、Excel和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。

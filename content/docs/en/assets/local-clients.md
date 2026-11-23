@@ -1,7 +1,7 @@
 ---
 title: "Local clients"
 seoTitle: "Casvisor: open assets in Xshell, WinSCP, mstsc, DBeaver and psql"
-description: "Open an asset from the asset list in a client on your own machine: SSH clients such as Xshell and SFTP clients such as WinSCP through the SSH gateway, Remote Desktop Connection (mstsc) through Casvisor's Remote Desktop Gateway, and DBeaver, Navicat, mysql and psql through the database proxy, with a token instead of a registered public key."
+description: "Open an asset from the asset list in a client on your own machine: SSH clients such as Xshell and SFTP clients such as WinSCP through the SSH gateway, Remote Desktop Connection (mstsc) through Casvisor's Remote Desktop Gateway, which signs in to Windows with the stored password, and DBeaver, Navicat, mysql and psql through the database proxy. Casvisor Launcher picks the client you have installed."
 ---
 
 Besides the browser, an asset can be opened in a client on your own machine, straight from the asset list. On **Assets**, the **Open in a local client** button of each asset opens a menu of what fits the asset. Every link and command in it carries a token that stands for you and the account you would connect as, so no public key has to be [registered](./ssh-gateway.md#registering-a-public-key) first. For SSH and RDP it is a one-time token: it works once, within two minutes. For database clients it is a [database token](#database-clients), which lasts hours, since database clients connect again and again.
@@ -12,13 +12,14 @@ Besides the browser, an asset can be opened in a client on your own machine, str
 | SSH | **Open in SFTP client** | Opens `sftp://<token>@<host>:<port>` in WinSCP, FileZilla or another client that handles `sftp://` links |
 | SSH | **Copy one-time SSH command** | Copies `ssh -p 2222 <token>@casvisor.example.com`, for any terminal |
 | RDP | **Open in Remote Desktop Connection (mstsc)** | Downloads a `.rdp` file that mstsc opens, see [Remote Desktop Connection](#remote-desktop-connection) |
-| MySQL, PostgreSQL | **Open with the Casvisor helper** | Opens a `casvisor://launch?type=db&...` link, which the Casvisor helper on your machine hands to a database client, see [Database clients](#database-clients) |
+| MySQL, PostgreSQL | **Open with Casvisor Launcher** | Opens a `casvisor://launch?type=db&...` link, which [Casvisor Launcher](#casvisor-launcher) hands to a database client, see [Database clients](#database-clients) |
 | MySQL, PostgreSQL | **Copy mysql command**, **Copy psql command** | Copies `mysql -h casvisor.example.com -P 3307 -u <token> -p<token> app` or `psql "postgresql://<token>:<token>@casvisor.example.com:5433/app?sslmode=prefer"` |
 | MySQL, PostgreSQL | **Copy JDBC URL** | Copies `jdbc:mysql://...?user=<token>&password=<token>&sslMode=PREFERRED` or `jdbc:postgresql://...`, for DataGrip, IntelliJ and other JDBC tools |
 | MySQL, PostgreSQL | **Copy DBeaver connection command**, **Download DBeaver connection** | Copies `dbeaver -con "driver=mysql|host=...|user=<token>|password=<token>|..."`, which opens the connection in DBeaver, or downloads a `data-sources.json` with it |
 | Other | **Copy one-time port forwarding command** | Copies `ssh -p 2222 -N -L 13389:win-01:3389 <token>@casvisor.example.com`, see [Port forwarding to other assets](./ssh-gateway.md#port-forwarding-to-other-assets) |
+| SSH, RDP | **Open with Casvisor Launcher** | Hands a `casvisor://` link to [Casvisor Launcher](#casvisor-launcher), which opens the asset in the SSH, SFTP or Remote Desktop client you have |
 
-The menu also keeps the commands for a registered public key, which do not expire. The SSH items need the [SSH gateway](./ssh-gateway.md); the Remote Desktop item needs the web UI to be opened over HTTPS; the database items need the [database proxy](#database-clients) to be on for the asset's protocol.
+The menu also keeps the commands for a registered public key, which do not expire. The SSH items need the [SSH gateway](./ssh-gateway.md); the Remote Desktop items need the web UI to be opened over HTTPS; the database items need the [database proxy](#database-clients) to be on for the asset's protocol.
 
 ## SSH and SFTP clients
 
@@ -31,11 +32,22 @@ A token used once, or older than two minutes, is refused with `Permission denied
 Casvisor has a Remote Desktop Gateway built in, at `/remoteDesktopGateway/` on the address of the web UI. **Open in Remote Desktop Connection (mstsc)** downloads `<asset>.rdp`; open it within two minutes. The file names Casvisor as the gateway (`gatewayhostname`), carries the token as the gateway access token, and fills in the user name of the account. mstsc then reaches the asset through Casvisor, which connects to it through its [network gateway](./network-gateways.md) if it has one.
 
 - It needs **Connect** and **Forward** on the asset.
-- mstsc asks for the Windows password itself: Casvisor does not fill in the account's password, so you log in with an account you know.
-- The RDP session is encrypted between mstsc and the asset, so Casvisor cannot see inside it. It is listed as a [session](../audit/sessions.md) with the mode `tunnel`, which administrators can stop and which ends when Forward is taken away, and written to the [operation log](../audit/operation-logs.md) as `rdp-gateway`, but it is not recorded or checked against command rules.
 - The gateway tells mstsc what to keep out of the session: the clipboard without both Copy and Paste, local drives without both Upload and Download, and always printers, serial ports and plug-and-play devices.
 - The file is not signed, so mstsc shows a warning about an unknown publisher before it connects.
-- mstsc only uses a gateway over HTTPS with a certificate it trusts, so the item shows only when the web UI is opened over HTTPS. Behind a reverse proxy, the proxy has to pass the gateway's requests on, see [Behind a reverse proxy](../operations/reverse-proxy.md#the-remote-desktop-gateway).
+- mstsc only uses a gateway over HTTPS with a certificate it trusts, so the items show only when the web UI is opened over HTTPS. Behind a reverse proxy, the proxy has to pass the gateway's requests on, see [Behind a reverse proxy](../operations/reverse-proxy.md#the-remote-desktop-gateway).
+- The session is listed as a [session](../audit/sessions.md) with the mode `tunnel`, which administrators can stop and which ends when Forward is taken away, and written to the [operation log](../audit/operation-logs.md) as `rdp-gateway`. It is not recorded or checked against command rules.
+
+### When the account has a password
+
+When the account you connect as has a password stored in Casvisor, Casvisor signs in to Windows with it, and the user never sees or types it. This is what lets users reach a server whose password only the administrators know.
+
+- The `.rdp` file turns CredSSP off in mstsc (`enablecredsspsupport:i:0`), so mstsc does not ask for a password and speaks TLS to Casvisor, inside the gateway's HTTPS tunnel.
+- Casvisor connects to the asset with Network Level Authentication (CredSSP) and the stored password when the asset asks for it, or with TLS otherwise, and passes the account and password to Windows at logon. The asset's certificate is pinned on the first connection, as in the browser; a different one is refused until the fingerprint of the asset is cleared.
+- The certificate mstsc sees is Casvisor's own, a self-signed one kept in the database, so the first time mstsc says it cannot verify the identity of the remote computer. Check **Don't ask me again for connections to this computer** and click **Yes**; [Casvisor Launcher](#casvisor-launcher) tells mstsc to trust it, so there is no question at all.
+- If Casvisor cannot sign in, for example because the stored password is wrong, it logs why and passes mstsc through to the asset as below. An asset that requires Network Level Authentication then refuses mstsc, which says so.
+- Casvisor sees the RDP traffic in the clear in this mode, but does not record it yet.
+
+When the account has no stored password, the RDP bytes pass through as they are, encrypted between mstsc and the asset, and mstsc asks for the Windows password itself, so you log in with an account you know.
 
 Set `disableRdGateway = true` in `conf/app.conf` to turn the gateway off. It is always off with `isDemoMode = true`.
 
@@ -84,11 +96,11 @@ Ctrl+C in `mysql` and `psql` works: `mysql` sends `KILL QUERY` with the connecti
 
 Not passed through: changing the user of a MySQL connection (`COM_CHANGE_USER`), the binlog and replica commands, `LOAD DATA LOCAL INFILE` (the proxy does not offer it), PostgreSQL replication connections and function calls by OID. Data sent with `COPY ... FROM STDIN` goes through; the `COPY` statement itself is checked.
 
-### The menu and the helper
+### The menu
 
 For a MySQL or PostgreSQL asset, the **Open in a local client** menu has:
 
-- **Open with the Casvisor helper**: opens a link that the Casvisor helper on your machine passes to a database client there:
+- **Open with Casvisor Launcher**: opens a link that [Casvisor Launcher](#casvisor-launcher) on your machine passes to a database client there:
 
   ```
   casvisor://launch?type=db&dbtype=mysql|postgresql&host=<proxy host>&port=<proxy port>&user=<token>&password=<token>&database=<database>&name=<asset>
@@ -105,6 +117,58 @@ The MySQL greeting is sent before Casvisor knows the asset, so the server versio
 
 The proxy is for MySQL and PostgreSQL. The other kinds of database are opened in the [console](./databases.md), or through [port forwarding](./ssh-gateway.md#port-forwarding-to-other-assets), which is not recorded. The proxy is off in demo mode.
 
+## Casvisor Launcher
+
+Casvisor Launcher is a small program for Windows, Linux and macOS that opens the `casvisor://` links of the **Open with Casvisor Launcher** menu items in a client you have installed, so a link does not depend on which program the system gives `ssh://` links to. Download `casvisor-launcher_<os>_<arch>` from the [latest release](https://github.com/casvisor/casvisor/releases/latest); the **No Casvisor Launcher yet? Download** item at the bottom of the menu links to it. A browser cannot tell whether the launcher is installed, so if nothing happens after you click an item, install it first.
+
+Run it once without arguments. It registers itself for `casvisor://` links, writes its configuration file with the clients it finds, and shows where both are. Keep the program where it is, or run it again after moving it; `casvisor-launcher uninstall` removes the registration.
+
+- **Windows**: registered for the current user under `HKEY_CURRENT_USER\Software\Classes\casvisor`, no administrator rights needed.
+- **Linux**: a `casvisor-launcher.desktop` file in `~/.local/share/applications`, set as the handler of `x-scheme-handler/casvisor` with `xdg-mime`.
+- **macOS**: a small `Casvisor Launcher.app` in `~/Applications` that receives the links and passes them to the program.
+
+It picks a client by the type of the link, the first one found in this order unless the configuration file names another:
+
+| Type | Windows | Linux | macOS |
+| --- | --- | --- | --- |
+| `ssh` | Xshell, SecureCRT, PuTTY, OpenSSH in Windows Terminal or a console window | OpenSSH in a terminal, PuTTY | OpenSSH in Terminal |
+| `sftp` | WinSCP, FileZilla | FileZilla | FileZilla |
+| `rdp` | Remote Desktop Connection (mstsc) | FreeRDP in a terminal | the app that opens `.rdp` files, such as Windows App |
+| `db` | `mysql` or `psql` in a terminal, DBeaver | `mysql` or `psql` in a terminal, DBeaver | `mysql` or `psql` in Terminal, DBeaver |
+
+For `rdp`, the launcher writes the `.rdp` file to a temporary folder and removes it a minute later. It names the remote computer `<asset>.casvisor`, and on Windows, when Casvisor signs in for you, it tells mstsc to trust Casvisor's certificate for that name only, so mstsc asks nothing but the unknown publisher question.
+
+The configuration file is `%APPDATA%\casvisor-launcher\config.json` on Windows, `~/.config/casvisor-launcher/config.json` on Linux and `~/Library/Application Support/casvisor-launcher/config.json` on macOS:
+
+```json
+{
+  "ssh": "putty",
+  "sftp": "",
+  "rdp": "",
+  "mysql": "dbeaver",
+  "postgresql": "",
+  "paths": {
+    "putty": "D:\\Tools\\putty.exe",
+    "winscp": "C:\\Program Files (x86)\\WinSCP\\WinSCP.exe"
+  }
+}
+```
+
+`ssh`, `sftp`, `rdp`, `mysql` and `postgresql` choose the client of each type by name: `xshell`, `securecrt`, `putty`, `openssh`, `winscp`, `filezilla`, `mstsc`, `freerdp`, `mysql`, `psql` and `dbeaver`; empty takes the first one found. `paths` sets where a client is, and also `terminal` (Windows Terminal or the terminal emulator on Linux); a client not listed there is looked for in its usual install folders and on the `PATH`.
+
+The links look like this, with the token in place of the user name or password:
+
+```
+casvisor://launch?type=ssh&host=casvisor.example.com&port=2222&user=<token>&name=web-01
+casvisor://launch?type=sftp&host=casvisor.example.com&port=2222&user=<token>&name=web-01
+casvisor://launch?type=rdp&host=casvisor.example.com&port=443&token=<token>&name=win-01&username=Administrator&autologon=1&certhash=<sha256>
+casvisor://launch?type=db&dbtype=mysql&host=<proxy host>&port=<proxy port>&user=<token>&password=<token>&database=<database>&name=db-01
+```
+
+Any web page can open a `casvisor://` link, so the launcher only accepts host names, ports, tokens and database names made of the characters Casvisor puts there, starts the clients without a shell, and refuses anything else with a message.
+
 ## Tokens
 
-A token is issued by `POST /api/add-client-token?assetId=<organization>/<name>&kind=<ssh|tunnel|rdp|db>&account=<account>` for the signed-in user, who must have Connect on the asset as that account, and Forward for `tunnel` and `rdp`. Tokens are kept in memory, so they do not survive a restart. A one-time token is deleted when it is used; a database token lasts `dbProxyTokenHours`, 8 hours by default, and is listed by `GET /api/get-database-tokens` and revoked by `POST /api/revoke-database-token?tokenId=<id>`.
+A token is issued by `POST /api/add-client-token?assetId=<organization>/<name>&kind=<ssh|tunnel|rdp|db>&account=<account>` for the signed-in user, who must have Connect on the asset as that account, and Forward for `tunnel` and `rdp`. For `rdp` the answer also says whether Casvisor signs in for the user (`autoLogon`) and the SHA-256 fingerprint of the certificate mstsc then sees (`certHash`). Tokens are kept in memory, so they do not survive a restart. A one-time token is deleted when it is used; a database token lasts `dbProxyTokenHours`, 8 hours by default, and is listed by `GET /api/get-database-tokens` and revoked by `POST /api/revoke-database-token?tokenId=<id>`.
+
+mstsc closes its first connection when it checks the certificate of the remote computer, and connects again with the same token. So an `rdp` token whose connection ends within 30 seconds, before the remote desktop has started, can be used again until it expires.

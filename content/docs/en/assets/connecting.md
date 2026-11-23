@@ -20,7 +20,7 @@ On **Assets**, the **Connect** button opens the asset at `/access/<organization>
 
 If the asset has no stored username or password, the button asks for what is missing first. See [The account](./assets.md#the-account). When the user may connect as several accounts of the asset, the button opens a **Connect as** menu to pick one; see [System accounts](./accounts.md#connecting-as-an-account).
 
-Next to it, the **Open in a local client** button opens the asset in a client on your own machine: Xshell, WinSCP or a terminal through the SSH gateway, Remote Desktop Connection (mstsc) for RDP assets, or a port forward for the others, with one-time links and commands. See [Local clients](./local-clients.md).
+Next to it, the **Open in a local client** button opens the asset in a client on your own machine: Xshell, WinSCP or a terminal through the SSH gateway, Remote Desktop Connection (mstsc) for RDP assets, signed in with the stored password, or a port forward for the others, with one-time links and commands. See [Local clients](./local-clients.md).
 
 ## What happens on connect
 
