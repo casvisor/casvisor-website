@@ -43,6 +43,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Cloud accounts](../assets/cloud-accounts.md): the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure and Google Cloud accounts synced as assets, with a preview and scheduled syncs.
 - [Command review](../audit/commands.md#review): commands that match a Review rule wait for another administrator to approve them, in the terminal, the SSH gateway, the database console, jobs and websites.
 - [Audit reports](../audit/reports.md): sign-ins, sessions, commands, file transfers, approvals, account changes and asset and permission changes of a period, printed to PDF, exported to Excel or emailed on a schedule; and [Excel import and export](../assets/assets.md#import-and-export) of assets and the audit lists.
+- [Casvisor's browser](../assets/websites.md#casvisors-browser): websites opened in a Chrome on the server that signs in with a password the user never sees, reaches only that website, keeps the clipboard, uploads and downloads to the permission, and records the screen.
 
 ## Next
 
@@ -50,7 +51,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 
 ## Later
 
-- **The rest of RDP**: H.264 and RemoteApp.
+- **The rest of RDP**: H.264 and RemoteApp, for opening client programs such as Navicat or SQL Server Management Studio on a Windows server with the account filled in.
 - **A gateway for AI agents.** A controlled SSH and MCP entry for coding agents and AI operators, with their commands going through policy, risky ones waiting for a human to approve, and everything recorded.
 - **Compliance in China**: the bastion host requirements of MLPS level 3 (等保三级) and the SM2, SM3 and SM4 algorithms.
 

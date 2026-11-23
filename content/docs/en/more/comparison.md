@@ -11,9 +11,9 @@ There are several good open-source projects in this space. This page is meant to
 | License | Apache-2.0 | GPL-3.0 | AGPL-3.0 source; community binaries under their own terms | Apache-2.0 |
 | Paid edition | None | Enterprise edition | Enterprise edition | None |
 | Written in | Go | Python, Go | Go | Rust |
-| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
+| Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB, websites (through a reverse proxy, or a remote browser that signs in for the user) | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
 | Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, Xshell and WinSCP opened from the asset list, audited; mstsc through a built-in Remote Desktop Gateway and other protocols through port forwarding, not recorded | Yes | Yes | Yes |
-| Session recording | SSH, Telnet, VNC, RDP, played in the browser; database statements listed per session | Yes | Yes | Yes |
+| Session recording | SSH, Telnet, VNC, RDP and the remote browser, played in the browser; database statements and website requests listed per session | Yes | Yes | Yes |
 | Identity | Built in with TOTP, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC |
 | Access policy | Casbin: users, groups, assets, tags, accounts, actions, IPs, time windows; access requests with approval | RBAC, asset authorizations | RBAC with labels | Roles on targets |
 

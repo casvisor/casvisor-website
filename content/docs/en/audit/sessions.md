@@ -42,7 +42,7 @@ Besides the connections people open, each asset a [job](../assets/jobs.md) runs 
 An online session has a **Monitor** action, which opens the session in a new browser tab, read only: nothing typed or clicked there reaches the session. Several administrators can watch the same session.
 
 - **SSH and Telnet**: the administrator sees the user's terminal as the user does: first the output so far, up to the last 512 KB, which redraws the screen, then everything as it happens, including changes of the terminal size.
-- **VNC and RDP**: the desktop is drawn from the start of the session up to now, then follows live. This reads from the session's recording as it is written, so it needs recording to be on; see [Recordings](./recordings.md#recordings-and-live-monitoring).
+- **VNC, RDP and [Casvisor's browser](../assets/websites.md#casvisors-browser)**: the desktop is drawn from the start of the session up to now, then follows live. This reads from the session's recording as it is written, so it needs recording to be on; see [Recordings](./recordings.md#recordings-and-live-monitoring).
 - **Databases**: there is no screen to watch, so **Monitor** opens the list of the statements run so far, with their results, refreshed every 3 seconds. After the session ends, **Replay** shows the same list. See [Databases](../assets/databases.md#what-is-recorded).
 
 Through the SSH gateway, interactive shells can be watched; a connection that only runs a command, transfers files or forwards ports cannot. The user is not told that someone is watching. Each time an administrator opens the view, a `session-monitor` entry goes into the [operation log](./operation-logs.md#ssh-and-file-events).

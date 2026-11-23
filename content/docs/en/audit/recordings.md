@@ -1,7 +1,7 @@
 ---
 title: "Recordings"
 seoTitle: "Casvisor: SSH and RDP session recording"
-description: "Casvisor records SSH, Telnet, VNC and RDP sessions and replays them in the browser, with speed, seeking, skipping idle time and the commands of the session; terminal recordings download as asciicast."
+description: "Casvisor records SSH, Telnet, VNC and RDP sessions and websites opened in its browser and replays them in the browser, with speed, seeking, skipping idle time and the commands of the session; terminal recordings download as asciicast."
 ---
 
 Casvisor records every session it carries, of all four protocols, and administrators replay them in the browser. Recording needs nothing on the servers or in the browser, and is on unless you turn it off.
@@ -30,10 +30,10 @@ Under **Sessions**, a session with a recording has a **Replay** action, on the *
 - **Play** and **Pause**, the position and length, and a slider to jump anywhere.
 - **Speed**: 1x, 2x, 4x, 8x or 16x.
 - **Skip idle time**, on by default: any pause longer than 2 seconds is shortened to half a second.
-- For SSH and Telnet, the **commands** of the session beside the screen, blocked ones in red and flagged ones in amber. Clicking one jumps to just before it.
+- For SSH, Telnet and Casvisor's browser, the **commands** of the session beside the screen (for the browser, the pages opened, uploads and downloads), blocked ones in red and flagged ones in amber. Clicking one jumps to just before it.
 - When one session has several recordings, numbered buttons switch between them.
 
-Terminal sessions are replayed in a terminal, VNC with noVNC and RDP with the same code that draws the live desktop, so the replay looks as the session did. Replaying is for administrators only. Each replay or download is written to the [operation log](./operation-logs.md#ssh-and-file-events) as `session-replay`.
+Terminal sessions are replayed in a terminal, VNC with noVNC, and RDP and [Casvisor's browser](../assets/websites.md#casvisors-browser) with the same code that draws the live desktop, so the replay looks as the session did. Replaying is for administrators only. Each replay or download is written to the [operation log](./operation-logs.md#ssh-and-file-events) as `session-replay`.
 
 ## Downloading
 
@@ -61,4 +61,4 @@ See [Configuration](../operations/configuration.md#recordings) for the three key
 
 ## Recordings and live monitoring
 
-[Watching a VNC or RDP session live](./sessions.md#watching-a-session-live) reads from its recording as it is written, so with `disableRecording = true` VNC and RDP sessions cannot be watched. SSH and Telnet sessions can be watched either way.
+[Watching a VNC, RDP or browser session live](./sessions.md#watching-a-session-live) reads from its recording as it is written, so with `disableRecording = true` these sessions cannot be watched. SSH and Telnet sessions can be watched either way.

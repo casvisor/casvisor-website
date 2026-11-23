@@ -82,6 +82,7 @@ See [Connect Casdoor](../getting-started/casdoor.md) and [Users and administrato
 | `sshGatewayHost` | empty | The host name shown in the SSH commands users copy. Empty uses the host name of the web UI. |
 | `webAssetDomain` | empty | The domain whose subdomains serve [websites](../assets/websites.md), such as `example-apps.com`, optionally with a scheme and a port: `https://example-apps.com`, `web.localhost:19000`. All its subdomains have to reach Casvisor. Empty means Web assets can't be opened. |
 | `webSessionIdleMinutes` | `30` | Minutes after which a web session nobody uses ends. |
+| `remoteBrowserPath` | empty | The Chrome, Chromium or Edge that runs [Casvisor's browser](../assets/websites.md#casvisors-browser), such as `/usr/bin/chromium`. Empty to use the first one found on the server; when there is none, Web assets can only be opened through the reverse proxy. |
 | `disableRdGateway` | `false` | `true` turns off the Remote Desktop Gateway that lets [Remote Desktop Connection (mstsc)](../assets/local-clients.md#remote-desktop-connection) open RDP assets. It is always off with `isDemoMode = true`. |
 
 ## Recordings

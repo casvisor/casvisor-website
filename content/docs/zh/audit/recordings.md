@@ -1,7 +1,7 @@
 ---
 title: "录像"
 seoTitle: "Casvisor：SSH和RDP会话录像"
-description: "Casvisor为SSH、Telnet、VNC和RDP会话录像，在浏览器里回放，可以调速、拖动、跳过空闲，并列出会话里的命令；终端录像可以下载成asciicast。"
+description: "Casvisor为SSH、Telnet、VNC和RDP会话以及在它的浏览器里打开的网站录像，在浏览器里回放，可以调速、拖动、跳过空闲，并列出会话里的命令；终端录像可以下载成asciicast。"
 ---
 
 Casvisor会为经过它的每个会话录像，四种协议都录，管理员在浏览器里回放。录像不需要在服务器或浏览器上装任何东西，默认就是打开的。
@@ -30,10 +30,10 @@ Casvisor会为经过它的每个会话录像，四种协议都录，管理员在
 - **播放**和**暂停**、当前位置和总时长，以及可以拖到任意位置的进度条。
 - **速度**：1x、2x、4x、8x或16x。
 - **跳过空闲**，默认打开：超过2秒的停顿缩短成半秒。
-- SSH和Telnet会在画面旁边列出会话里的**命令**，被拦截的标红，被告警的标黄。点一条就跳到它之前。
+- SSH、Telnet和Casvisor浏览器会在画面旁边列出会话里的**命令**（浏览器的是打开的页面、上传和下载），被拦截的标红，被告警的标黄。点一条就跳到它之前。
 - 一个会话有多段录像时，用编号按钮切换。
 
-终端会话在终端里回放，VNC用noVNC回放，RDP用和实时桌面同一套绘制代码回放，所以回放看起来和当时一样。只有管理员能回放。每次回放或下载都会以`session-replay`写进[操作日志](./operation-logs.md#ssh和文件事件)。
+终端会话在终端里回放，VNC用noVNC回放，RDP和[Casvisor浏览器](../assets/websites.md#casvisor浏览器)用和实时桌面同一套绘制代码回放，所以回放看起来和当时一样。只有管理员能回放。每次回放或下载都会以`session-replay`写进[操作日志](./operation-logs.md#ssh和文件事件)。
 
 ## 下载
 
@@ -61,4 +61,4 @@ Docker镜像里是`/recordings`，这是一个卷；在这里挂一个命名卷�
 
 ## 录像和实时旁观
 
-[实时旁观VNC和RDP会话](./sessions.md#实时旁观)读的是正在写入的录像，所以设了`disableRecording = true`后，VNC和RDP会话就不能旁观了。SSH和Telnet会话不受影响。
+[实时旁观VNC、RDP和浏览器会话](./sessions.md#实时旁观)读的是正在写入的录像，所以设了`disableRecording = true`后，这些会话就不能旁观了。SSH和Telnet会话不受影响。

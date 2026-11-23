@@ -1,10 +1,12 @@
 ---
 title: "Websites"
-seoTitle: "Casvisor: web assets through a reverse proxy, with permissions and audit"
-description: "Internal websites such as Grafana, Jenkins or a router's admin page can be Web assets. Each opens on a subdomain of its own through Casvisor's reverse proxy, under the same permissions, command rules, revocation and session audit as the other assets."
+seoTitle: "Casvisor: web assets through a reverse proxy or a remote browser, with permissions and audit"
+description: "Internal websites such as Grafana, Jenkins or a router's admin page can be Web assets. Each opens on a subdomain of its own through Casvisor's reverse proxy, or in a remote browser that signs in for the user and records the screen, under the same permissions, command rules, revocation and session audit as the other assets."
 ---
 
 Internal websites can be assets too: a monitoring dashboard, a CI server, the admin page of a router or a storage box. Users open them from Casvisor, and every request goes through Casvisor's reverse proxy, which checks the user's permission, applies the [command rules](../audit/commands.md), records what matters, and ends the session when the permission goes.
+
+A website can also be opened in [Casvisor's browser](#casvisors-browser) instead: a Chrome that Casvisor runs on its server, whose screen the user sees and controls in the page, like a remote desktop. It signs in to the website for the user with a password the user never sees, records the screen, and works with websites that write their own address into their pages. The rest of this page up to that section is about the reverse proxy.
 
 ## Setting up the domain
 
@@ -93,4 +95,62 @@ Each of these requests is a [command record](../audit/commands.md) of the sessio
 - WebSockets, with status 101 and how long they stayed open,
 - requests matched by a command rule, and requests refused for Upload or Download.
 
-The images, scripts and API reads a page loads by itself are passed through without a record. In the [session list](../audit/sessions.md), **Monitor** on an online web session opens the list of its requests, which refreshes every 3 seconds, and **Replay** on a finished one shows the same list. Web sessions have no screen recording and no watermark.
+The images, scripts and API reads a page loads by itself are passed through without a record. In the [session list](../audit/sessions.md), **Monitor** on an online web session opens the list of its requests, which refreshes every 3 seconds, and **Replay** on a finished one shows the same list. Web sessions through the reverse proxy have no screen recording and no watermark.
+
+## Casvisor's browser
+
+With **Open in** set to **Casvisor's browser**, a Web asset opens in a headless Chrome, Chromium or Edge on the server of Casvisor, one for each session, with a profile of its own that is deleted when the session ends. Its screen is streamed into the connection page, and the mouse, the keyboard, typing in other languages and the clipboard go back to it. Above the screen are the address bar, back, forward and reload; pages the website opens in a new tab are shown in place of the first, with a button to close them. The option is only offered when Casvisor finds a browser on its server (see [Installing the browser](#installing-the-browser)), and it does not need `webAssetDomain`.
+
+Use it when:
+
+- users must not know the password of the website: Casvisor fills in the sign-in form for them,
+- the screen should be recorded and watched like a remote desktop, not only the requests listed,
+- the website writes its own full address into its pages, which breaks it on a subdomain: here the browser opens the website at its own address.
+
+### The browser reaches nothing but the website
+
+The browser goes out through a proxy of its session that lets through only the website's scheme, host and port, through the asset's [network gateway](./network-gateways.md) if it has one. Images, scripts and fonts from other hosts, such as a public CDN, are not loaded, and a link to another website opens a page of Casvisor saying that only this website can be opened. The browser's own pages, such as `chrome://` addresses, and files on the server can't be opened either, and cloud metadata addresses are refused.
+
+Casvisor checks the https certificate of the website the same way as for the reverse proxy, pinning a self-signed one on first use (see [Certificates](#certificates)). The browser itself is given a certificate that Casvisor makes for each session, which only this browser trusts.
+
+### Signing in for the user
+
+Fill in the sign-in form of the asset, with CSS selectors such as `#username` or `input[name=email]`:
+
+| Field | Value |
+| --- | --- |
+| Sign-in page | The page with the form, on the website, such as `/login`. Empty for the address of the website. |
+| Username field | The field Casvisor types the username into. |
+| Next button | For a sign-in in two steps, where the password field shows after the username, the button between them. Empty otherwise. |
+| Password field | The field Casvisor types the password into. |
+| Sign-in button | The button that signs in. Empty to submit the form of the password field. |
+
+When a session starts, Casvisor opens the sign-in page and fills in the username and password of the asset, or of the [system account](./accounts.md) the user connects as. The screen stays hidden behind "Signing in to the website..." and the user's input is ignored until the website has moved on from the sign-in page, or for at most 8 seconds after the sign-in button. Any field still holding the password is then emptied before the screen is shown, so that a "show password" button of the website reveals nothing. If the form is not found, the user is told and can sign in by hand. The key button in the address bar signs in again, for a website that signed the user out.
+
+Without a sign-in form, the asset's username and password are sent as HTTP basic authentication, as with the reverse proxy.
+
+### Permissions and command rules
+
+| Action | In Casvisor's browser |
+| --- | --- |
+| Connect | Opens the website. |
+| Copy | Text copied in the browser with Ctrl+C or Ctrl+X goes to the user's clipboard. Text in a password field is never copied. |
+| Paste | Ctrl+V and the clipboard button type the user's clipboard into the browser. |
+| Upload | When the website asks for files, the user chooses them on their own computer and they are handed to the website. Without it, the file chooser does not open. |
+| Download | Files the website downloads are kept on the server for the session, and the user saves them from the download button. Without it, downloads are cancelled. |
+
+These follow the permission while the session is open, and the session is disconnected when Connect goes, as for every session.
+
+Every page and frame the browser opens is matched against the [command rules](../audit/commands.md) as `METHOD /path?query`, the same as for the reverse proxy. **Block** shows a page of Casvisor naming the rule, **Alert** lets it open and records it, and **Review** shows a page that reloads by itself until another administrator approves it.
+
+### What is recorded
+
+- The screen, with the user's pointer, in the session's [recording](../audit/recordings.md), which administrators replay, [watch live](../audit/sessions.md#watching-a-session-live) and share like a remote desktop.
+- Each page and frame opened, as a command record, with the rule and the action that matched it.
+- Each upload and download, as `UPLOAD name (size)` and `DOWNLOAD /path (name)`, also when they are refused.
+
+The replay lists these commands beside the screen, to jump to the moment they happened. In the session list these sessions have the protocol `Browser`.
+
+### Installing the browser
+
+Casvisor uses `remoteBrowserPath` from `conf/app.conf`, or else the first Chrome, Chromium or Edge it finds in the usual places and on the `PATH`. On a Linux server without a desktop, install Chromium from the distribution, such as `apt install chromium`; Casvisor starts it with `--no-sandbox` when it runs as root. Each session runs a browser of its own, which takes a few hundred MB of memory while it is open.

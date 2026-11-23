@@ -43,6 +43,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [云账号](../assets/cloud-accounts.md)：把阿里云、AWS、腾讯云、Azure和Google Cloud账号里的服务器同步成资产，可预览、可定时。
 - [命令复核](../audit/commands.md#复核)：命中复核规则的命令要等另一位管理员批准才执行，终端、SSH网关、数据库控制台、作业和网站都生效。
 - [审计报表](../audit/reports.md)：一段时间的登录、会话、命令、文件传输、审批、账号变更以及资产和授权变更，可打印成PDF、导出Excel或按计划发邮件；资产和审计列表也能[导入导出Excel](../assets/assets.md#导入和导出)。
+- [Casvisor浏览器](../assets/websites.md#casvisor浏览器)：网站在服务器上的Chrome里打开，用用户看不到的口令登录，只能访问这个网站，剪贴板、上传和下载跟着权限走，全程录屏。
 
 ## 接下来
 
@@ -50,7 +51,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 
 ## 再往后
 
-- **补全RDP**：H.264和远程应用（RemoteApp）。
+- **补全RDP**：H.264和远程应用（RemoteApp），用来在Windows服务器上打开Navicat、SQL Server Management Studio这类客户端，并自动填好账号。
 - **AI智能体网关。** 给编程智能体和AI运维一个受控的SSH和MCP入口：命令要过策略，高危命令等人确认，全程记录。
 - **国内合规**：等保三级对堡垒机的要求，以及SM2、SM3、SM4国密算法。
 
