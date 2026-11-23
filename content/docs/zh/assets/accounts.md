@@ -1,10 +1,10 @@
 ---
 title: "系统账号与改密"
 seoTitle: "Casvisor：服务器共享账号与自动改密"
-description: "一个资产除了自己的账号，还可以有多个系统账号，例如root、deploy和readonly。权限规定每个用户能以哪个账号连接，用户全程看不到密码；SSH资产上的密码可以由Casvisor手动或按周期修改。"
+description: "一个资产除了自己的账号，还可以有多个系统账号，例如root、deploy和readonly。权限规定每个用户能以哪个账号连接，用户全程看不到密码；Linux、Windows、网络设备和数据库上的密码可以由Casvisor手动或按周期修改。"
 ---
 
-资产上保存的[账号](./assets.md#账号)是它的**默认账号**。除此之外，一个资产还可以有更多**系统账号**，例如一台Linux服务器上的`root`、`deploy`和`readonly`。用户能以其中哪些账号连接，由[权限](../access-control/permissions.md#账号)决定。账号的密码或私钥由Casvisor在服务端填入，所以用户能以`root`连接，却始终不知道它的密码；对SSH资产，Casvisor还能到资产上修改这些账号的密码，可以手动改，也可以按周期自动改。
+资产上保存的[账号](./assets.md#账号)是它的**默认账号**。除此之外，一个资产还可以有更多**系统账号**，例如一台Linux服务器上的`root`、`deploy`和`readonly`。用户能以其中哪些账号连接，由[权限](../access-control/permissions.md#账号)决定。账号的密码或私钥由Casvisor在服务端填入，所以用户能以`root`连接，却始终不知道它的密码；Casvisor还能按资产的[平台](./platforms.md)到服务器、网络设备和数据库上修改这些账号的密码，可以手动改，也可以按周期自动改。
 
 ## 添加账号
 
@@ -43,19 +43,32 @@ description: "一个资产除了自己的账号，还可以有多个系统账号
 
 ## 修改密码
 
-SSH资产上每个账号有两个按钮：
+[平台](./platforms.md)能改密的资产上，每个账号有两个按钮：
 
 - **立即改密**：在资产上给这个账号设一个新的随机密码，并保存到Casvisor里。已经以这个账号连着的会话不受影响。适用于有密码、没有私钥的账号。
-- **推送到资产**：把Casvisor里保存的密码设到资产上；资产上没有这个账号就先创建。适合在Casvisor里加了服务器上还没有的账号之后用，或者让服务器和Casvisor重新一致。账号要有保存的密码。
+- **推送到资产**：把Casvisor里保存的密码设到资产上；资产上没有这个账号就先创建。适合在Casvisor里加了服务器上还没有的账号之后用，或者让服务器和Casvisor重新一致。账号要有保存的密码，平台要能推送账号。
 
-Casvisor经由资产**自己的账号**去改，所以这个账号要有修改其他账号密码的权限：
+Casvisor经由资产**自己的账号**去改；这个账号本身没有特权时，按平台的[提权方式](./platforms.md#提权)获得：
 
-- **Linux**：root，或者能免密执行`sudo`的账号。用`chpasswd`设密码；新账号用`useradd -m`创建。
-- **Windows**：管理员，经由OpenSSH服务端。用`Set-LocalUser`设密码；新账号用`New-LocalUser`创建，密码设为永不过期，并加入本地Users组。
+- **Linux、Unix和macOS**，经SSH：root，或者能用`sudo`的账号（免密或用它自己的密码），或者用资产的提权密码`su`。Shell脚本用`chpasswd`设密码，FreeBSD上用`pw usermod -h 0`，macOS上用`dscl`；新账号用`useradd -m`、`pw useradd`或`sysadminctl -addUser`创建。密码从标准输入传入；macOS例外，`dscl`和`sysadminctl`要把密码作为参数。
+- **Windows**，经OpenSSH服务端：管理员。用`Set-LocalUser`设密码；新账号用`New-LocalUser`创建，密码设为永不过期，并加入本地Users组。
+- **网络设备**（Cisco IOS、Huawei VRP、H3C Comware、Juniper JunOS），经SSH：平台要求时先`enable`或`super`，再在设备命令行上执行平台的命令并保存配置，见[网络设备](./platforms.md#网络设备)。
+- **数据库**：经由资产自己的账号执行下表的语句。这个账号无权修改其他用户时，有保存密码的账号会用它登录，改自己的密码。
 
-资产自己的账号不会这样修改；RDP、VNC、Telnet和数据库资产没有这两个按钮。
+| 数据库 | 改密 | 创建（推送） | 账号改自己的密码 |
+| --- | --- | --- | --- |
+| MySQL、MariaDB | 对用户的每个host执行`ALTER USER 'name'@'host' IDENTIFIED BY ...` | `CREATE USER 'name'@'%'` | `ALTER USER CURRENT_USER() IDENTIFIED BY ...` |
+| PostgreSQL | `ALTER ROLE "name" WITH PASSWORD ...` | `CREATE ROLE "name" WITH LOGIN PASSWORD ...` | 同一条语句 |
+| SQL Server | `ALTER LOGIN [name] WITH PASSWORD = ...` | 不支持 | 带`OLD_PASSWORD` |
+| Oracle | `ALTER USER name IDENTIFIED BY "..."` | 不支持 | 带`REPLACE` |
+| Redis | `ACL SETUSER name resetpass >...`；`default`用户，或者没有用户名的资产自身账号，用`CONFIG SET requirepass` | 不支持 | 不支持 |
+| MongoDB | 在`admin`或用户所在的资产数据库里执行`updateUser` | 不支持 | 同一条命令 |
 
-新密码长24个字符，包含大小写字母、数字和`!#%+-=_.`中的符号，去掉了`0`、`O`、`1`、`l`这类容易看错的字符。设好之后，Casvisor会以这个账号和新密码经SSH登录一次资产，确认能用。如果改成功了但登录失败，例如SSH服务端不允许这个账号用密码登录，这次修改会标为失败，提示*the password was changed, but signing in with it failed*；新密码照样保存，因为资产上已经是它了。
+推送创建的MySQL、PostgreSQL用户没有任何权限，需要的权限自己授予。Redis改完后，Casvisor用`ACL SAVE`保存，没有ACL文件时用`CONFIG REWRITE`；两个都不行时，修改已经生效，但账号上会提示Redis重启后会丢失。
+
+这两个按钮不修改资产自己的账号，那要从[风险账号](#风险账号)里改。数据库的密码不能含引号和反斜杠，网络设备的密码不能含空格、引号和`?`。
+
+新密码按平台的[密码规则](./platforms.md#密码规则)生成，默认长24个字符，包含大小写字母、数字和`!#%+-=_.`中的符号，去掉了`0`、`O`、`1`、`l`这类容易看错的字符。设好之后，Casvisor会以这个账号和新密码登录一次，确认能用：主机和网络设备经SSH，数据库直接登录数据库（MySQL和SQL Server不指定默认数据库，PostgreSQL连资产的数据库或`postgres`）。无权执行`PING`的Redis用户也算登录成功。如果改成功了但登录失败，例如SSH服务端不允许这个账号用密码登录，这次修改会标为失败，提示*the password was changed, but signing in with it failed*；新密码照样保存，因为资产上已经是它了。
 
 每个账号显示上次改密的时间和结果：*进行中*、*成功*或*失败*（附错误信息）。同一个账号同一时间只会有一次修改。每次修改都会写进[操作日志](../audit/operation-logs.md)，方法是`Account`，动作是`rotate-asset-account`或`push-asset-account`，带上资产、账号的用户名和结果。
 
@@ -63,7 +76,7 @@ Casvisor经由资产**自己的账号**去改，所以这个账号要有修改�
 
 打开**自动改密**后，每当距上次修改满一个周期，Casvisor就像**立即改密**那样改一次密码；从没改过的账号会马上改。Casvisor每10分钟检查一次哪些账号到期，第一次在启动一分钟后。
 
-只有SSH资产上已启用、有密码且没有私钥的账号会自动改密。改失败了，一小时后再试。如果改密码的过程中Casvisor被停掉，这次修改会标为失败，提示*Casvisor restarted while the password was being changed*，下一轮再试。
+只有平台能改密的资产上已启用、有密码且没有私钥的账号会自动改密：主机和网络设备要是SSH资产，数据库资产都可以。改失败了，一小时后再试。如果改密码的过程中Casvisor被停掉，这次修改会标为失败，提示*Casvisor restarted while the password was being changed*，下一轮再试。
 
 ## 账号模板
 
@@ -71,7 +84,7 @@ Casvisor经由资产**自己的账号**去改，所以这个账号要有修改�
 
 | 字段 | 含义 |
 | --- | --- |
-| 推送到资产 | 应用模板时把口令设到每台资产上，没有这个账号就创建，和**推送到资产**一样。只支持SSH资产，而且只能推送口令。每台资产随机口令必须打开它。 |
+| 推送到资产 | 应用模板时把口令设到每台资产上，没有这个账号就创建，和**推送到资产**一样。只推送到平台能推送账号的资产，其余跳过，而且只能推送口令。每台资产随机口令必须打开它，口令按各资产的密码规则生成。 |
 | 自动改密 | 给这些账号打开按周期自动改密。 |
 | 资产、资产标签 | 模板覆盖哪些资产，`*`表示所有资产。 |
 
@@ -90,7 +103,18 @@ Casvisor经由资产**自己的账号**去改，所以这个账号要有修改�
 | 未纳管的特权账号 | 高 | 资产上Casvisor没有纳管的账号，uid为0、在sudo、wheel或admin组里，或者是Windows管理员 |
 | 未纳管的账号 | 低 | 资产上其他能登录、但Casvisor没有纳管的账号 |
 
-后三种是用资产自己的账号登录每台SSH资产读出来的：Linux读`/etc/passwd`和`/etc/group`，这个账号是root或能免密sudo时还读`/etc/shadow`；Windows读已启用的本地用户和Administrators组。读不了的资产会在扫描结果里列出，它原来的风险保持不变。
+后三种是用资产自己的账号，在平台能收集账号的资产上读出来的：
+
+- **Linux和Unix**，经SSH：读`/etc/passwd`和`/etc/group`，这个账号是root或经sudo、su成为root时还读`/etc/shadow`。
+- **Windows**，经SSH：读已启用的本地用户和Administrators组。
+- **MySQL和MariaDB**：读`mysql.user`；有`SUPER`、`GRANT OPTION`或`CREATE USER`的算特权账号，认证串为空且不是socket登录的算空口令，已锁定的不算。
+- **PostgreSQL**：能登录的角色，超级用户或能创建角色的算特权账号。
+- **SQL Server**：已启用的SQL登录名，`sysadmin`成员算特权账号，`PWDCOMPARE`和空口令一致的算空口令。
+- **Oracle**：`dba_users`里状态为OPEN、不是Oracle自带的用户，有`DBA`角色的算特权账号。
+- **Redis**：`ACL LIST`里打开的用户，能执行所有命令、`@admin`、`@dangerous`或`ACL`的算特权账号，`nopass`的算空口令。
+- **MongoDB**：所有数据库的用户，有`root`、`userAdmin`、`userAdminAnyDatabase`、`dbOwner`或`clusterAdmin`的算特权账号。
+
+读不了的资产（例如资产自己的账号无权读`mysql.user`）会在扫描结果里列出，它原来的风险保持不变。没有用户名的Redis资产按`default`用户检查口令。
 
 再次发现的风险保持待处理；不再发现的标为已解决；解决后又出现的重新打开。确认没问题的风险可以**忽略**并写上备注，之后的扫描不会再打开它，点**重新打开**可以恢复。
 
@@ -98,9 +122,9 @@ Casvisor经由资产**自己的账号**去改，所以这个账号要有修改�
 
 - **改密**（Casvisor已纳管账号的弱口令、长期未改、重复使用或空口令）：换成新的随机口令，设到资产上并用新口令登录验证，和**立即改密**一样。资产自己的账号会同时更新资产里保存的口令；用私钥登录的账号不处理。
 - **纳管**（资产上收集到的账号）：变成所在资产的系统账号，设一个随机口令到资产上，每30天自动改密。之后谁能用它连接由权限决定。
-- **锁定**（资产上收集到的账号）：在资产上执行`usermod -L -e 1`锁定并让账号过期，口令和密钥都不能再登录；Windows上是禁用账号。要恢复，执行`usermod -U -e -1`或`Enable-LocalUser`。`root`、`Administrator`和资产自己的账号不会被锁定。
+- **锁定**（资产上收集到的账号）：在资产上执行`usermod -L -e 1`锁定并让账号过期，口令和密钥都不能再登录；Windows上是禁用账号。数据库里，MySQL和Oracle用`ACCOUNT LOCK`，PostgreSQL设为`NOLOGIN`，SQL Server执行`DISABLE`，Redis设为`off`；MongoDB的用户不能锁定。要恢复，执行`usermod -U -e -1`、`Enable-LocalUser`或相反的语句。`root`、`Administrator`、Redis的`default`用户和资产自己的账号不会被锁定。
 
-这些操作要求资产是SSH资产，且资产自己的账号是root、能免密sudo或是Windows管理员。处理完的风险标为已解决，备注写明做了什么、是谁做的，操作也记在操作日志里；下次扫描如果问题还在，会重新打开。
+这些操作和[修改密码](#修改密码)一样经由资产自己的账号执行，需要同样的权限。处理完的风险标为已解决，备注写明做了什么、是谁做的，操作也记在操作日志里；下次扫描如果问题还在，会重新打开。
 
 扫描发现之前没有的风险时，会把`account_risk.found`事件发给选了它的[Webhook](../audit/notifications.md)，也可以发邮件。
 

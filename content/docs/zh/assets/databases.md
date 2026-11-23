@@ -29,7 +29,7 @@ description: "MySQL、PostgreSQL、SQL Server、Oracle、Redis和MongoDB资产�
 
 资产页面上的**测试连接**用表单里的内容登录一次（不保存），显示服务器版本；服务器有TLS时还会填上**指纹**。
 
-数据库资产同样可以有[系统账号](./accounts.md)，例如同一台服务器上的`readonly`和`admin`，由权限决定谁用哪个。它们的密码Casvisor改不了，Casvisor只经SSH改密。
+数据库资产同样可以有[系统账号](./accounts.md)，例如同一台服务器上的`readonly`和`admin`，由权限决定谁用哪个。Casvisor会按资产的[平台](./platforms.md)在数据库里修改它们的密码、创建MySQL和PostgreSQL用户，并为风险账号读取数据库用户，见[修改密码](./accounts.md#修改密码)。
 
 ## 连接和TLS
 

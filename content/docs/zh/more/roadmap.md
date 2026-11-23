@@ -25,7 +25,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - RDP：剪贴板、随窗口调整大小、经重定向磁盘[传文件](../assets/file-transfer.md#rdp)、带ClearCodec和RemoteFX Progressive的图形管道、高分屏上的清晰文字、远程光标，以及Windows 11和基于FreeRDP的服务端。
 - Telnet用Go直接处理，带命令记录和命令规则，一个程序覆盖所有协议。
 - SSH、Telnet、VNC和RDP会话的[录像和回放](../audit/recordings.md)，在浏览器里播放，终端录像可以下载成asciicast；四种协议都能实时旁观。
-- [系统账号](../assets/accounts.md)：一个资产多个账号，权限决定用户能以哪个账号连接；SSH资产上的密码可以手动或按周期修改。
+- [系统账号](../assets/accounts.md)：一个资产多个账号，权限决定用户能以哪个账号连接；密码可以手动或按周期修改。
 - [访问申请](../access-control/access-requests.md)：用户申请一段时间内访问某些资产，管理员批准（可缩小范围）、驳回或收回，批准的申请到期自动失效。
 - 自带账号的[两步验证](../access-control/users-and-admins.md#两步验证)，用身份验证器里的动态码。
 - 浏览器里的[MySQL和PostgreSQL](../assets/databases.md) SQL控制台，每条语句都记录并按命令规则检查。
@@ -38,6 +38,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [账号模板和风险账号](../assets/accounts.md#账号模板)：一个账号批量给多台资产，每天检查弱口令、长期未改和重复使用的口令以及未纳管的账号，可以一键改密、纳管或锁定。
 - 作业结束和计划作业没有启动时发Webhook。
 - [账号备份](../assets/accounts.md#账号备份)：口令和私钥打包成AES-256加密的zip，手动下载或定时发邮件，恢复前先预览。
+- [平台](../assets/platforms.md)：内置Linux、Unix、macOS、Windows、Cisco IOS、Huawei VRP、H3C Comware、Juniper JunOS、各种数据库、Kubernetes和网站，可以复制后修改，每个平台有自己的端口、终端字符集、sudo、su或enable提权和密码规则；网络设备经命令行改密和推送账号，MySQL、MariaDB、PostgreSQL、SQL Server、Oracle、Redis和MongoDB也能改密，风险扫描同样读取它们的账号。
 - [邮件通知](../audit/notifications.md#邮件)：邮件类型的Webhook，经你的SMTP服务器发送；新增账号风险事件。
 - [连接方式规则](../access-control/connect-rules.md)：按用户、资产和账号放行或拒绝浏览器、SSH和SFTP客户端、端口转发和远程桌面连接。
 - [计划作业](../assets/jobs.md#计划作业)：按cron时间表、在任意时区自动运行作业。

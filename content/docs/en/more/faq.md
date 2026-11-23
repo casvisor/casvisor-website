@@ -48,7 +48,7 @@ The gateway does not know the key your client offered. Check that the public key
 
 ## Where are the passwords of assets kept?
 
-In Casvisor's database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own. On SSH assets, Casvisor can change the passwords of [system accounts](../assets/accounts.md) on a schedule.
+In Casvisor's database, encrypted when `credentialKey` is set and as they are when it is not; see [Encryption](../assets/assets.md#encryption). The API only returns them masked, and the browser never receives them. You can also leave the account empty so that each user types their own. Casvisor can change the passwords of [system accounts](../assets/accounts.md) on a schedule, on servers over SSH, on network devices and in databases.
 
 ## Does Casvisor record sessions?
 

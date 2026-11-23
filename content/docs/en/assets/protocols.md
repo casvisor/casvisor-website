@@ -15,7 +15,7 @@ description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL
 | Command records and rules | Yes | No | No | Yes | Yes, per SQL statement, SQL Server batch, Redis command or MongoDB call | Yes, per page opened and per changing request |
 | Recording | Yes | Yes | Yes | Yes | No; the statements are listed instead | No; the requests are listed instead |
 | Live view | Yes | Yes | Yes | Yes | The statements, as they run | The requests, as they are sent |
-| [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes | Yes, as basic authentication accounts |
+| [System accounts](./accounts.md) | Yes, with password rotation | Yes | Yes | Yes | Yes, with password rotation | Yes, as basic authentication accounts |
 | Native clients | Through the SSH gateway | Port forwarding | Port forwarding | Port forwarding | Port forwarding | Port forwarding |
 
 Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. Native clients reach assets other than SSH by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.

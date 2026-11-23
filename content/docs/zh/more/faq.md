@@ -48,7 +48,7 @@ SSH资产可以，经由[SSH网关](../assets/ssh-gateway.md)：在**SSH公钥**
 
 ## 资产的密码存在哪里？
 
-存在Casvisor的数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。SSH资产上[系统账号](../assets/accounts.md)的密码，Casvisor可以按周期修改。
+存在Casvisor的数据库里：设了`credentialKey`就加密保存，没设就按原样保存，见[加密](../assets/assets.md#加密)。接口只返回打码后的值，浏览器拿不到。也可以不填账号，让每个用户自己输入。[系统账号](../assets/accounts.md)的密码，Casvisor可以在经SSH的服务器、网络设备和数据库上按周期修改。
 
 ## Casvisor会录像吗？
 

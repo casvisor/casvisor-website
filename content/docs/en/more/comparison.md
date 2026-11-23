@@ -47,4 +47,4 @@ HashiCorp Boundary archived its open-source repository in October 2026; it conti
 
 ## Where Casvisor is behind
 
-Kubernetes access, which is next on the [roadmap](./roadmap.md). For databases, only the console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on SSH assets only, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.
+Kubernetes access, which is next on the [roadmap](./roadmap.md). For databases, only the console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on servers over SSH, on network devices and in databases, but not over RDP, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.

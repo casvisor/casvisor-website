@@ -3,6 +3,7 @@
   "pages": [
     "assets",
     "accounts",
+    "platforms",
     "connecting",
     "ssh-gateway",
     "local-clients",

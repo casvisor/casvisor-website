@@ -15,9 +15,11 @@ Administrators manage assets under **Assets**. Users who are not administrators 
 | Name | The ID, unique within the organization. Permissions refer to assets by it. |
 | Display name, Description | What users see in the workbench. |
 | Protocol | `SSH`, `RDP`, `VNC`, `Telnet`, `MySQL`, `PostgreSQL`, `SQLServer`, `Oracle`, `Redis` or `MongoDB`. Choosing one fills in its usual port. See [Protocols](./protocols.md) and [Databases](./databases.md). |
+| Platform | The kind of system, such as Linux, Cisco IOS or MySQL: its default ports, terminal charset, elevation and how its passwords are changed. Only the platforms with the asset's protocol are listed. See [Platforms](./platforms.md). |
 | Host, Port | Where Casvisor connects to. The address is resolved and reached from the Casvisor server, or from the network gateway, not from the user's browser, so it can be a private address the users cannot reach themselves. |
 | Username, Password | The account Casvisor logs in with, the asset's default account. See below. The [SSH gateway](./ssh-gateway.md) needs at least the username. |
 | Private key | For SSH: a private key to log in with, instead of or besides the password. See below. |
+| Elevation password | Shown when the platform becomes privileged with `su` or `enable`: the password they ask for, such as the root password or the enable secret. See [Elevation](./platforms.md#elevation). |
 | Fingerprint | The server's SSH host key or RDP certificate, or the public key of a database server with TLS, recorded on the first connection. See [Protocols](./protocols.md). |
 | Database | For databases: the database to open after connecting. For Oracle it is the service name, and for Redis the database number. See [Databases](./databases.md). |
 | Network gateway | *Direct connection*, or the [network gateway](./network-gateways.md) to reach the asset through. |
@@ -44,7 +46,7 @@ Without `credentialKey`, credentials are stored as they are, so protect the data
 
 ### More accounts
 
-Once an asset is saved, its page has a **System accounts** section for more accounts on the same server, such as `root` and `deploy`, with permissions saying who may connect as which, and with their passwords changed by Casvisor on SSH assets. See [System accounts and password rotation](./accounts.md).
+Once an asset is saved, its page has a **System accounts** section for more accounts on the same server, such as `root` and `deploy`, with permissions saying who may connect as which, and with their passwords changed by Casvisor as the asset's platform says. See [System accounts and password rotation](./accounts.md).
 
 ## Import and export
 

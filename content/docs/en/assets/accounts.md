@@ -1,10 +1,10 @@
 ---
 title: "System accounts and password rotation"
 seoTitle: "Casvisor: shared server accounts and password rotation"
-description: "An asset can have several system accounts besides its own, such as root, deploy and readonly. Permissions say which account each user may connect as, users never see the passwords, and Casvisor changes the passwords on SSH assets by hand or on a schedule."
+description: "An asset can have several system accounts besides its own, such as root, deploy and readonly. Permissions say which account each user may connect as, users never see the passwords, and Casvisor changes the passwords on Linux, Windows, network devices and databases by hand or on a schedule."
 ---
 
-The account stored on an [asset](./assets.md#the-account) is its **default account**. Besides it, an asset can have more **system accounts**, such as `root`, `deploy` and `readonly` on one Linux server. A [permission](../access-control/permissions.md#accounts) says which of them a user may connect as. Casvisor fills in the account's password or private key on the server, so users connect as `root` without ever learning its password, and on SSH assets Casvisor can change the passwords on the asset itself, by hand or on a schedule.
+The account stored on an [asset](./assets.md#the-account) is its **default account**. Besides it, an asset can have more **system accounts**, such as `root`, `deploy` and `readonly` on one Linux server. A [permission](../access-control/permissions.md#accounts) says which of them a user may connect as. Casvisor fills in the account's password or private key on the server, so users connect as `root` without ever learning its password, and Casvisor can change the passwords on the asset itself, by hand or on a schedule, on servers, network devices and databases, as the asset's [platform](./platforms.md) says.
 
 ## Adding accounts
 
@@ -43,19 +43,32 @@ The **Account** column of the [session list](../audit/sessions.md) shows which a
 
 ## Changing passwords
 
-On SSH assets each account has two buttons:
+On assets whose [platform](./platforms.md) can change passwords, each account has two buttons:
 
 - **Change password now** sets a new random password for the account on the asset and saves it in Casvisor. Sessions already connected as the account are not affected. It works for accounts with a password and no private key.
-- **Push to asset** sets the password saved in Casvisor on the asset, and creates the account there first if it does not exist. Use it after adding an account in Casvisor that the server does not have yet, or to put the server back in line with Casvisor. It needs a saved password.
+- **Push to asset** sets the password saved in Casvisor on the asset, and creates the account there first if it does not exist. Use it after adding an account in Casvisor that the server does not have yet, or to put the server back in line with Casvisor. It needs a saved password, and a platform that can push accounts.
 
-Casvisor makes the change through the asset's **own account**, so that account has to be allowed to change other accounts' passwords:
+Casvisor makes the change through the asset's **own account**, which becomes privileged by the platform's [elevation](./platforms.md#elevation) when it is not by itself:
 
-- **Linux**: root, or an account that can run `sudo` without a password. The password is set with `chpasswd`; a new account is created with `useradd -m`.
-- **Windows**: an administrator, over the OpenSSH server. The password is set with `Set-LocalUser`; a new account is created with `New-LocalUser`, with a password that never expires, and added to the local Users group.
+- **Linux, Unix and macOS**, over SSH: root, or an account that can use `sudo`, without a password or with its own, or `su` with the asset's elevation password. A shell script sets the password with `chpasswd`, with `pw usermod -h 0` on FreeBSD, or with `dscl` on macOS, and creates a new account with `useradd -m`, `pw useradd` or `sysadminctl -addUser`. The password goes in on stdin, except on macOS, where `dscl` and `sysadminctl` take it as an argument.
+- **Windows**, over the OpenSSH server: an administrator. The password is set with `Set-LocalUser`; a new account is created with `New-LocalUser`, with a password that never expires, and added to the local Users group.
+- **Network devices** (Cisco IOS, Huawei VRP, H3C Comware, Juniper JunOS), over SSH: the platform's commands on the device CLI, after `enable` or `super` when the platform says so, and the configuration saved; see [Network devices](./platforms.md#network-devices).
+- **Databases**: the statements below, through the asset's own account. When that account may not change other users, an account with a saved password changes its own password instead, signing in with it.
 
-The asset's own account is not changed this way, and RDP, VNC, Telnet and database assets have no such buttons.
+| Database | Change | Create (push) | When the account changes its own |
+| --- | --- | --- | --- |
+| MySQL, MariaDB | `ALTER USER 'name'@'host' IDENTIFIED BY ...` for every host the user has | `CREATE USER 'name'@'%'` | `ALTER USER CURRENT_USER() IDENTIFIED BY ...` |
+| PostgreSQL | `ALTER ROLE "name" WITH PASSWORD ...` | `CREATE ROLE "name" WITH LOGIN PASSWORD ...` | The same statement |
+| SQL Server | `ALTER LOGIN [name] WITH PASSWORD = ...` | No | With `OLD_PASSWORD` |
+| Oracle | `ALTER USER name IDENTIFIED BY "..."` | No | With `REPLACE` |
+| Redis | `ACL SETUSER name resetpass >...`; for the `default` user, or the asset's own account with no username, `CONFIG SET requirepass` | No | No |
+| MongoDB | `updateUser` in `admin`, or in the asset's database where the user is | No | The same command |
 
-A new password is 24 characters long, with upper and lower case letters, digits and some of `!#%+-=_.`, leaving out characters that are easy to confuse such as `0`, `O`, `1` and `l`. After setting it, Casvisor logs in to the asset over SSH as the account with the new password to check that it works. If the change went through but that login fails, for example because the SSH server does not accept passwords for that account, the change is marked failed with *the password was changed, but signing in with it failed*; the new password is still saved, since it is the one on the asset.
+A pushed MySQL or PostgreSQL user gets no privileges; grant them as you need. After a Redis change, Casvisor saves it with `ACL SAVE`, or `CONFIG REWRITE` when there is no ACL file; when neither works, the change is in effect but the account shows that Redis loses it when it restarts.
+
+The asset's own account is not changed with these buttons, only from the [account risks](#account-risks). Passwords for databases can't contain quotes or backslashes, and those for network devices can't contain spaces, quotes or `?`.
+
+The new password follows the platform's [password rules](./platforms.md#password-rules): by default 24 characters with upper and lower case letters, digits and some of `!#%+-=_.`, leaving out characters that are easy to confuse such as `0`, `O`, `1` and `l`. After setting it, Casvisor signs in as the account with the new password to check that it works: over SSH for hosts and network devices, and to the database for databases (MySQL and SQL Server without a default database, PostgreSQL to the asset's database or `postgres`). A Redis user that may not run `PING` counts as signed in. If the change went through but that sign-in fails, for example because the SSH server does not accept passwords for that account, the change is marked failed with *the password was changed, but signing in with it failed*; the new password is still saved, since it is the one on the asset.
 
 Each account shows when its password was last changed and how the last change went: *Running*, *Succeeded* or *Failed*, with the error. Only one change runs on an account at a time. Every change is written to the [operation log](../audit/operation-logs.md) with the method `Account`, the action `rotate-asset-account` or `push-asset-account`, the asset, and the account's username with the result.
 
@@ -63,7 +76,7 @@ Each account shows when its password was last changed and how the last change we
 
 With **Auto rotate** on, Casvisor changes the account's password as **Change password now** does, every time the interval has passed since the last change, and right away if it has never been changed. It looks for accounts that are due every 10 minutes, starting a minute after Casvisor starts.
 
-Only enabled accounts on SSH assets with a password and no private key are rotated. When a rotation fails, it is tried again an hour later. If Casvisor is stopped while a password is being changed, the change is marked failed with *Casvisor restarted while the password was being changed*, and the next round tries again.
+Only enabled accounts with a password and no private key are rotated, on assets whose platform can change passwords: SSH assets for hosts and network devices, and database assets. When a rotation fails, it is tried again an hour later. If Casvisor is stopped while a password is being changed, the change is marked failed with *Casvisor restarted while the password was being changed*, and the next round tries again.
 
 ## Account templates
 
@@ -71,7 +84,7 @@ To give many assets the same account, such as an `ops` account on every Linux se
 
 | Field | Meaning |
 | --- | --- |
-| Push to assets | Set the password on each asset when the template is applied, creating the account there if needed, as **Push to asset** does. Only on SSH assets, and only with a password. A random password for each asset needs it. |
+| Push to assets | Set the password on each asset when the template is applied, creating the account there if needed, as **Push to asset** does. Only on assets whose platform can push accounts, and only with a password; the others are left alone. A random password for each asset needs it, and follows each asset's password rules. |
 | Rotate | Turn on automatic rotation for the accounts, every so many days. |
 | Assets, Asset tags | The assets the template covers; `*` is every asset. |
 
@@ -90,7 +103,18 @@ To give many assets the same account, such as an `ops` account on every Linux se
 | Privileged account not managed | High | An account on the asset that Casvisor does not manage, with uid 0, in the sudo, wheel or admin group, or a Windows administrator |
 | Account not managed | Low | Any other account on the asset that can sign in and that Casvisor does not manage |
 
-The last three come from reading the accounts on each SSH asset with its own account: `/etc/passwd` and `/etc/group` on Linux, and `/etc/shadow` when that account is root or can use sudo without a password; the enabled local users and the Administrators group on Windows. An asset that can't be read is listed with the scan, and its risks are left as they were.
+The last three come from reading the accounts on each asset whose platform can gather accounts, with the asset's own account:
+
+- **Linux and Unix**, over SSH: `/etc/passwd` and `/etc/group`, and `/etc/shadow` when that account is root or becomes root by sudo or su.
+- **Windows**, over SSH: the enabled local users and the Administrators group.
+- **MySQL and MariaDB**: `mysql.user`; privileged with `SUPER`, `GRANT OPTION` or `CREATE USER`, no password when the authentication string is empty and the user does not sign in by socket. Locked users are left out.
+- **PostgreSQL**: the roles that can log in, privileged when superuser or allowed to create roles.
+- **SQL Server**: the enabled SQL logins, privileged in `sysadmin`, no password when `PWDCOMPARE` matches an empty one.
+- **Oracle**: the open users of `dba_users` that Oracle does not maintain, privileged with the `DBA` role.
+- **Redis**: `ACL LIST`, the users that are on; privileged with all commands, `@admin`, `@dangerous` or `ACL`, no password with `nopass`.
+- **MongoDB**: the users of every database, privileged with `root`, `userAdmin`, `userAdminAnyDatabase`, `dbOwner` or `clusterAdmin`.
+
+An asset that can't be read, for example because its own account may not read `mysql.user`, is listed with the scan, and its risks are left as they were. A Redis asset with no username has its password checked as the `default` user's.
 
 A risk found again stays open; one no longer found is resolved; one that comes back opens again. **Ignore** a risk that is fine, with a comment for the next one to read: later scans leave it ignored, and **Reopen** brings it back.
 
@@ -98,9 +122,9 @@ Open risks can be fixed from the page, one by one or for the selected ones at on
 
 - **Change password** (weak, old, reused or no password, on an account Casvisor manages): a new random password, set on the asset and checked by signing in with it, as **Change password now** does. For an asset's own account, the asset's saved password changes with it; an account that signs in with a private key is left alone.
 - **Manage** (an account found on the asset): the account becomes a system account of its asset, with a random password set on the asset and rotated every 30 days. Who may connect as it is then up to the permissions.
-- **Lock** (an account found on the asset): the account is locked and expired on its asset with `usermod -L -e 1`, so that it can sign in neither with a password nor with a key, or disabled on Windows. Undo it with `usermod -U -e -1` or `Enable-LocalUser`. `root`, `Administrator` and the asset's own account are never locked.
+- **Lock** (an account found on the asset): the account is locked and expired on its asset with `usermod -L -e 1`, so that it can sign in neither with a password nor with a key, or disabled on Windows. In databases, the user is locked with `ACCOUNT LOCK` on MySQL and Oracle, `NOLOGIN` on PostgreSQL, `DISABLE` on SQL Server, and turned `off` on Redis; MongoDB users can't be locked. Undo it with `usermod -U -e -1`, `Enable-LocalUser` or the opposite statement. `root`, `Administrator`, the Redis `default` user and the asset's own account are never locked.
 
-These need SSH assets whose own account is root, can use sudo without a password, or is a Windows administrator. A fixed risk is resolved with a comment saying what was done and by whom, and the action is in the operation log; the next scan opens it again if it is still there.
+These go through the asset's own account as the [password changes](#changing-passwords) do, so it needs the same privileges. A fixed risk is resolved with a comment saying what was done and by whom, and the action is in the operation log; the next scan opens it again if it is still there.
 
 When a scan finds risks that the scans before did not, the `account_risk.found` event goes to the [webhooks](../audit/notifications.md) that pick it, by email too.
 

@@ -29,7 +29,7 @@ Add an asset as usual (see [Assets](./assets.md)), with:
 
 **Test connection** on the asset's page logs in with what is in the form, without saving it, and shows the server's version; for a server with TLS it also fills in **Fingerprint**.
 
-[System accounts](./accounts.md) work for database assets as well, for example a `readonly` and an `admin` account on one server, with permissions saying who uses which. Their passwords cannot be changed by Casvisor, which only does that over SSH.
+[System accounts](./accounts.md) work for database assets as well, for example a `readonly` and an `admin` account on one server, with permissions saying who uses which. Casvisor changes their passwords in the database, creates MySQL and PostgreSQL users, and reads the users for the account risks, as the asset's [platform](./platforms.md) says; see [Changing passwords](./accounts.md#changing-passwords).
 
 ## Connections and TLS
 
