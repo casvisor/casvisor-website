@@ -29,6 +29,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Two-factor sign-in](../access-control/users-and-admins.md#two-factor-sign-in) for the built-in accounts, with codes from an authenticator app.
 - [MySQL and PostgreSQL](../assets/databases.md) in a SQL console in the browser, with every statement recorded and checked against command rules.
 - [SQL Server, Oracle, Redis and MongoDB](../assets/databases.md) in the same console: SQL Server batches between `GO` lines, Oracle PL/SQL blocks, Redis commands and MongoDB shell statements, recorded and checked against command rules, with the public key of a database server pinned on first use.
+- [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
 - [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
 

@@ -70,6 +70,10 @@ server {
 
 这里`Host $host`很重要：Casvisor按子域名区分是哪个网站。`proxy_buffering off`让流式响应边到边转，`client_max_body_size 0`把上传大小交给网站自己限制。
 
+## 远程桌面网关
+
+[远程桌面连接（mstsc）](../assets/local-clients.md#远程桌面连接)经网页界面同一个地址下的`/remoteDesktopGateway/`连远程桌面网关，用的HTTP方法是`RDG_OUT_DATA`，并升级成WebSocket。上面的`location /`已经能转发它。只放行常见方法的代理、负载均衡或Web应用防火墙，要对这个路径放行`RDG_OUT_DATA`。mstsc只连证书可信的网关，所以证书要是Windows认可的、和地址栏里的主机名一致。
+
 ## SSH网关
 
 [SSH网关](../assets/ssh-gateway.md)是独立端口（Docker镜像里是2222）上的SSH，不是HTTP，所以不经过nginx。直接对外开放这个端口，或者用TCP代理转发，例如nginx的`stream`模块或云上的负载均衡。

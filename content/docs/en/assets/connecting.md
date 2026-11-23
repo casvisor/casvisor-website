@@ -20,7 +20,7 @@ On **Assets**, the **Connect** button opens the asset at `/access/<organization>
 
 If the asset has no stored username or password, the button asks for what is missing first. See [The account](./assets.md#the-account). When the user may connect as several accounts of the asset, the button opens a **Connect as** menu to pick one; see [System accounts](./accounts.md#connecting-as-an-account).
 
-When the SSH gateway is on, SSH assets also have a **Copy SSH command** button, which copies a command such as `ssh -p 2222 web-01@casvisor.example.com` for a terminal on your own machine. Other assets have a **Copy port forwarding command** button instead, for mstsc, a VNC viewer or a Telnet client on your machine; see [Port forwarding to other assets](./ssh-gateway.md#port-forwarding-to-other-assets).
+Next to it, the **Open in a local client** button opens the asset in a client on your own machine: Xshell, WinSCP or a terminal through the SSH gateway, Remote Desktop Connection (mstsc) for RDP assets, or a port forward for the others, with one-time links and commands. See [Local clients](./local-clients.md).
 
 ## What happens on connect
 

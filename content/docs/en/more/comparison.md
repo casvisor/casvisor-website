@@ -12,7 +12,7 @@ There are several good open-source projects in this space. This page is meant to
 | Paid edition | None | Enterprise edition | Enterprise edition | None |
 | Written in | Go | Python, Go | Go | Rust |
 | Browser access | SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL Server, Oracle, Redis, MongoDB | SSH, RDP, VNC, databases, K8s, apps | SSH, RDP (Windows), databases, K8s, apps | SSH, RDP, VNC |
-| Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, audited; other protocols through port forwarding, not recorded | Yes | Yes | Yes |
+| Native clients (`ssh`, `scp`, database clients) | SSH: `ssh`, `scp`, `sftp`, `rsync`, Xshell and WinSCP opened from the asset list, audited; mstsc through a built-in Remote Desktop Gateway and other protocols through port forwarding, not recorded | Yes | Yes | Yes |
 | Session recording | SSH, Telnet, VNC, RDP, played in the browser; database statements listed per session | Yes | Yes | Yes |
 | Identity | Built in with TOTP, or Casdoor: SSO, MFA, LDAP, SAML, OAuth, groups | Built in, LDAP, SSO | Built in, SSO | Built in, TOTP, OIDC |
 | Access policy | Casbin: users, groups, assets, tags, accounts, actions, IPs, time windows; access requests with approval | RBAC, asset authorizations | RBAC with labels | Roles on targets |

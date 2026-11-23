@@ -29,6 +29,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - 自带账号的[两步验证](../access-control/users-and-admins.md#两步验证)，用身份验证器里的动态码。
 - 浏览器里的[MySQL和PostgreSQL](../assets/databases.md) SQL控制台，每条语句都记录并按命令规则检查。
 - 同一个控制台连[SQL Server、Oracle、Redis和MongoDB](../assets/databases.md)：SQL Server按`GO`行分批、Oracle的PL/SQL块、Redis命令和MongoDB shell语句都记录并按命令规则检查，数据库服务器的公钥在第一次连接时固定。
+- [本地客户端](../assets/local-clients.md)：在资产列表里用一次性链接打开Xshell、WinSCP和终端，RDP资产经Casvisor内置的远程桌面网关用远程桌面连接（mstsc）打开。
 - [作业中心](../assets/jobs.md)：在多台SSH资产上批量执行命令、脚本和分发文件。
 - 会话、命令记录和操作日志[导出CSV和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。
 

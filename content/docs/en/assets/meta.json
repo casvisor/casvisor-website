@@ -5,6 +5,7 @@
     "accounts",
     "connecting",
     "ssh-gateway",
+    "local-clients",
     "network-gateways",
     "file-transfer",
     "protocols",

@@ -12,7 +12,7 @@ description: "Casvisor与JumpServer、Teleport、Warpgate等开源堡垒机的�
 | 收费版 | 没有 | 企业版 | 企业版 | 没有 |
 | 开发语言 | Go | Python、Go | Go | Rust |
 | 浏览器访问 | SSH、RDP、VNC、Telnet、MySQL、PostgreSQL、SQL Server、Oracle、Redis、MongoDB | SSH、RDP、VNC、数据库、K8s、应用 | SSH、RDP（Windows）、数据库、K8s、应用 | SSH、RDP、VNC |
-| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，受审计；其他协议经端口转发，不录像 | 支持 | 支持 | 支持 |
+| 本地客户端（`ssh`、`scp`、数据库客户端） | SSH：`ssh`、`scp`、`sftp`、`rsync`，可从资产列表直接打开Xshell、WinSCP，受审计；mstsc经内置远程桌面网关，其他协议经端口转发，不录像 | 支持 | 支持 | 支持 |
 | 会话录像 | SSH、Telnet、VNC、RDP，在浏览器里回放；数据库语句按会话列出 | 支持 | 支持 | 支持 |
 | 身份 | 自带（可开TOTP），或Casdoor：单点登录、多因素、LDAP、SAML、OAuth、用户组 | 自带、LDAP、单点登录 | 自带、单点登录 | 自带、TOTP、OIDC |
 | 访问策略 | Casbin：用户、用户组、资产、标签、账号、动作、IP、有效期；访问申请与审批 | RBAC、资产授权 | 基于标签的RBAC | 目标上的角色 |

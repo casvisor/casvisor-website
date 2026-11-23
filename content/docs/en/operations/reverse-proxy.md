@@ -70,6 +70,10 @@ server {
 
 `Host $host` matters here: Casvisor tells the websites apart by the subdomain. `proxy_buffering off` passes streamed responses on as they come, and `client_max_body_size 0` leaves the size of uploads to the website.
 
+## The Remote Desktop Gateway
+
+[Remote Desktop Connection (mstsc)](../assets/local-clients.md#remote-desktop-connection) reaches the Remote Desktop Gateway at `/remoteDesktopGateway/` on the same address as the web UI, with the HTTP method `RDG_OUT_DATA` and a WebSocket upgrade. The `location /` above already passes it through. A proxy, load balancer or web application firewall that only allows the usual methods has to let `RDG_OUT_DATA` through for that path. mstsc only uses a gateway whose certificate it trusts, so the certificate must be one Windows accepts, for the host name in the address bar.
+
 ## The SSH gateway
 
 The [SSH gateway](../assets/ssh-gateway.md) is SSH on its own port, 2222 in the Docker images, not HTTP, so it does not go through nginx. Publish that port directly, or pass it through a TCP proxy such as nginx's `stream` module or a cloud load balancer.

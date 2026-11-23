@@ -46,7 +46,7 @@ The username tells the gateway which asset to open:
 
 The menu lists one line for every asset and account you may connect as, with its number, the asset's name, the account, the address and the display name. Type a number, an asset name, or `<account>@<asset>` to connect, or `q` to quit. It is meant for tools such as Xshell that save one host and one user name.
 
-On **Assets**, SSH assets have a **Copy SSH command** button that copies the right command, with the port and host filled in, and the account when you may not use the asset's own.
+On **Assets**, the **Open in a local client** menu of an SSH asset copies the right command, with the port and host filled in, and the account when you may not use the asset's own. The same menu also opens the asset in Xshell or WinSCP, or copies a command that works without a registered key, with a one-time token as the user name; see [Local clients](./local-clients.md).
 
 Logging in works for SSH assets only, and only as an account Casvisor holds the username of: the gateway logs in to the asset with the stored account, its private key or password, and cannot ask for one. An asset without a username is refused with a message to ask the administrator. The asset's host key is pinned as in the web terminal; see [Protocols](./protocols.md#ssh).
 
@@ -108,7 +108,7 @@ Leave it running and connect your client to `localhost:13389`. Windows 10 and la
 - Sign in with your own user name and no asset, as for the menu.
 - In `-L`, write the asset's name where a host would go, and the asset's own port. Casvisor connects to the address stored on the asset, through its [network gateway](./network-gateways.md) if it has one. Other ports are refused. An asset of another organization is written `other-org/win-01`.
 - It needs Connect and Forward on that asset.
-- On **Assets**, assets other than SSH have a **Copy port forwarding command** button with the command filled in. It takes the local port 10000 above the asset's, 13389 for 3389, so that it does not clash with a service on your own machine; any free port works.
+- On **Assets**, the **Open in a local client** menu of an asset other than SSH copies the command filled in, with your user name for a registered key, or with a one-time token that needs no key and forwards only to that asset; see [Local clients](./local-clients.md). It takes the local port 10000 above the asset's, 13389 for 3389, so that it does not clash with a service on your own machine; any free port works.
 - One `ssh` command can carry several `-L` options, for several assets at once.
 
 Unlike a connection from the browser, the bytes pass through as they are. Casvisor does not fill in the asset's account, so you log in to the asset with an account you know. The connection is not recorded or checked against command rules, SQL statements included, and the Copy, Paste, Upload and Download actions do not limit it. That is why it takes the Forward action, which administrators give only to the people who should have it.

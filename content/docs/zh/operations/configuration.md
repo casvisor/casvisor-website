@@ -82,6 +82,7 @@ Casvisor启动时会建好它的表，以及新版本需要的列。SQLite以WAL
 | `sshGatewayHost` | 空 | 用户复制的SSH命令里显示的主机名。为空时用网页界面的主机名。 |
 | `webAssetDomain` | 空 | 用来打开[网站](../assets/websites.md)的域名，如`example-apps.com`，可以带协议和端口：`https://example-apps.com`、`web.localhost:19000`。它的所有子域名都要能到达Casvisor。为空时Web资产打不开。 |
 | `webSessionIdleMinutes` | `30` | 网站会话没人用多少分钟后结束。 |
+| `disableRdGateway` | `false` | 设为`true`关闭远程桌面网关，[远程桌面连接（mstsc）](../assets/local-clients.md#远程桌面连接)就不能再打开RDP资产。`isDemoMode = true`时总是关闭。 |
 
 ## 录像
 
