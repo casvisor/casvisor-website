@@ -33,6 +33,7 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - [本地客户端](../assets/local-clients.md)：在资产列表里用一次性链接打开Xshell、WinSCP和终端，RDP资产经Casvisor内置的远程桌面网关用远程桌面连接（mstsc）打开。
 - [作业中心](../assets/jobs.md)：在多台SSH资产上批量执行命令、脚本和分发文件。
 - 会话、命令记录和操作日志[导出CSV和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。
+- [命令复核](../audit/commands.md#复核)：命中复核规则的命令要等另一位管理员批准才执行，终端、SSH网关、数据库控制台、作业和网站都生效。
 
 ## 接下来
 

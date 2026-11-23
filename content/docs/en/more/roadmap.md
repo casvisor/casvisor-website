@@ -33,6 +33,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
 - [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
+- [Command review](../audit/commands.md#review): commands that match a Review rule wait for another administrator to approve them, in the terminal, the SSH gateway, the database console, jobs and websites.
 
 ## Next
 
