@@ -1,7 +1,7 @@
 ---
 title: "通知"
 seoTitle: "Casvisor：命令、复核、作业和账号风险的Webhook与邮件通知"
-description: "把Casvisor里发生的事发到钉钉、飞书、企业微信和Slack群机器人，以签名的JSON发给自己的系统，或用你的SMTP服务器发邮件：被拦截的命令、待复核的请求、作业结果、新的账号风险和失败的备份。"
+description: "把Casvisor里发生的事发到钉钉、飞书、企业微信和Slack群机器人，以签名的JSON发给自己的系统，或用你的SMTP服务器发邮件：被拦截的命令、待复核的请求、作业结果、新的账号风险，以及失败的备份和报表。"
 ---
 
 Casvisor通过**Webhook**页面里的Webhook通知需要处理的人。每个Webhook属于一个组织，选好要接收的事件，类型是下面之一：
@@ -27,6 +27,7 @@ Casvisor通过**Webhook**页面里的Webhook通知需要处理的人。每个Web
 | `job_schedule.missed` | [计划作业](../assets/jobs.md#计划作业)到了时间，但没有启动作业 |
 | `account_risk.found` | 一次扫描发现了之前没有的[账号风险](../assets/accounts.md#风险账号)：新增几条、其中高风险几条，以及前10条 |
 | `account_backup.failed` | [账号备份](../assets/accounts.md#账号备份)没能生成或没能发出 |
+| `report.failed` | [定时报表](./reports.md#定时报表)没能生成或没能发出 |
 
 事件在后台发送，慢或失败的Webhook不会拖住别的操作；发送失败记在Casvisor的日志里。
 
@@ -39,7 +40,7 @@ Casvisor通过**Webhook**页面里的Webhook通知需要处理的人。每个Web
 - **发件人**：邮件的发件人，例如`Casvisor <casvisor@example.com>`；留空用SMTP账号。
 - **收件人**：收件邮箱，多个用逗号分隔。
 
-邮件标题是`[Casvisor]`加事件的标题，例如`[Casvisor] Command waiting for review`，正文每个字段一行。[账号备份](../assets/accounts.md#账号备份)也是用邮件类型的Webhook发送的。
+邮件标题是`[Casvisor]`加事件的标题，例如`[Casvisor] Command waiting for review`，正文每个字段一行。[账号备份](../assets/accounts.md#账号备份)和[定时报表](./reports.md#定时报表)也是用邮件类型的Webhook发送的。
 
 ## JSON
 

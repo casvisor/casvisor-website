@@ -46,6 +46,18 @@ Without `credentialKey`, credentials are stored as they are, so protect the data
 
 Once an asset is saved, its page has a **System accounts** section for more accounts on the same server, such as `root` and `deploy`, with permissions saying who may connect as which, and with their passwords changed by Casvisor on SSH assets. See [System accounts and password rotation](./accounts.md).
 
+## Import and export
+
+**Import** on the asset list adds assets from a CSV file or an Excel workbook (`.xlsx`), whose first line is the header; from a workbook the first sheet is read. The columns are those of the export:
+
+`name, displayName, description, protocol, host, port, username, password, privateKey, database, os, tag, nodes, networkGateway`
+
+Only `name` is required, and columns may be left out or come in any order; headers such as `Display name` or `display_name` are understood too. The protocol defaults to SSH and the port to the protocol's usual one. `nodes` holds paths in the asset tree, such as `Beijing/Production`, separated by `;`, and the nodes that do not exist yet are created. In `privateKey`, `\n` stands for a new line. A file holds at most 5,000 assets.
+
+**Preview** first tells, row by row, what would be created, updated or skipped and why a row fails, without changing anything; a row with an error is skipped and the others go on. With **Update the assets that already exist** on, an existing asset takes the values in the file, keeps those of the columns the file leaves out, and keeps its password and private key when those cells are empty. The import is written to the operation log as `import-assets`, with the file itself masked.
+
+**Export** downloads the assets that match the list's search and the selected node, as CSV or Excel, in the same columns and without passwords and private keys, so the file can be edited and imported back. In the Excel file every cell is text, so nothing in it runs as a formula.
+
 ## Network placement
 
 Casvisor opens the connections, so it needs to reach the assets' hosts and ports. A common layout is Casvisor on a host inside the private network, published to users over HTTPS, with the assets' firewalls only letting in Casvisor's address. Users then have no direct way to the servers at all, and every connection passes the permission check and lands in the [session list](../audit/sessions.md).

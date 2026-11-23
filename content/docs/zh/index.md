@@ -32,7 +32,8 @@ Casvisor是一个开源堡垒机（跳板机）。用户用Casvisor自带的账�
 - [录像](./audit/recordings.md)：在浏览器里回放会话，以及录像存在哪里
 - [命令记录和命令规则](./audit/commands.md)：SSH和Telnet里执行过的命令、数据库里执行过的语句，以及拦截危险命令
 - [操作日志](./audit/operation-logs.md)：通过接口做的每一次改动，以及传过的每个文件
-- [导出与syslog转发](./audit/export.md)：导出CSV文件，转发到syslog服务器或SIEM
+- [审计报表](./audit/reports.md)：一段时间的登录、会话、命令、传输、审批和变更统计，可打印、导出Excel或发邮件
+- [导出与syslog转发](./audit/export.md)：导出CSV和Excel文件，转发到syslog服务器或SIEM
 
 ## 运维
 

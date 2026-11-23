@@ -33,7 +33,7 @@ Each session has these actions:
 | Stop | Online | Disconnect it, see below |
 | Delete | History | Remove it from the list, with its recordings |
 
-The list can be exported as a CSV file with **Export CSV**; see [Export and syslog](./export.md).
+The list can be exported as a CSV file or an Excel workbook with **Export**; see [Export and syslog](./export.md).
 
 Besides the connections people open, each asset a [job](../assets/jobs.md) runs on is a session, with the mode `job` and the user agent `Casvisor job`. It ends when the job is done on that asset, and stopping it stops the job there.
 

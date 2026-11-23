@@ -1,24 +1,28 @@
 ---
 title: "Export and syslog"
-seoTitle: "Casvisor: export audit logs to CSV and forward them to syslog or a SIEM"
-description: "Download sessions, commands and the operation log as CSV files, filtered as the list is, and forward sessions, commands and operation log entries to a syslog server as RFC 5424 with a JSON body or as CEF, for a SIEM."
+seoTitle: "Casvisor: export audit logs to CSV or Excel and forward them to syslog or a SIEM"
+description: "Download sessions, commands and the operation log as CSV files or Excel workbooks, filtered as the list is, and forward sessions, commands and operation log entries to a syslog server as RFC 5424 with a JSON body or as CEF, for a SIEM."
 ---
 
-The audit trail lives in Casvisor's database. Two ways get it out: CSV files downloaded from the lists, and a live feed to a syslog server, from which a SIEM such as Splunk, Elastic, QRadar or ArcSight can take it.
+The audit trail lives in Casvisor's database. Two ways get it out: CSV files and Excel workbooks downloaded from the lists, and a live feed to a syslog server, from which a SIEM such as Splunk, Elastic, QRadar or ArcSight can take it.
 
-## CSV export
+## CSV and Excel export
 
-**Sessions**, **Commands** and **Records** (the [operation log](./operation-logs.md)) each have an **Export CSV** button. It downloads every row that matches what the list shows, across all its pages: the current search and sort, and on **Sessions** the tab, Online or History. A file holds at most 100,000 rows.
+**Sessions**, **Commands** and **Records** (the [operation log](./operation-logs.md)) each have an **Export** button, with a choice of CSV (`.csv`) or Excel (`.xlsx`). It downloads every row that matches what the list shows, across all its pages: the current search and sort, and on **Sessions** the tab, Online or History. A file holds at most 100,000 rows.
 
 | List | Columns |
 | --- | --- |
 | Sessions | ID, Asset, Protocol, Mode, User, Client IP, Client IP location, User agent, Status, Start time, End time, Duration (s), Commands, Code, Message |
-| Commands | Time, Command, Action, Rule, User, Asset, Client IP, Session |
+| Commands | Time, Command, Action, Rule, Reviewer, Error, User, Operator, Asset, Client IP, Session |
 | Records | ID, Name, Time, Organization, User, Client IP, User agent, Method, Request URI, Action, Language, Object, Response |
 
 The file is UTF-8 with a byte order mark, so Excel shows Chinese and other text correctly, and is named after the list and the time, such as `commands-20261120-153000.csv`. A cell that starts with `=`, `+`, `-` or `@` gets a `'` in front, so a spreadsheet does not run it as a formula.
 
-Exporting is for administrators, and covers their own organization. Each export is itself written to the operation log, as `export-sessions`, `export-commands` or `export-records`, with the number of rows and the filter used.
+The Excel file has the same columns on one sheet named after the list, with the header row frozen, and is named the same way, such as `commands-20261120-153000.xlsx`. Every cell is written as text, so a command such as `=1+1` shows as it was typed, with no `'` and without running. The **Assets** list exports the same way; see [Assets](../assets/assets.md#import-and-export).
+
+For counts over a period rather than rows, such as failed sign-ins last week or the rules hit most, see [Audit reports](./reports.md).
+
+Exporting is for administrators, and covers their own organization. Each export is itself written to the operation log, as `export-sessions`, `export-commands` or `export-records`, with the number of rows, the file name and the filter used.
 
 The results of a [database session](../assets/databases.md#copying-and-exporting) are exported from the database console instead.
 

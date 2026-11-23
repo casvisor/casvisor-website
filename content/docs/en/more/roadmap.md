@@ -32,7 +32,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Login rules](../access-control/login-rules.md): allowing, rejecting or holding sign-ins for review by user, group, client IP, weekday and time of day, on the web and through the SSH gateway, and requiring two-step verification.
 - [Local clients](../assets/local-clients.md): Xshell, WinSCP and terminals opened from the asset list with one-time links, and RDP assets in Remote Desktop Connection (mstsc) through a Remote Desktop Gateway built into Casvisor.
 - [Jobs](../assets/jobs.md): commands, scripts and file transfers on many SSH assets at once.
-- [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
+- [CSV and Excel export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
 - [Account templates and account risks](../assets/accounts.md#account-templates): one account for many assets, a daily scan for weak, old and reused passwords and unmanaged accounts, and fixing them by changing the password, managing or locking the account.
 - Webhooks for finished jobs and missed schedule runs.
 - [Account backups](../assets/accounts.md#account-backups): the passwords and private keys in an AES-256 zip file, downloaded or emailed on a schedule, and restored with a preview.
@@ -42,6 +42,7 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Session sharing](../audit/sessions.md#sharing-a-session): a user shares a session with colleagues through a link and a code, to watch it or type in it too.
 - [Cloud accounts](../assets/cloud-accounts.md): the servers of Alibaba Cloud, AWS, Tencent Cloud, Azure and Google Cloud accounts synced as assets, with a preview and scheduled syncs.
 - [Command review](../audit/commands.md#review): commands that match a Review rule wait for another administrator to approve them, in the terminal, the SSH gateway, the database console, jobs and websites.
+- [Audit reports](../audit/reports.md): sign-ins, sessions, commands, file transfers, approvals, account changes and asset and permission changes of a period, printed to PDF, exported to Excel or emailed on a schedule; and [Excel import and export](../assets/assets.md#import-and-export) of assets and the audit lists.
 
 ## Next
 

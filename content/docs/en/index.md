@@ -32,7 +32,8 @@ Casvisor is an open-source bastion host (jump server). People sign in, with Casv
 - [Recordings](./audit/recordings.md): replaying sessions in the browser, and where recordings are kept
 - [Commands and command rules](./audit/commands.md): the commands run over SSH and Telnet and the statements run on databases, and blocking the dangerous ones
 - [Operation logs](./audit/operation-logs.md): every change made through the API, and every file moved
-- [Export and syslog](./audit/export.md): CSV files, and forwarding to a syslog server or SIEM
+- [Audit reports](./audit/reports.md): sign-ins, sessions, commands, transfers, approvals and changes of a period, printed, exported to Excel or emailed
+- [Export and syslog](./audit/export.md): CSV and Excel files, and forwarding to a syslog server or SIEM
 
 ## Running it
 

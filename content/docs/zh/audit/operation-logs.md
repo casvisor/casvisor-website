@@ -45,7 +45,7 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 | `session-replay` | 管理员回放或下载[录像](./recordings.md) | 录像文件 |
 | `sql-export` | 用户把[数据库会话](../assets/databases.md#复制和导出)的结果导出成CSV | 语句 |
 | `rotate-asset-account`、`push-asset-account` | Casvisor在资产上修改[系统账号](../assets/accounts.md#修改密码)的密码，手动或按周期；用户是`casvisor`，方法是`Account` | 账号的用户名和结果 |
-| `export-sessions`、`export-commands`、`export-records` | 管理员把列表下载成CSV；方法是`Export` | 行数、文件名和筛选条件 |
+| `export-sessions`、`export-commands`、`export-records`、`export-assets` | 管理员把列表下载成CSV或Excel；方法是`Export` | 行数、文件名和筛选条件 |
 
 这些记录不受`logPostOnly`影响，总会写入。SSH和Telnet会话里执行的命令不在这里，在[命令记录](./commands.md)页面。
 
@@ -55,4 +55,4 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 
 ## 导出和转发
 
-列表上的**导出 CSV**下载与当前搜索相符的记录。设置了`syslogAddress`时，每条新记录写入的同时也会发给syslog服务器。见[导出与syslog转发](./export.md)。
+列表上的**导出**按CSV或Excel下载与当前搜索相符的记录。设置了`syslogAddress`时，每条新记录写入的同时也会发给syslog服务器。见[导出与syslog转发](./export.md)。

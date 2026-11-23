@@ -24,7 +24,7 @@ These pages are for administrators: **Commands** (`/commands`), **Command rules*
 
 ## The Commands page
 
-Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. For a database statement, a **Result** column shows the number of rows it returned or changed, or its error. The list can be searched by command, user, asset, client IP and session, and exported as CSV; see [Export and syslog](./export.md). In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH, Telnet and database session and links to them. The player of a [recording](./recordings.md) lists the commands of SSH and Telnet sessions beside the screen; clicking one jumps to it. A database session has no recording, and its **Replay** is the list of its statements.
+Each line is one command: the time, the command, the user, the asset, the client IP, the session, and, when a rule matched, the rule and its action. For a database statement, a **Result** column shows the number of rows it returned or changed, or its error. The list can be searched by command, user, asset, client IP and session, and exported as CSV or Excel; see [Export and syslog](./export.md). In the [session list](./sessions.md), the **Commands** column counts the commands of each SSH, Telnet and database session and links to them. The player of a [recording](./recordings.md) lists the commands of SSH and Telnet sessions beside the screen; clicking one jumps to it. A database session has no recording, and its **Replay** is the list of its statements.
 
 ## Command rules
 

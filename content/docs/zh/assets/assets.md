@@ -46,6 +46,18 @@ SSH资产可以保存**私钥**（OpenSSH或PEM格式），代替密码或者和
 
 资产保存后，它的页面上有一栏**系统账号**，可以给同一台服务器加更多账号，例如`root`和`deploy`；权限决定谁能以哪个账号连接，SSH资产上的密码还能由Casvisor修改。见[系统账号与改密](./accounts.md)。
 
+## 导入和导出
+
+资产列表上的**导入**从CSV文件或Excel文件（`.xlsx`）添加资产，第一行是表头；Excel文件读取第一个工作表。列和导出的文件相同：
+
+`name, displayName, description, protocol, host, port, username, password, privateKey, database, os, tag, nodes, networkGateway`
+
+只有`name`必填，其余列可以省略、顺序随意，`Display name`、`display_name`这样的表头也认。协议默认SSH，端口默认用协议的常用端口。`nodes`写资产树里的路径，例如`北京/生产`，多个用`;`分隔，不存在的节点会自动建。`privateKey`里用`\n`表示换行。一个文件最多5,000个资产。
+
+先点**预览**，逐行显示会新建、更新还是跳过，以及出错的原因，不做任何改动；出错的行跳过，其余照常。打开**更新已有的资产**时，已有资产取文件里的值，文件里没有的列保持原值，password、privateKey留空也保持原值。导入会记进操作日志，动作是`import-assets`，文件内容打码。
+
+**导出**按列表当前的搜索和所选节点，把资产下载成CSV或Excel文件，列相同、不含口令和私钥，改完可以再导回来。Excel文件里所有单元格都是文本，不会被当成公式执行。
+
 ## 网络规划
 
 连接是Casvisor发起的，所以它要能访问资产的主机和端口。常见的做法是把Casvisor放在内网的一台机器上，通过HTTPS对用户开放，资产的防火墙只放行Casvisor的地址。这样用户没有任何直连服务器的途径，每一次连接都要经过权限检查，并出现在[会话列表](../audit/sessions.md)里。

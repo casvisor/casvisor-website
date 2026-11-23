@@ -1,24 +1,28 @@
 ---
 title: "导出与syslog转发"
-seoTitle: "Casvisor：审计日志导出CSV，转发到syslog和SIEM"
-description: "把会话、命令记录和操作日志按列表当前的筛选下载成CSV文件；把会话、命令和操作日志实时转发到syslog服务器，格式为带JSON正文的RFC 5424或CEF，供SIEM使用。"
+seoTitle: "Casvisor：审计日志导出CSV和Excel，转发到syslog和SIEM"
+description: "把会话、命令记录和操作日志按列表当前的筛选下载成CSV或Excel文件；把会话、命令和操作日志实时转发到syslog服务器，格式为带JSON正文的RFC 5424或CEF，供SIEM使用。"
 ---
 
-审计记录存在Casvisor的数据库里。有两种方式把它们拿出来：从列表下载CSV文件，或者实时发给syslog服务器，再由Splunk、Elastic、QRadar、ArcSight这类SIEM接收。
+审计记录存在Casvisor的数据库里。有两种方式把它们拿出来：从列表下载CSV或Excel文件，或者实时发给syslog服务器，再由Splunk、Elastic、QRadar、ArcSight这类SIEM接收。
 
-## 导出CSV
+## 导出CSV和Excel
 
-**会话**、**命令记录**和**日志**（即[操作日志](./operation-logs.md)）页面各有一个**导出 CSV**按钮。它下载与列表当前显示相符的全部行，不只是当前页：按当前的搜索和排序，在**会话**页面还按当前的标签（在线或历史）。一个文件最多100,000行。
+**会话**、**命令记录**和**日志**（即[操作日志](./operation-logs.md)）页面各有一个**导出**按钮，可选CSV（`.csv`）或Excel（`.xlsx`）。它下载与列表当前显示相符的全部行，不只是当前页：按当前的搜索和排序，在**会话**页面还按当前的标签（在线或历史）。一个文件最多100,000行。
 
 | 列表 | 列 |
 | --- | --- |
 | 会话 | ID, Asset, Protocol, Mode, User, Client IP, Client IP location, User agent, Status, Start time, End time, Duration (s), Commands, Code, Message |
-| 命令记录 | Time, Command, Action, Rule, User, Asset, Client IP, Session |
+| 命令记录 | Time, Command, Action, Rule, Reviewer, Error, User, Operator, Asset, Client IP, Session |
 | 日志 | ID, Name, Time, Organization, User, Client IP, User agent, Method, Request URI, Action, Language, Object, Response |
 
 文件是带BOM的UTF-8，Excel打开时中文不会乱码；文件名由列表名和时间组成，例如`commands-20261120-153000.csv`。以`=`、`+`、`-`或`@`开头的单元格前面会加一个`'`，免得表格软件把它当公式执行。
 
-导出只有管理员能用，范围是本组织。每次导出本身也会记进操作日志，动作是`export-sessions`、`export-commands`或`export-records`，带上行数和所用的筛选条件。
+Excel文件的列相同，放在一个以列表命名的工作表里，表头行冻结，文件名的规则也一样，例如`commands-20261120-153000.xlsx`。所有单元格都写成文本，`=1+1`这样的命令原样显示，不加`'`，也不会被执行。**资产**列表也能这样导出，见[资产](../assets/assets.md#导入和导出)。
+
+要看一段时间的汇总数字而不是一行行记录，例如上周的登录失败次数、命中最多的规则，见[审计报表](./reports.md)。
+
+导出只有管理员能用，范围是本组织。每次导出本身也会记进操作日志，动作是`export-sessions`、`export-commands`或`export-records`，带上行数、文件名和所用的筛选条件。
 
 [数据库会话](../assets/databases.md#复制和导出)的查询结果在数据库控制台里导出。
 

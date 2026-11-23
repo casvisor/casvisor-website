@@ -1,7 +1,7 @@
 ---
 title: "Notifications"
 seoTitle: "Casvisor: webhook and email notifications for commands, reviews, jobs and account risks"
-description: "Send what happens in Casvisor to DingTalk, Feishu, WeCom and Slack group bots, to your own systems as signed JSON, or by email through your SMTP server: blocked commands, reviews waiting, finished jobs, new account risks and failed backups."
+description: "Send what happens in Casvisor to DingTalk, Feishu, WeCom and Slack group bots, to your own systems as signed JSON, or by email through your SMTP server: blocked commands, reviews waiting, finished jobs, new account risks, and failed backups and reports."
 ---
 
 Casvisor tells people of what needs them through webhooks, on the **Webhooks** page. Each webhook belongs to an organization, picks the events it is told of, and is one of these types:
@@ -27,6 +27,7 @@ Casvisor tells people of what needs them through webhooks, on the **Webhooks** p
 | `job_schedule.missed` | A [job schedule](../assets/jobs.md#job-schedules)'s time came and no job started |
 | `account_risk.found` | A scan found [account risks](../assets/accounts.md#account-risks) that the scans before did not: their number, how many are high, and the first 10 |
 | `account_backup.failed` | An [account backup](../assets/accounts.md#account-backups) was not made or not sent |
+| `report.failed` | A [scheduled report](./reports.md#scheduled-reports) was not made or not sent |
 
 Events are sent in the background, so a slow or failing webhook holds nothing up; a failure is written to Casvisor's log.
 
@@ -39,7 +40,7 @@ An Email webhook sends each event as a plain-text email:
 - **Sender**: the From of the emails, such as `Casvisor <casvisor@example.com>`; empty means the SMTP username.
 - **Recipients**: the addresses to send to, separated by commas.
 
-The subject is the event's title after `[Casvisor]`, such as `[Casvisor] Command waiting for review`, and the body has one line per field. Email webhooks are also what [account backups](../assets/accounts.md#account-backups) are sent with.
+The subject is the event's title after `[Casvisor]`, such as `[Casvisor] Command waiting for review`, and the body has one line per field. Email webhooks are also what [account backups](../assets/accounts.md#account-backups) and [scheduled reports](./reports.md#scheduled-reports) are sent with.
 
 ## JSON
 
