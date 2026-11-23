@@ -35,6 +35,8 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [CSV export and syslog forwarding](../audit/export.md) of sessions, commands and the operation log, as RFC 5424 or CEF.
 - [Account templates and account risks](../assets/accounts.md#account-templates): one account for many assets, a daily scan for weak, old and reused passwords and unmanaged accounts, and fixing them by changing the password, managing or locking the account.
 - Webhooks for finished jobs and missed schedule runs.
+- [Account backups](../assets/accounts.md#account-backups): the passwords and private keys in an AES-256 zip file, downloaded or emailed on a schedule, and restored with a preview.
+- [Email notifications](../audit/notifications.md#email): webhooks of the Email type, through your SMTP server, and an event for new account risks.
 - [Connect rules](../access-control/connect-rules.md): the browser, SSH and SFTP clients, port forwarding and Remote Desktop Connection allowed or rejected by user, asset and account.
 - [Job schedules](../assets/jobs.md#job-schedules): jobs run on cron schedules in any time zone.
 - [Session sharing](../audit/sessions.md#sharing-a-session): a user shares a session with colleagues through a link and a code, to watch it or type in it too.

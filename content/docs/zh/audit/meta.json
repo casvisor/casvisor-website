@@ -6,6 +6,7 @@
     "recordings",
     "commands",
     "operation-logs",
-    "export"
+    "export",
+    "notifications"
   ]
 }

@@ -35,6 +35,8 @@ Casvisor正在公开地重做成一个完整的堡垒机。下面是工作的先
 - 会话、命令记录和操作日志[导出CSV和转发到syslog](../audit/export.md)，格式为RFC 5424或CEF。
 - [账号模板和风险账号](../assets/accounts.md#账号模板)：一个账号批量给多台资产，每天检查弱口令、长期未改和重复使用的口令以及未纳管的账号，可以一键改密、纳管或锁定。
 - 作业结束和计划作业没有启动时发Webhook。
+- [账号备份](../assets/accounts.md#账号备份)：口令和私钥打包成AES-256加密的zip，手动下载或定时发邮件，恢复前先预览。
+- [邮件通知](../audit/notifications.md#邮件)：邮件类型的Webhook，经你的SMTP服务器发送；新增账号风险事件。
 - [连接方式规则](../access-control/connect-rules.md)：按用户、资产和账号放行或拒绝浏览器、SSH和SFTP客户端、端口转发和远程桌面连接。
 - [计划作业](../assets/jobs.md#计划作业)：按cron时间表、在任意时区自动运行作业。
 - [分享会话](../audit/sessions.md#分享会话)：用户用链接和验证码把会话分享给同事，旁观或一起操作。

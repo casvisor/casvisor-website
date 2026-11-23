@@ -101,3 +101,22 @@ Open risks can be fixed from the page, one by one or for the selected ones at on
 - **Lock** (an account found on the asset): the account is locked and expired on its asset with `usermod -L -e 1`, so that it can sign in neither with a password nor with a key, or disabled on Windows. Undo it with `usermod -U -e -1` or `Enable-LocalUser`. `root`, `Administrator` and the asset's own account are never locked.
 
 These need SSH assets whose own account is root, can use sudo without a password, or is a Windows administrator. A fixed risk is resolved with a comment saying what was done and by whom, and the action is in the operation log; the next scan opens it again if it is still there.
+
+When a scan finds risks that the scans before did not, the `account_risk.found` event goes to the [webhooks](../audit/notifications.md) that pick it, by email too.
+
+## Account backups
+
+Casvisor keeps the passwords and private keys of the assets encrypted in its database. **Account backups** (`/account-backups`) puts them in a zip file, so that they are not lost with the database and can be read when Casvisor can't:
+
+- `accounts.csv`: the system accounts, with the asset, its address, the username, the password and the private key (with `\n` for the new lines).
+- `assets.csv`, with **Include assets** on: the assets with the passwords and private keys of their own accounts, in the format of the [asset import](./assets.md).
+- `README.txt`, telling what the files are.
+
+The zip file is encrypted with AES-256 and the backup's **Password**, of 12 characters at least. 7-Zip, WinRAR, Bandizip and the Archive Utility of macOS open it with the password; the Explorer of Windows can't. Whoever has the file and the password can read every password in it, so keep the two apart.
+
+A backup is made when it is needed and never kept on the server:
+
+- **Download** makes it and downloads it.
+- With **Send with** set to [webhooks of the Email type](../audit/notifications.md#email), **Send now** emails it as an attachment, and a **Schedule**, a cron line such as `0 2 * * 0` for 02:00 every Sunday, emails it on its own. The last run shows whether it was sent and how many accounts it had; a failed one is also sent as the `account_backup.failed` event.
+
+**Restore a backup** takes a zip file and its password, into this Casvisor or a new one. The assets come back first, then their accounts. Off, the restore only adds the assets and accounts that are missing; with **Overwrite the assets and accounts that already exist** on, the existing ones are set back to the backup too, passwords included, which undoes the password changes made since. **Preview** lists what each row would do and what it would change before anything is written.
