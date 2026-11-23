@@ -39,6 +39,7 @@ description: "Casvisor为对它的接口调用记操作日志：谁、从哪里�
 | `sftp-rename` | 经SFTP或在文件面板里重命名文件或文件夹 | `旧 -> 新` |
 | `sftp-symlink`、`sftp-link` | 经SFTP建链接 | `链接 -> 目标` |
 | `file-upload`、`file-download`、`file-mkdir`、`file-rename`、`file-delete` | 在[RDP会话](../assets/file-transfer.md#rdp)的文件面板里做同样的操作 | 路径，或`旧 -> 新` |
+| `kubernetes-upload`、`kubernetes-download` | 在浏览器里或用`kubectl cp`往[Kubernetes资产](../assets/kubernetes.md)的容器里复制或从中复制文件，或用`kubectl exec -i`往命令里灌数据 | `命名空间/Pod/容器:路径`，或那条命令 |
 | `file-create`、`file-mkdir`、`file-read`、`file-write`、`file-rename`、`file-delete` | 远程桌面使用RDP会话里重定向的磁盘；`file-write`在文件关闭时记一次 | 路径，`file-write`还带写入的字节数 |
 | `clipboard-copy`、`clipboard-paste` | 从[RDP会话](../assets/protocols.md#剪贴板)里复制出文字，或往里粘贴文字 | 文字内容，最多1000字节 |
 | `session-monitor` | 管理员打开某个会话的[实时旁观](./sessions.md#实时旁观) | 会话 |

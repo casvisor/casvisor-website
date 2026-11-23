@@ -39,6 +39,7 @@ Some things happen inside a session rather than through an API call, so Casvisor
 | `sftp-rename` | A file or folder is renamed over SFTP or in the file panel | `old -> new` |
 | `sftp-symlink`, `sftp-link` | A link is created over SFTP | `link -> target` |
 | `file-upload`, `file-download`, `file-mkdir`, `file-rename`, `file-delete` | The same in the file panel of an [RDP session](../assets/file-transfer.md#rdp) | The path, or `old -> new` |
+| `kubernetes-upload`, `kubernetes-download` | A file is copied into or out of a container of a [Kubernetes asset](../assets/kubernetes.md), in the browser or with `kubectl cp`, or piped into a command with `kubectl exec -i` | `namespace/pod/container:path`, or the command |
 | `file-create`, `file-mkdir`, `file-read`, `file-write`, `file-rename`, `file-delete` | The remote desktop uses the redirected drive of an RDP session; `file-write` once the file is closed | The path, with the bytes written for `file-write` |
 | `clipboard-copy`, `clipboard-paste` | Text is copied out of or pasted into an [RDP session](../assets/protocols.md#clipboard) | The text, up to 1000 bytes |
 | `session-monitor` | An administrator opens the [live view](./sessions.md#watching-a-session-live) of a session | The session |

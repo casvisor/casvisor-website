@@ -39,7 +39,7 @@ HashiCorp Boundary archived its open-source repository in October 2026; it conti
 
 ## Where Casvisor differs
 
-- **One binary.** SSH, RDP, VNC, Telnet, the six databases, the SSH gateway, recording, the network gateway agent and the playbook executor are all in one Go program, on SQLite by default, with nothing installed on the servers. Ansible playbooks run without Ansible, also when Casvisor runs on Windows, and every task goes through the command rules and is recorded.
+- **One binary.** SSH, RDP, VNC, Telnet, the six databases, Kubernetes with kubectl, the SSH gateway, recording, the network gateway agent and the playbook executor are all in one Go program, on SQLite by default, with nothing installed on the servers. Ansible playbooks run without Ansible, also when Casvisor runs on Windows, and every task goes through the command rules and is recorded.
 - **Identity can be Casdoor's.** Casvisor has its own accounts, but if you already run Casdoor, or want its single sign-on, MFA, LDAP and SAML, Casvisor uses those directly, including Casdoor's groups in permissions, rather than keeping a second user directory.
 - **Policy is Casbin's.** Permissions combine users and groups, assets and tags, actions, client IP ranges and time windows, and are evaluated by a model you can read on the [permissions page](../access-control/permissions.md#the-casbin-model).
 - **Command rules follow the same scopes as permissions.** A rule applies to users, groups, assets and asset tags, and covers the web terminal and native SSH clients alike, since both go through the same check. See [Commands and command rules](../audit/commands.md).
@@ -47,4 +47,4 @@ HashiCorp Boundary archived its open-source repository in October 2026; it conti
 
 ## Where Casvisor is behind
 
-Kubernetes access, which is next on the [roadmap](./roadmap.md). For databases, only the console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on servers over SSH, on network devices and in databases, but not over RDP, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.
+For databases, only the console in the browser is audited: native clients other than SSH go through plain port forwarding, which is not recorded. Passwords are rotated on servers over SSH, on network devices and in databases, but not over RDP, and the Copy and Paste actions do not restrict the SSH and Telnet terminals. If you need these today, the projects above have most of them.

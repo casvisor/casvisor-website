@@ -1,7 +1,7 @@
 ---
 title: "Connect rules"
 seoTitle: "Casvisor: connect rules for the browser, SSH and SFTP clients, port forwarding and mstsc"
-description: "Connect rules allow or reject ways to connect to assets, by user, group, asset, asset tag and account: the browser, SSH clients through the SSH gateway, SFTP, scp and rsync, port forwarding, and Remote Desktop Connection."
+description: "Connect rules allow or reject ways to connect to assets, by user, group, asset, asset tag and account: the browser, SSH clients through the SSH gateway, SFTP, scp and rsync, port forwarding, Remote Desktop Connection and kubectl."
 ---
 
 [Permissions](./permissions.md) decide which assets a user may reach and what they may do there. Connect rules decide **how** they may reach them. For example: contractors only in the browser, where sessions are recorded and the clipboard follows the permission; no port forwarding to production, since forwarded bytes go through as they are; no SFTP to the database servers. The page is for administrators: **Connect rules** (`/connect-rules`).
@@ -15,6 +15,7 @@ description: "Connect rules allow or reject ways to connect to assets, by user, 
 | SFTP client, scp and rsync | File transfer through the SSH gateway: `sftp`, WinSCP, FileZilla, `scp` and `rsync` |
 | Port forwarding | `ssh -L` through the SSH gateway, and one-time forwarding commands from the [local clients](../assets/local-clients.md) menu |
 | Remote Desktop Connection | mstsc through the Remote Desktop Gateway |
+| kubectl | kubectl, Lens and other Kubernetes clients with a kubeconfig from Casvisor, through its [Kubernetes proxy](../assets/kubernetes.md#kubectl) |
 
 ## Fields
 

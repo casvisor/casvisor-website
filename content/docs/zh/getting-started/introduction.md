@@ -56,13 +56,14 @@ Casvisor是一个Go程序加React前端，采用Apache-2.0许可证，没有企�
 | 查出是谁、什么时候改了某条权限 | [操作日志](../audit/operation-logs.md) |
 | 有人申请、管理员同意后，给他一个下午的生产环境权限 | [访问申请](../access-control/access-requests.md) |
 | 让人不拿密码就能查生产数据库，并拦下`DROP TABLE` | [数据库](../assets/databases.md) |
+| 让开发人员用kubectl访问集群，只能在自己的命名空间里，每个请求都有记录 | [Kubernetes](../assets/kubernetes.md) |
 | 在一百台服务器上执行同一条命令，或者分发一个文件 | [作业中心](../assets/jobs.md) |
 | 把审计记录送进SIEM | [导出与syslog转发](../audit/export.md) |
 | 找出每台服务器待装的更新并装上 | [补丁管理](../assets/patches.md) |
 
 ## 还没做的
 
-堡垒机可能被期待的几项功能还在[路线图](../more/roadmap.md)上，首先是Kubernetes访问。本手册写的是当前代码里已有的功能，某个设置暂时不起作用的地方会直接说明。
+堡垒机可能被期待的几项功能还在[路线图](../more/roadmap.md)上，首先是补全RDP。本手册写的是当前代码里已有的功能，某个设置暂时不起作用的地方会直接说明。
 
 ## 下一步
 

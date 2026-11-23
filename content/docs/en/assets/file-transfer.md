@@ -8,6 +8,8 @@ Files can be moved to and from **SSH assets** in two ways:
 - the **file panel** next to the web terminal, with nothing to install;
 - `sftp`, `scp` and `rsync` through the [SSH gateway](./ssh-gateway.md).
 
+Containers of [Kubernetes assets](./kubernetes.md) have a **Files** tab and `kubectl cp`, under the same Upload and Download actions.
+
 and to and from **RDP assets** through a drive that Casvisor redirects into the session, with the same file panel next to the desktop.
 
 All of them are allowed by the **Upload** and **Download** actions of a [permission](../access-control/permissions.md), and write the files they move or change to the [operation log](../audit/operation-logs.md#ssh-and-file-events). VNC and Telnet have no file transfer.

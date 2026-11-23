@@ -3,7 +3,7 @@ title: "命令记录和命令规则"
 description: "Casvisor记录SSH和Telnet会话（网页终端、SSH网关和作业）里执行的命令，以及数据库会话里执行的SQL语句、Redis命令和MongoDB调用；命令规则按正则表达式拦截、复核或标记命中的命令，可以限定用户、用户组、资产和资产标签。"
 ---
 
-Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网页终端里，还是SSH经由[SSH网关](../assets/ssh-gateway.md)和[作业](../assets/jobs.md)，以及用户在[数据库资产](../assets/databases.md)上执行的内容（MySQL、PostgreSQL、SQL Server和Oracle的SQL语句、Redis命令和MongoDB shell调用），并能在你指定的命令执行之前把它拦下，或者先扣住、等管理员批准后再执行。RDP和VNC会话没有命令记录，它们的画面在[录像](./recordings.md)里。
+Casvisor会记下用户在SSH和Telnet资产上执行的命令，不论是在网页终端里，还是SSH经由[SSH网关](../assets/ssh-gateway.md)和[作业](../assets/jobs.md)，以及用户在[数据库资产](../assets/databases.md)上执行的内容（MySQL、PostgreSQL、SQL Server和Oracle的SQL语句、Redis命令和MongoDB shell调用）、[Kubernetes资产](../assets/kubernetes.md)里的Shell命令和kubectl请求，并能在你指定的命令执行之前把它拦下，或者先扣住、等管理员批准后再执行。RDP和VNC会话没有命令记录，它们的画面在[录像](./recordings.md)里。
 
 这几个页面都只对管理员开放：**命令记录**（`/commands`）、**命令规则**（`/command-rules`）和**命令复核**（`/command-reviews`）。
 

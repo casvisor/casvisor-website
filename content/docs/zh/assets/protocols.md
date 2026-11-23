@@ -20,6 +20,8 @@ description: "Casvisor用Go直接连接SSH、RDP、VNC、Telnet、MySQL、Postgr
 
 每种协议都可以经由[网域网关](./network-gateways.md)连接；只要没关掉录像，前四种协议的每个会话都会[录像](../audit/recordings.md)。SSH以外的资产，本地客户端经[SSH网关的端口转发](./ssh-gateway.md#端口转发到其他资产)连接，这种连接原样转发、不录像。
 
+Kubernetes集群（在浏览器里进容器、看日志、传文件，以及经Casvisor使用kubectl）有单独的一页：[Kubernetes](./kubernetes.md)。
+
 ## SSH
 
 Casvisor用Go的`golang.org/x/crypto/ssh`连接，申请`xterm-256color`终端，通过WebSocket转给浏览器里的xterm.js。终端大小跟随浏览器窗口。

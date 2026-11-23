@@ -56,13 +56,14 @@ Casvisor is one Go binary with a React web UI, licensed under Apache-2.0, and ha
 | Find out who changed a permission and when | [Operation logs](../audit/operation-logs.md) |
 | Give someone production access for an afternoon, when they ask and an administrator agrees | [Access requests](../access-control/access-requests.md) |
 | Let people query a production database without its password, and stop `DROP TABLE` | [Databases](../assets/databases.md) |
+| Give developers kubectl to a cluster, only in their own namespace, with every request recorded | [Kubernetes](../assets/kubernetes.md) |
 | Run the same command, or copy a file, on a hundred servers | [Jobs](../assets/jobs.md) |
 | Send the audit trail to a SIEM | [Export and syslog](../audit/export.md) |
 | Find and install the pending updates of every server | [Patch management](../assets/patches.md) |
 
 ## What it does not do yet
 
-A few things a bastion host may be expected to have are still on the [roadmap](../more/roadmap.md), Kubernetes access first among them. The pages of this manual describe what is in the current code, and say so where a setting has no effect yet.
+A few things a bastion host may be expected to have are still on the [roadmap](../more/roadmap.md), the rest of RDP first among them. The pages of this manual describe what is in the current code, and say so where a setting has no effect yet.
 
 ## Next
 

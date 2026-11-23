@@ -3,7 +3,7 @@ title: "Commands and command rules"
 description: "Casvisor records the commands run in SSH and Telnet sessions, from the web terminal, the SSH gateway and jobs, and the SQL statements, Redis commands and MongoDB calls run in database sessions; command rules block, hold for review or flag the ones that match a regular expression, for chosen users, groups, assets and asset tags."
 ---
 
-Casvisor keeps the commands people run on SSH and Telnet assets, whether from the web terminal or, for SSH, through the [SSH gateway](../assets/ssh-gateway.md) and [jobs](../assets/jobs.md), and what they run on [database assets](../assets/databases.md), the SQL statements of MySQL, PostgreSQL, SQL Server and Oracle, Redis commands and MongoDB shell calls, and can stop the ones you name before they run, or hold them until an administrator approves them. RDP and VNC sessions have no command records; their screens are in the [recordings](./recordings.md).
+Casvisor keeps the commands people run on SSH and Telnet assets, whether from the web terminal or, for SSH, through the [SSH gateway](../assets/ssh-gateway.md) and [jobs](../assets/jobs.md), and what they run on [database assets](../assets/databases.md), the SQL statements of MySQL, PostgreSQL, SQL Server and Oracle, Redis commands and MongoDB shell calls, and the shells and kubectl requests of [Kubernetes assets](../assets/kubernetes.md), and can stop the ones you name before they run, or hold them until an administrator approves them. RDP and VNC sessions have no command records; their screens are in the [recordings](./recordings.md).
 
 These pages are for administrators: **Commands** (`/commands`), **Command rules** (`/command-rules`) and **Command reviews** (`/command-reviews`).
 

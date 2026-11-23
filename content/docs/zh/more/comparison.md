@@ -39,7 +39,7 @@ HashiCorp Boundary在2026年10月归档了开源仓库，之后只有HCP Boundar
 
 ## Casvisor不一样的地方
 
-- **一个程序。** SSH、RDP、VNC、Telnet、六种数据库、SSH网关、录像、网域网关的agent和playbook执行器都在一个Go程序里，默认用SQLite，服务器上什么都不用装。执行Ansible playbook不用装Ansible，Casvisor跑在Windows上也行，每个任务都过命令规则并有录像。
+- **一个程序。** SSH、RDP、VNC、Telnet、六种数据库、Kubernetes和kubectl、SSH网关、录像、网域网关的agent和playbook执行器都在一个Go程序里，默认用SQLite，服务器上什么都不用装。执行Ansible playbook不用装Ansible，Casvisor跑在Windows上也行，每个任务都过命令规则并有录像。
 - **身份可以交给Casdoor。** Casvisor有自己的账号；如果你已经在用Casdoor，或者想要它的单点登录、多因素认证、LDAP和SAML，Casvisor直接用它们，权限里也能直接写Casdoor用户组，不用再维护第二套用户目录。
 - **策略交给Casbin。** 权限组合了用户和用户组、资产和标签、动作、来源IP段和有效期，判断用的模型就写在[权限页面](../access-control/permissions.md#casbin模型)上。
 - **命令规则和权限用同一套范围。** 规则可以写用户、用户组、资产和资产标签，网页终端和本地SSH客户端走的是同一个检查，一条规则两边都管。见[命令记录和命令规则](../audit/commands.md)。
@@ -47,4 +47,4 @@ HashiCorp Boundary在2026年10月归档了开源仓库，之后只有HCP Boundar
 
 ## Casvisor落后的地方
 
-Kubernetes访问是[路线图](./roadmap.md)上的下一项。数据库只有浏览器里的控制台受审计：SSH以外的本地客户端走的是普通端口转发，不录像。自动改密支持经SSH的服务器、网络设备和数据库，不支持经RDP改密；复制和粘贴动作也限制不了SSH和Telnet终端。如果你现在就需要这些，上面这些项目大多都有。
+数据库只有浏览器里的控制台受审计：SSH以外的本地客户端走的是普通端口转发，不录像。自动改密支持经SSH的服务器、网络设备和数据库，不支持经RDP改密；复制和粘贴动作也限制不了SSH和Telnet终端。如果你现在就需要这些，上面这些项目大多都有。

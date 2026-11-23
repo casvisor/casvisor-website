@@ -8,6 +8,8 @@ description: "在SSH和RDP资产上传下载文件：网页终端和远程桌面
 - 网页终端旁边的**文件面板**，什么都不用装；
 - 经由[SSH网关](./ssh-gateway.md)用`sftp`、`scp`和`rsync`。
 
+[Kubernetes资产](./kubernetes.md)的容器有**文件**标签页和`kubectl cp`，同样由Upload和Download动作放行。
+
 **RDP资产**则通过Casvisor重定向进会话的一个磁盘传文件，桌面旁边有同样的文件面板。
 
 这些方式都由[权限](../access-control/permissions.md)里的**上传**（Upload）和**下载**（Download）动作放行，传过和改过的文件都会记进[操作日志](../audit/operation-logs.md#ssh和文件事件)。VNC和Telnet不能传文件。

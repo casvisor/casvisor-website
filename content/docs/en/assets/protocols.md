@@ -20,6 +20,8 @@ description: "Casvisor connects to SSH, RDP, VNC, Telnet, MySQL, PostgreSQL, SQL
 
 Every protocol can go through a [network gateway](./network-gateways.md), and every session of the first four is [recorded](../audit/recordings.md) unless recording is turned off. Native clients reach assets other than SSH by [port forwarding through the SSH gateway](./ssh-gateway.md#port-forwarding-to-other-assets), which passes the connection through without recording it.
 
+Kubernetes clusters, with shells, logs and files of containers in the browser and kubectl through Casvisor, have a page of their own: [Kubernetes](./kubernetes.md).
+
 ## SSH
 
 Casvisor connects with Go's `golang.org/x/crypto/ssh`, asks for a `xterm-256color` terminal, and relays it to xterm.js in the browser over a WebSocket. The terminal follows the size of the browser window.

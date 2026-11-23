@@ -1,6 +1,6 @@
 ---
 title: "Roadmap"
-description: "What is done and what is being built next in Casvisor: done are system accounts with password rotation, access requests, databases, jobs and syslog forwarding; next are Kubernetes access, the rest of RDP, a gateway for AI agents, and compliance in China."
+description: "What is done and what is being built next in Casvisor: done are system accounts with password rotation, access requests, databases, jobs and syslog forwarding; Kubernetes with kubectl and namespace permissions; next are the rest of RDP, a gateway for AI agents, and compliance in China."
 ---
 
 Casvisor is being rebuilt, in the open, into a complete bastion host. This is the order of work. Progress shows up as commits on [casvisor/casvisor](https://github.com/casvisor/casvisor) and as changes to this manual. Ideas and objections are welcome in [issues](https://github.com/casvisor/casvisor/issues).
@@ -48,13 +48,14 @@ Casvisor is being rebuilt, in the open, into a complete bastion host. This is th
 - [Audit reports](../audit/reports.md): sign-ins, sessions, commands, file transfers, approvals, account changes and asset and permission changes of a period, printed to PDF, exported to Excel or emailed on a schedule; and [Excel import and export](../assets/assets.md#import-and-export) of assets and the audit lists.
 - [Casvisor's browser](../assets/websites.md#casvisors-browser): websites opened in a Chrome on the server that signs in with a password the user never sees, reaches only that website, keeps the clipboard, uploads and downloads to the permission, and records the screen.
 
+- [Kubernetes](../assets/kubernetes.md): shells, logs and file transfer for containers in the browser, kubectl through Casvisor with kubeconfigs it issues, and permissions by namespace and read-only.
+
 ## Next
 
-1. **Kubernetes access.** Kubernetes clusters reached through Casvisor, under the same permissions and audit as the other assets.
+1. **The rest of RDP**: H.264 and RemoteApp, for opening client programs such as Navicat or SQL Server Management Studio on a Windows server with the account filled in.
 
 ## Later
 
-- **The rest of RDP**: H.264 and RemoteApp, for opening client programs such as Navicat or SQL Server Management Studio on a Windows server with the account filled in.
 - **A gateway for AI agents.** A controlled SSH and MCP entry for coding agents and AI operators, with their commands going through policy, risky ones waiting for a human to approve, and everything recorded.
 - **Compliance in China**: the bastion host requirements of MLPS level 3 (等保三级) and the SM2, SM3 and SM4 algorithms.
 

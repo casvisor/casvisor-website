@@ -20,6 +20,8 @@ Administrators manage permissions under **Permissions**.
 | Accounts | Which accounts of those assets the users may connect as. Empty means the asset's own account. See [Accounts](#accounts). |
 | Actions | Any of `Connect`, `Copy`, `Paste`, `Upload`, `Download`, `Forward`. |
 | Client IPs | Addresses or CIDR ranges the user must connect from, such as `10.0.0.0/8` or `203.0.113.7`. Empty means from anywhere. |
+| Namespaces | On [Kubernetes assets](../assets/kubernetes.md), the namespaces the permission covers; `*` or empty means all of them. See [Kubernetes namespaces](#kubernetes-namespaces). |
+| Read only | On Kubernetes assets, only `get`, `list` and `watch`. |
 | Start time, End time | The window in which the permission counts. Either can be empty, meaning no limit on that side. |
 | Enabled | Off means the permission counts for nothing, without deleting it. |
 
@@ -39,6 +41,16 @@ Permissions can also be asked for: users send an [access request](./access-reque
 | Forward | Port forwarding through the SSH gateway (`ssh -L`), which VS Code Remote needs along with Upload and Download, and [port forwarding to RDP, VNC and Telnet assets](../assets/ssh-gateway.md#port-forwarding-to-other-assets) for mstsc and other clients. Those connections are not recorded. |
 
 Copy, Paste, Upload and Download are all enforced on the server, not only in the browser: for RDP and VNC Casvisor drops the clipboard messages the user may not send or receive, and every file channel checks them itself. They are separate from the [command rules](../audit/commands.md), which only see commands. The SSH and Telnet terminals use the browser's own copy and paste, which Copy and Paste do not restrict; see [Protocols](../assets/protocols.md).
+
+## Kubernetes namespaces
+
+On a [Kubernetes asset](../assets/kubernetes.md), **Namespaces** and **Read only** decide what the user may do in the cluster, in the browser and with kubectl alike. A request in a namespace needs it in the permission; what has no namespace, like nodes or a list across all namespaces, needs `*`; a namespace can be read in its own permission but only changed with `*`. A read-only permission allows `get`, `list` and `watch`, and leaves out shells, file transfers and port forwarding, which create things in the pod. Several permissions add up: a namespace is writable when one of them allows it. They only count with **Connect**, and do nothing on other assets.
+
+| Goal | Namespaces | Read only |
+| --- | --- | --- |
+| Developers work in their own namespace | `team-a` | Off |
+| Support reads every namespace and the nodes, without shells | `*` | On |
+| On-call engineers may change `prod`, and read the rest | Two permissions: `prod` off, and `*` on | |
 
 ## Accounts
 
