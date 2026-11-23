@@ -64,3 +64,32 @@ Each account shows when its password was last changed and how the last change we
 With **Auto rotate** on, Casvisor changes the account's password as **Change password now** does, every time the interval has passed since the last change, and right away if it has never been changed. It looks for accounts that are due every 10 minutes, starting a minute after Casvisor starts.
 
 Only enabled accounts on SSH assets with a password and no private key are rotated. When a rotation fails, it is tried again an hour later. If Casvisor is stopped while a password is being changed, the change is marked failed with *Casvisor restarted while the password was being changed*, and the next round tries again.
+
+## Account templates
+
+To give many assets the same account, such as an `ops` account on every Linux server, use **Account templates** (`/account-templates`). A template has the username, and either a password or a private key, or **A random password for each asset**, plus:
+
+| Field | Meaning |
+| --- | --- |
+| Push to assets | Set the password on each asset when the template is applied, creating the account there if needed, as **Push to asset** does. Only on SSH assets, and only with a password. A random password for each asset needs it. |
+| Rotate | Turn on automatic rotation for the accounts, every so many days. |
+| Assets, Asset tags | The assets the template covers; `*` is every asset. |
+
+**Apply** first shows what would change on each asset, then applies it. On an asset without the account, the account is created; one created by the template before is brought in line with it, its password or key and its rotation, unless each asset has a random password, which stays its own. An asset whose own account has that username, or that already has an account of that username that is not from the template, is left alone. Applying again later picks up the assets added since. The asset's accounts panel shows which accounts come from a template. Deleting a template keeps its accounts, which are then on their own.
+
+## Account risks
+
+**Account risks** (`/account-risks`) lists what is wrong with the accounts of the assets. Casvisor looks once a day, and **Scan now** looks at once:
+
+| Risk | Level | What it means |
+| --- | --- | --- |
+| Weak password | High | The password of an asset's own account or of a system account is one of the most common ones, contains the username, is shorter than 8 characters, or uses too few kinds of characters |
+| Reused password | Medium | The same password is used on 3 assets or more |
+| Old password | Low, Medium after 180 days | The password of a system account has not been changed for 90 days |
+| No password | High | An account on the asset can sign in without a password |
+| Privileged account not managed | High | An account on the asset that Casvisor does not manage, with uid 0, in the sudo, wheel or admin group, or a Windows administrator |
+| Account not managed | Low | Any other account on the asset that can sign in and that Casvisor does not manage |
+
+The last three come from reading the accounts on each SSH asset with its own account: `/etc/passwd` and `/etc/group` on Linux, and `/etc/shadow` when that account is root or can use sudo without a password; the enabled local users and the Administrators group on Windows. An asset that can't be read is listed with the scan, and its risks are left as they were.
+
+A risk found again stays open; one no longer found is resolved; one that comes back opens again. **Ignore** a risk that is fine, with a comment for the next one to read: later scans leave it ignored, and **Reopen** brings it back.
