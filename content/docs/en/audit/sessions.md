@@ -47,6 +47,26 @@ An online session has a **Monitor** action, which opens the session in a new bro
 
 Through the SSH gateway, interactive shells can be watched; a connection that only runs a command, transfers files or forwards ports cannot. The user is not told that someone is watching. Each time an administrator opens the view, a `session-monitor` entry goes into the [operation log](./operation-logs.md#ssh-and-file-events).
 
+## Sharing a session
+
+Any user can share a session of their own with colleagues of the organization, for example to have someone look at a problem with them. In an SSH, Telnet, VNC or RDP session in the browser, the **Share this session** button at the top right creates a share:
+
+| Field | Meaning |
+| --- | --- |
+| Who may join | The users the share is for. Anyone in the organization when empty. |
+| They may | **Watch and type**: they see the terminal and can take part in it, like an administrator taking control. **Only watch**: they only see it. VNC and RDP sessions can only be watched. |
+| For | 10 minutes to 8 hours. |
+
+The share has a link, `https://casvisor.example.com/share/<organization>/<id>`, and a six-digit code; hand both over, for example with **Copy the link and code**. The colleague opens the link, signs in, enters the code and joins. Five wrong codes revoke the share.
+
+While someone is in the session:
+
+- The session shows who joins and leaves, such as *[Casvisor] alice is watching this session through a share*.
+- What they type is checked against the [command rules](./commands.md) for them, and recorded with them as the operator, so the Commands page tells who typed what. They need no permission on the asset of their own.
+- Revoking the share in the same dialog, its end, or the end of the session disconnects them within a few seconds.
+
+Creating a share and every join are in the [operation log](./operation-logs.md), as `session-share`, `session-share-join` and `session-share-control`.
+
 ## Stopping a session
 
 **Stop** on an online session disconnects it at once, whatever the protocol. The user's tab shows that the connection was closed; an SSH client through the gateway is disconnected. Stopping does not prevent them from connecting again; for that, change their [permission](../access-control/permissions.md).
