@@ -26,6 +26,8 @@ export async function generateMetadata({ params }: LayoutProps<'/[lang]'>): Prom
   };
 }
 
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return i18n.languages.map((lang) => ({ lang }));
 }
@@ -37,7 +39,7 @@ export default async function Layout({ params, children }: LayoutProps<'/[lang]'
   return (
     <html lang={lang === 'zh' ? 'zh-CN' : lang} className={inter.className} suppressHydrationWarning>
       <body className="flex flex-col min-h-screen">
-        <RootProvider i18n={i18nProvider(translations, lang)}>{children}</RootProvider>
+        <RootProvider i18n={i18nProvider(translations, lang)} search={{ options: { type: 'static' } }}>{children}</RootProvider>
         {googleAnalyticsId && (
           <>
             <Script src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`} strategy="afterInteractive" />
